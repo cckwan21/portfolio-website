@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__0eec5882-e35f-40f9-a7cf-e9ce9bc3dc5e__get_design_context",
+      "mcp__0eec5882-e35f-40f9-a7cf-e9ce9bc3dc5e__get_screenshot",
+      "mcp__0eec5882-e35f-40f9-a7cf-e9ce9bc3dc5e__get_metadata",
+      "Bash(curl -s -o \"/Users/cheryl/Claude code/figma-frame1.png\" \"https://www.figma.com/api/mcp/asset/1250be02-42b4-41fe-b884-1d5f083b3f4d\")",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill *)",
+      "Bash(npx serve *)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__claude_ai_Figma__get_design_context",
+      "Bash(curl -s -o images/hongkong-taxi.png \"https://www.figma.com/api/mcp/asset/6f8333d5-e2b9-4815-ae5a-180ce251b0e5.png\")",
+      "Bash(sips -r 90 --out images/cheryl-portrait.jpg \"/Users/cherylkwan/Downloads/DSCF6394.JPG\")",
+      "Bash(sips -Z 500 images/cheryl-portrait.jpg)",
+      "Bash(sips -g pixelWidth -g pixelHeight -g formatOptions images/cheryl-portrait.jpg)",
+      "Bash(sips -s formatOptions 70 images/cheryl-portrait.jpg)",
+      "Bash(mdls -name kMDItemPixelWidth -name kMDItemPixelHeight -name kMDItemDurationSeconds \"/Users/cherylkwan/portfolio website/deposit thumbnail.mp4\")",
+      "Bash(sips -g pixelWidth -g pixelHeight -g dpiWidth \"/Users/cherylkwan/portfolio website/images/thumbnail bg1.png\")",
+      "mcp__shipstudio-preview__preview_scroll",
+      "mcp__shipstudio-preview__preview_screenshot"
+    ]
+  }
+}

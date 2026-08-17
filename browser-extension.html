@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Crypto.com Wallet Extension — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── CASE STUDY PAGE SPECIFIC — LIGHT / MONOCHROME TEMPLATE ── */
+  :root { --max-w: 954px; }
+
+  body { background: #ffffff; }
+
+  /* nav — always black text, page is white top to bottom */
+  .nav-logo,
+  .nav-links a { color: #000000 !important; }
+  .nav-links a::after { background: #000000; }
+  nav.scrolled {
+    background: rgba(255, 255, 255, .88);
+  }
+  nav.scrolled .nav-logo,
+  nav.scrolled .nav-links a { color: #000000 !important; }
+  nav.scrolled::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,.35) 0%, rgba(255,255,255,.12) 45%, transparent 100%);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 180px var(--pad) 64px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #000000;
+    opacity: .5;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: opacity .2s, gap .2s;
+  }
+  .back-link:hover { opacity: 1; gap: 12px; }
+
+  .hero-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 1.08;
+    color: #000000;
+    max-width: 1000px;
+    opacity: 0;
+    animation: fadeUp .9s .15s forwards;
+  }
+
+  /* ── LAYOUT — sticky side nav + content column ── */
+  .cs-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 64px;
+    padding: 0 var(--pad) 120px;
+  }
+
+  .cs-sidenav {
+    position: sticky;
+    top: 140px;
+    flex: 0 0 260px;
+    width: 260px;
+  }
+
+  .toc {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .toc-link {
+    font-family: 'Ghost', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.16px;
+    color: #000000;
+    text-decoration: none;
+    opacity: .4;
+    transition: opacity .25s;
+  }
+
+  .toc-link:hover { opacity: .7; }
+  .toc-link.active { opacity: 1; }
+
+  .cs-content {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--max-w);
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .cs-content .section[id] { scroll-margin-top: 140px; }
+
+  /* ── LABELS ── */
+  .label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* ── STATEMENT (large heading) ── */
+  .statement {
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: 0.4px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+
+  /* ── MINI HEADING (Research sub-groups) ── */
+  .mini-heading {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #000000;
+    display: block;
+    margin-top: 32px;
+    margin-bottom: 8px;
+  }
+  .mini-heading:first-child { margin-top: 0; }
+
+  /* ── BODY ── */
+  .body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .body + .body { margin-top: 16px; }
+  .body strong { font-weight: 600; color: #000000; }
+
+  /* ── NUMBERED LIST ── */
+  .numbered-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .numbered-list li {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 0 12px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .numbered-list .num {
+    font-weight: 600;
+    color: #000000;
+  }
+
+  /* ── TEXT COLUMNS (Key Learnings) ── */
+  .text-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 16px;
+  }
+
+  .text-col-heading {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 26px;
+    color: #000000;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .text-col-body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 22px;
+    color: #000000;
+  }
+
+  /* ── STATS ROW (Outcome) ── */
+  .stats-row {
+    display: flex;
+    gap: 64px;
+    margin-top: 32px;
+  }
+
+  .stat-value {
+    font-family: 'Ghost', sans-serif;
+    font-size: clamp(40px, 5vw, 56px);
+    font-weight: 300;
+    color: #000000;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    opacity: .55;
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* ── VISUAL PLACEHOLDER ── */
+  .visual {
+    width: 100%;
+    height: 412px;
+    background: rgba(217, 217, 217, 0.31);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .visual span {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.28px;
+    text-transform: uppercase;
+    color: #000000;
+  }
+
+  /* ── METADATA ROW ── */
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .meta-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .meta-value {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  /* ── NEXT PROJECT ── */
+  .next-project {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    padding: 72px var(--pad);
+    display: flex; justify-content: space-between; align-items: center;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .next-project::before {
+    content: ''; position: absolute; inset: 0;
+    background: #000000; transform: scaleX(0); transform-origin: left;
+    transition: transform .5s cubic-bezier(.16,1,.3,1); z-index: 0;
+  }
+  .next-project:hover::before { transform: scaleX(1); }
+  .next-project > * { position: relative; z-index: 1; }
+  .next-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #000000; opacity: .5; margin-bottom: 12px;
+    transition: color .3s;
+  }
+  .next-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #000000;
+    transition: color .3s;
+  }
+  .next-arrow {
+    font-size: 28px; color: #000000;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), color .3s;
+  }
+  .next-project:hover .next-label,
+  .next-project:hover .next-title,
+  .next-project:hover .next-arrow { color: #ffffff; }
+  .next-project:hover .next-arrow { transform: translateX(12px); }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid rgba(0, 0, 0, .1); }
+  .footer-text {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    color: #000000;
+    opacity: .5;
+  }
+
+  @media (max-width: 900px) {
+    .cs-sidenav { display: none; }
+    .meta-row { grid-template-columns: 1fr 1fr; }
+    .text-cols { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 130px var(--pad) 48px; }
+    .cs-layout { padding: 0 var(--pad) 80px; gap: 32px; }
+    .meta-row { grid-template-columns: 1fr; gap: 24px; }
+    .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .visual { height: 260px; }
+    .stats-row { gap: 40px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="inspirations.html">Inspirations</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a href="portfolio.html#work" class="back-link">← Back</a>
+  <h1 class="hero-title">Bringing DeFi to the browser</h1>
+</section>
+
+<!-- ════════════════════════════════════════
+     CONTENT — sticky section nav + blocks
+     ════════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <aside class="cs-sidenav">
+    <div class="toc">
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#challenge" class="toc-link">Challenge</a>
+      <a href="#research" class="toc-link">Research</a>
+      <a href="#wallet-modes" class="toc-link">Clarifying wallet modes</a>
+      <a href="#learnings" class="toc-link">Key learnings</a>
+      <a href="#outcome" class="toc-link">Outcome</a>
+    </div>
+  </aside>
+
+  <div class="cs-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="section reveal" id="overview">
+      <span class="label">Overview</span>
+      <p class="body">The Crypto.com Wallet Extension gives users an additional gateway to access dApps and approve transactions directly through their web browser — letting them seamlessly access the DeFi world, and store and grow crypto securely.</p>
+      <p class="body">Given the popularity of wallet extensions in Web3, I led the design of the Crypto.com Wallet Extension as a one-stop-shop solution for DeFi users, building the essential foundation as the extension's first stage.</p>
+      <p class="body">As the sole designer on this project, I was responsible for the overall user experience, information architecture, and visual design of the wallet — advocating for users to ensure the features implemented were both intuitive and easy to use.</p>
+      <p class="body"><strong>Scope:</strong> Building the foundation of the wallet extension as the initial stage — essential wallet features only.</p>
+    </div>
+
+    <!-- ── METADATA ── -->
+    <div class="meta-row reveal">
+      <div>
+        <span class="meta-label">Role</span>
+        <div class="meta-value">Sole Product Designer</div>
+      </div>
+      <div>
+        <span class="meta-label">Involvement</span>
+        <div class="meta-value">Competitive Analysis<br>Information Architecture<br>User Flow</div>
+      </div>
+      <div>
+        <span class="meta-label">Timeline</span>
+        <div class="meta-value">Apr–Jun 2022</div>
+      </div>
+    </div>
+
+    <!-- ── CHALLENGE ── -->
+    <div class="section reveal" id="challenge">
+      <span class="label">Challenge</span>
+      <p class="statement">How might we introduce a new Standalone mode alongside the existing Bridge mode without confusing users already familiar with it, while building essential wallet functionality from the ground up under a tight timeline?</p>
+      <p class="body">Due to legacy issues, the wallet extension had already been introduced via Bridge mode prior to this project — a mode that requires connecting the DeFi wallet app to approve transactions on the web. Building the MVP meant introducing a new Standalone mode alongside it, without confusing users who were already familiar with Bridge mode.</p>
+      <p class="body">At the same time, I needed to define and build the essential wallet functionality from the ground up within a tight timeline.</p>
+    </div>
+
+    <!-- ── RESEARCH ── -->
+    <div class="section reveal" id="research">
+      <span class="label">Research</span>
+      <p class="body">After a series of quick desk research and competitive analysis, I solidified the core features to build for this initial stage:</p>
+
+      <span class="mini-heading">Onboarding</span>
+      <ul class="numbered-list">
+        <li><span class="num">01</span><span>Add wallet</span></li>
+        <li><span class="num">02</span><span>Import existing wallet</span></li>
+        <li><span class="num">03</span><span>Select modes: Bridge &amp; Standalone mode</span></li>
+      </ul>
+
+      <span class="mini-heading">Send &amp; Receive</span>
+      <ul class="numbered-list">
+        <li><span class="num">01</span><span>Send tokens</span></li>
+        <li><span class="num">02</span><span>Receive tokens</span></li>
+      </ul>
+
+      <span class="mini-heading">Settings</span>
+      <ul class="numbered-list">
+        <li><span class="num">01</span><span>Basic settings functions</span></li>
+        <li><span class="num">02</span><span>Network management: edit + add new networks</span></li>
+        <li><span class="num">03</span><span>dApp management: browse + disconnect dApps</span></li>
+      </ul>
+    </div>
+
+    <!-- ── WALLET MODES ── -->
+    <div class="section reveal" id="wallet-modes">
+      <span class="label">Clarifying wallet modes</span>
+      <p class="statement">The wallet extension needed to support both Bridge and Standalone modes without confusing users already familiar with the legacy Bridge experience, so I gave both modes clear, distinct naming and folded explanations into onboarding.</p>
+      <p class="body">I developed clear and straightforward terms for the wallet modes — Bridge mode and Standalone mode — supplemented with detailed explanations of each mode, integrated into the onboarding flow as part of the introductory screens. Users are also reminded to select their preferred mode during onboarding and again in the Settings menu.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+    <!-- ── KEY LEARNINGS ── -->
+    <div class="section reveal" id="learnings">
+      <span class="label">Key learnings</span>
+      <div class="text-cols">
+        <div>
+          <span class="text-col-heading">Working under time pressure</span>
+          <p class="text-col-body">The journey from concept to product was marked by a tight timeline, leaving me with limited research time. I had to make quick decisions and iterate rapidly, with little room to push back or explore design options for more complex features.</p>
+        </div>
+        <div>
+          <span class="text-col-heading">Prioritising functionality first</span>
+          <p class="text-col-body">As the wallet extension landscape matured, my prior emphasis was on optimising the product's core functionality over onboarding simplicity.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OUTCOME ── -->
+    <div class="section reveal" id="outcome">
+      <span class="label">Outcome</span>
+      <p class="body">Stats after ~3 months of launch (Jun 2022):</p>
+      <div class="stats-row reveal">
+        <div>
+          <div class="stat-value">75K+</div>
+          <span class="stat-label">Downloads</span>
+        </div>
+        <div>
+          <div class="stat-value">14K+</div>
+          <span class="stat-label">MAU</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── NEXT PROJECT ── -->
+<a href="apaa.html" class="next-project reveal">
+  <div>
+    <div class="next-label">Next Project</div>
+    <div class="next-title">APAA</div>
+  </div>
+  <span class="next-arrow">→</span>
+</a>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <span class="footer-text">Currently: Hong Kong</span>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function tick() {
+    cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Section nav — highlight active link on scroll
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = Array.from(tocLinks).map(link => document.querySelector(link.getAttribute('href')));
+  const tocIo = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const idx = sections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        tocLinks[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => { if (s) tocIo.observe(s); });
+</script>
+
+</body>
+</html>

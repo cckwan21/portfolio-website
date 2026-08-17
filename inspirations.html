@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inspirations — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+
+body {
+  background: #fff;
+  color: #000;
+  overflow-x: hidden;
+}
+
+.nav-logo,
+.nav-links a { color: #1a1a1a; }
+nav.scrolled {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+nav.scrolled .nav-logo,
+nav.scrolled .nav-links a { color: #1a1a1a; }
+nav.scrolled::after { opacity: 0; }
+
+/* ── HEADER ── */
+.inspo-header {
+  padding: 100px var(--pad) 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.inspo-title {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 300;
+  color: #000;
+  letter-spacing: -0.4px;
+  line-height: 1;
+  margin: 0 0 8px;
+}
+
+.inspo-sub {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: clamp(13px, 1.1vw, 15px);
+  font-weight: 300;
+  color: #999;
+  margin: 0;
+}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+  display: flex;
+  gap: 2px;
+}
+
+.view-btn {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #bbb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 7px 12px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.view-btn.active {
+  color: #111;
+  background: #f0ede8;
+}
+
+/* ── BOARD ── */
+.inspo-board {
+  padding: 0 var(--pad) 100px;
+  transition: opacity 0.2s;
+}
+
+.inspo-board.is-switching { opacity: 0; }
+
+/* ── GRID LAYOUT ── */
+.inspo-board.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+/* ── RANDOM LAYOUT ── */
+.inspo-board.layout-random {
+  position: relative;
+  height: 620px;
+  display: block;
+}
+
+/* ── ITEM BASE ── */
+.inspo-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #ddd8d0;
+  cursor: default;
+  transition: box-shadow 0.3s cubic-bezier(.16,1,.3,1),
+              transform 0.3s cubic-bezier(.16,1,.3,1);
+}
+
+.inspo-item:hover {
+  box-shadow: 0 20px 56px rgba(0,0,0,0.18);
+  z-index: 10;
+}
+
+/* Grid: aspect ratios */
+.layout-grid .inspo-item[data-shape="portrait"]  { aspect-ratio: 3/4; }
+.layout-grid .inspo-item[data-shape="landscape"] { aspect-ratio: 4/3; }
+.layout-grid .inspo-item[data-shape="quote"]     { aspect-ratio: 4/3; }
+
+/* Random: absolute + rotate */
+.layout-random .inspo-item {
+  position: absolute;
+  transform: rotate(var(--r, 0deg));
+}
+
+.layout-random .inspo-item:hover {
+  transform: rotate(var(--r, 0deg)) translateY(-5px) scale(1.03);
+}
+
+/* ── ITEM IMAGE ── */
+.inspo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* ── HOVER REVEAL ── */
+.inspo-reveal {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.82);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px 16px;
+  opacity: 0;
+  transition: opacity 0.22s cubic-bezier(.16,1,.3,1);
+}
+
+.inspo-item:hover .inspo-reveal { opacity: 1; }
+
+.reveal-tag {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-highlight);
+  margin-bottom: 7px;
+}
+
+.reveal-desc {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #f0ede5;
+  line-height: 1.55;
+}
+
+/* ── QUOTE ITEMS ── */
+.inspo-item.is-quote {
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 24px;
+}
+
+.quote-display {
+  font-family: 'Ghost', 'Lausanne', sans-serif;
+  font-size: clamp(14px, 1.3vw, 18px);
+  font-weight: 300;
+  color: #f0ede5;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.quote-attr {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: #555;
+  margin-top: 10px;
+  pointer-events: none;
+}
+
+/* Quote reveal shows a context note */
+.inspo-item.is-quote .inspo-reveal {
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .inspo-board.layout-grid { grid-template-columns: repeat(3, 1fr); }
+  .inspo-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+}
+
+@media (max-width: 600px) {
+  .inspo-board.layout-grid { grid-template-columns: repeat(2, 1fr); }
+  .inspo-board.layout-random { height: 1100px; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="inspirations.html">Inspirations</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HEADER ── -->
+<header class="inspo-header">
+  <div>
+    <h1 class="inspo-title">My brain, but make it organized</h1>
+    <p class="inspo-sub">where inspiration lives, wild ideas roam, and good taste gets documented</p>
+  </div>
+  <div class="view-toggle" role="group" aria-label="Layout view">
+    <button class="view-btn active" data-layout="grid">Grid</button>
+    <button class="view-btn" data-layout="random">Random</button>
+  </div>
+</header>
+
+<!-- ── BOARD ── -->
+<div class="inspo-board layout-grid" id="board">
+
+  <!-- 1 · Acquired podcast -->
+  <div class="inspo-item"
+       data-shape="portrait"
+       data-idx="0">
+    <img src="https://www.figma.com/api/mcp/asset/6275b257-3bd1-49e5-bf0e-a38852fc1f7e" alt="Acquired podcast" />
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Podcast</span>
+      <p class="reveal-desc">My go-to for understanding how great businesses are built. Each episode is a 3-hour deep dive I end up referencing for months.</p>
+    </div>
+  </div>
+
+  <!-- 2 · Substack 1 -->
+  <div class="inspo-item"
+       data-shape="landscape"
+       data-idx="1"
+       style="background:#c8c2b8;">
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Substack</span>
+      <p class="reveal-desc">Changed how I think about building things people actually want. The kind of writing that makes you re-examine your assumptions.</p>
+    </div>
+  </div>
+
+  <!-- 3 · Quote -->
+  <div class="inspo-item is-quote"
+       data-shape="quote"
+       data-idx="2">
+    <p class="quote-display">"Everything is a win if the goal is to experience."</p>
+    <p class="quote-attr">Unknown</p>
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Quote</span>
+      <p class="reveal-desc">This one lives rent-free in my head on slow weeks.</p>
+    </div>
+  </div>
+
+  <!-- 4 · Substack 2 -->
+  <div class="inspo-item"
+       data-shape="landscape"
+       data-idx="3"
+       style="background:#bfb9b0;">
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Substack</span>
+      <p class="reveal-desc">Sharp, short, honest takes on design and culture. Never more than 5 minutes to read but stays with you for weeks.</p>
+    </div>
+  </div>
+
+  <!-- 5 · Currently reading -->
+  <div class="inspo-item"
+       data-shape="portrait"
+       data-idx="4"
+       style="background:#c4bdb3;">
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Currently Reading</span>
+      <p class="reveal-desc">Drop in the title and a note on why it's on the list.</p>
+    </div>
+  </div>
+
+  <!-- 6 · Quote 2 -->
+  <div class="inspo-item is-quote"
+       data-shape="quote"
+       data-idx="5">
+    <p class="quote-display">"Good taste is the enemy of creativity."</p>
+    <p class="quote-attr">Pablo Picasso</p>
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Quote</span>
+      <p class="reveal-desc">A reminder that over-refining can kill the spark before it's had a chance to breathe.</p>
+    </div>
+  </div>
+
+  <!-- 7 · Substack 3 -->
+  <div class="inspo-item"
+       data-shape="landscape"
+       data-idx="6"
+       style="background:#b5afa8;">
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Substack</span>
+      <p class="reveal-desc">A well-researched deep dive I return to every time I'm questioning my creative direction.</p>
+    </div>
+  </div>
+
+  <!-- 8 · Quote 3 -->
+  <div class="inspo-item is-quote"
+       data-shape="quote"
+       data-idx="7">
+    <p class="quote-display">"Design is not just what it looks like. Design is how it works."</p>
+    <p class="quote-attr">Steve Jobs</p>
+    <div class="inspo-reveal">
+      <span class="reveal-tag">Quote</span>
+      <p class="reveal-desc">Still the most useful framing I know for explaining why aesthetics and function are inseparable.</p>
+    </div>
+  </div>
+
+</div><!-- /board -->
+
+<script>
+/* ── Random positions: [left, top, width, height, rotate] ── */
+const RANDOM = [
+  ['20px',  '50px',  '170px', '228px', '-3deg'],   /* podcast      */
+  ['230px', '20px',  '240px', '182px',  '2deg'],   /* substack 1   */
+  ['510px', '60px',  '220px', '148px', '-1.5deg'], /* quote 1      */
+  ['770px', '30px',  '230px', '175px',  '3deg'],   /* substack 2   */
+  ['100px', '320px', '150px', '210px', '-2deg'],   /* reading      */
+  ['310px', '310px', '240px', '148px',  '1deg'],   /* quote 2      */
+  ['590px', '340px', '225px', '172px', '-2.5deg'], /* substack 3   */
+  ['855px', '300px', '240px', '155px',  '2deg'],   /* quote 3      */
+];
+
+const board   = document.getElementById('board');
+const items   = [...board.querySelectorAll('.inspo-item')];
+const buttons = document.querySelectorAll('.view-btn');
+
+function applyLayout(mode) {
+  board.classList.add('is-switching');
+
+  setTimeout(() => {
+    board.className = `inspo-board layout-${mode}`;
+
+    items.forEach((el, i) => {
+      const r = RANDOM[i];
+      if (mode === 'random' && r) {
+        el.style.left   = r[0];
+        el.style.top    = r[1];
+        el.style.width  = r[2];
+        el.style.height = r[3];
+        el.style.setProperty('--r', r[4]);
+      } else {
+        el.style.cssText = '';
+        el.style.removeProperty('--r');
+      }
+    });
+
+    requestAnimationFrame(() => board.classList.remove('is-switching'));
+  }, 180);
+}
+
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('active')) return;
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyLayout(btn.dataset.layout);
+  });
+});
+
+/* ── Nav scroll ── */
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+/* ── Cursor ── */
+const cursor = document.getElementById('cursor');
+let mx = 0, my = 0, cx = 0, cy = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function tick() {
+  cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+  cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+  requestAnimationFrame(tick);
+})();
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+});
+</script>
+
+</body>
+</html>

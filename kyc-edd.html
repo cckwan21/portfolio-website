@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Streamlining KYC EDD Across Regions — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── CASE STUDY PAGE SPECIFIC — LIGHT / MONOCHROME TEMPLATE ── */
+  :root { --max-w: 954px; }
+
+  body { background: #ffffff; }
+
+  /* nav — always black text, page is white top to bottom */
+  .nav-logo,
+  .nav-links a { color: #000000 !important; }
+  .nav-links a::after { background: #000000; }
+  nav.scrolled {
+    background: rgba(255, 255, 255, .88);
+  }
+  nav.scrolled .nav-logo,
+  nav.scrolled .nav-links a { color: #000000 !important; }
+  nav.scrolled::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,.35) 0%, rgba(255,255,255,.12) 45%, transparent 100%);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 180px var(--pad) 64px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #000000;
+    opacity: .5;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: opacity .2s, gap .2s;
+  }
+  .back-link:hover { opacity: 1; gap: 12px; }
+
+  .hero-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 1.08;
+    color: #000000;
+    max-width: 1000px;
+    opacity: 0;
+    animation: fadeUp .9s .15s forwards;
+  }
+
+  /* ── LAYOUT — sticky side nav + content column ── */
+  .cs-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 64px;
+    padding: 0 var(--pad) 120px;
+  }
+
+  .cs-sidenav {
+    position: sticky;
+    top: 140px;
+    flex: 0 0 200px;
+    width: 200px;
+  }
+
+  .toc {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .toc-link {
+    font-family: 'Ghost', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.16px;
+    color: #000000;
+    text-decoration: none;
+    opacity: .4;
+    transition: opacity .25s;
+  }
+
+  .toc-link:hover { opacity: .7; }
+  .toc-link.active { opacity: 1; }
+
+  .cs-content {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--max-w);
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .cs-content .section[id] { scroll-margin-top: 140px; }
+
+  /* ── LABELS ── */
+  .label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* ── STATEMENT (large heading — Challenge / Problem sections) ── */
+  .statement {
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: 0.4px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+
+  /* ── BODY ── */
+  .body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .body + .body { margin-top: 16px; }
+  .body strong { font-weight: 600; color: #000000; }
+
+  /* ── BULLET LIST ── */
+  .bullet-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .bullet-list li {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+    padding-left: 28px;
+    position: relative;
+  }
+
+  .bullet-list li::before {
+    content: '•';
+    position: absolute; left: 0;
+    color: #000000;
+  }
+
+  /* ── VISUAL PLACEHOLDER ── */
+  .visual {
+    width: 100%;
+    height: 412px;
+    background: rgba(217, 217, 217, 0.31);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .visual.tall { height: 465px; }
+  .visual span {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.28px;
+    text-transform: uppercase;
+    color: #000000;
+  }
+
+  /* ── METADATA ROW ── */
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .meta-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .meta-value {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  /* ── NEXT PROJECT ── */
+  .next-project {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    padding: 72px var(--pad);
+    display: flex; justify-content: space-between; align-items: center;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .next-project::before {
+    content: ''; position: absolute; inset: 0;
+    background: #000000; transform: scaleX(0); transform-origin: left;
+    transition: transform .5s cubic-bezier(.16,1,.3,1); z-index: 0;
+  }
+  .next-project:hover::before { transform: scaleX(1); }
+  .next-project > * { position: relative; z-index: 1; }
+  .next-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #000000; opacity: .5; margin-bottom: 12px;
+    transition: color .3s;
+  }
+  .next-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #000000;
+    transition: color .3s;
+  }
+  .next-arrow {
+    font-size: 28px; color: #000000;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), color .3s;
+  }
+  .next-project:hover .next-label,
+  .next-project:hover .next-title,
+  .next-project:hover .next-arrow { color: #ffffff; }
+  .next-project:hover .next-arrow { transform: translateX(12px); }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid rgba(0, 0, 0, .1); }
+  .footer-text {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    color: #000000;
+    opacity: .5;
+  }
+
+  @media (max-width: 900px) {
+    .cs-sidenav { display: none; }
+    .meta-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 130px var(--pad) 48px; }
+    .cs-layout { padding: 0 var(--pad) 80px; gap: 32px; }
+    .meta-row { grid-template-columns: 1fr; gap: 24px; }
+    .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .visual, .visual.tall { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="inspirations.html">Inspirations</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a href="portfolio.html#work" class="back-link">← Back</a>
+  <h1 class="hero-title">Streamlining KYC EDD across regions</h1>
+</section>
+
+<!-- ════════════════════════════════════════
+     CONTENT — sticky section nav + blocks
+     ════════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <aside class="cs-sidenav">
+    <div class="toc">
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#challenge" class="toc-link">Challenge</a>
+      <a href="#research" class="toc-link">Research &amp; discovery</a>
+      <a href="#problem-1" class="toc-link">Merging assessments</a>
+      <a href="#problem-2" class="toc-link">Front-loading wait time</a>
+      <a href="#problem-3" class="toc-link">Standardizing template</a>
+      <a href="#differently" class="toc-link">What I'd do differently</a>
+      <a href="#outcome" class="toc-link">Outcome</a>
+    </div>
+  </aside>
+
+  <div class="cs-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="section reveal" id="overview">
+      <span class="label">Overview</span>
+      <p class="body">KYC EDD (Enhanced Due Diligence) flows currently differ by region, each built independently over time as regional requirements came up, without a shared template to work from. Implementation is inconsistent too — some flows are native, some are webview.</p>
+      <ul class="bullet-list">
+        <li>EDD requirements were added after the original KYC onboarding was already built, so today's EDD flow triggers as a separate step after onboarding is complete, not as part of it</li>
+        <li>Requirements vary by region — UK has the most steps of any region</li>
+        <li>As a result, EDD generally sits outside the core KYC flow rather than being integrated into it</li>
+      </ul>
+      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+    </div>
+
+    <!-- ── METADATA ── -->
+    <div class="meta-row reveal">
+      <div>
+        <span class="meta-label">Role</span>
+        <div class="meta-value">Sole Product Designer</div>
+      </div>
+      <div>
+        <span class="meta-label">Involvement</span>
+        <div class="meta-value">Product Designer</div>
+      </div>
+      <div>
+        <span class="meta-label">Timeline</span>
+        <div class="meta-value">Apr–Jun 2026</div>
+      </div>
+    </div>
+
+    <!-- ── CHALLENGE ── -->
+    <div class="section reveal" id="challenge">
+      <span class="label">Challenge</span>
+      <p class="statement">How might we streamline KYC EDD across regions for a consistent experience, and reduce friction given EDD is mandatory and can't be skipped?</p>
+      <p class="body">This project prioritized UK and US:</p>
+      <ul class="bullet-list">
+        <li>UK — longest EDD flow of any region; the only region requiring risk profile and knowledge assessment beyond EDD, totaling three assessments and 17 questions</li>
+        <li>US — our largest overall user base</li>
+      </ul>
+      <p class="body" style="margin-top:24px;">We also referenced competitors' UK EDD flows for comparison.</p>
+    </div>
+
+    <!-- ── RESEARCH & DISCOVERY ── -->
+    <div class="section reveal" id="research">
+      <span class="label">Research &amp; discovery</span>
+      <p class="body">Before proposing changes, I audited our existing KYC EDD flows across regions to understand current limitations and the reasoning behind past decisions. I also reviewed the Crypto.com app's EDD flow — both its overall structure and its approach to SSN collection — and spoke with their PM to understand the reasoning behind their design decisions, using it as a reference throughout the redesign.</p>
+      <p class="body">Alongside the audit, I conducted user interviews with two participants, which surfaced specific findings referenced in the issues below.</p>
+      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+    </div>
+
+    <!-- ── PROBLEM 1 ── -->
+    <div class="section reveal" id="problem-1">
+      <span class="label">Merging assessments</span>
+      <p class="statement">For UK, EDD, risk profile, and knowledge assessment triggered separately at unpredictable points after KYC, creating a disjointed experience, so I merged them into one upfront assessment.</p>
+      <p class="body">EDD, risk profile, and knowledge assessment were originally <strong>split into three flows with separate entry points</strong>, based on the assumption that showing steps only when needed would reduce upfront friction and let users start browsing sooner. <strong>I merged them into one continuous assessment instead.</strong></p>
+      <p class="body">In practice, triggering these assessments at unpredictable points created a more disjointed experience, not a lighter one.</p>
+      <p class="body">A UK user interview confirmed this — he accepted EDD itself as standard across banking apps, but found being interrupted by unrelated questions more frustrating than the form's length. Combining the three into one upfront assessment set clear expectations and removed the surprise factor, trading three short interruptions for one longer session.</p>
+      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+    </div>
+
+    <!-- ── PROBLEM 2 ── -->
+    <div class="section reveal" id="problem-2">
+      <span class="label">Front-loading wait time</span>
+      <p class="statement">Users sat idle up to 30 seconds during the mandatory identity verification wait, while address/SSN collection was deferred until funding, and EDD-related assessments sat as separate blockers elsewhere in onboarding. I used the wait window to front-load both.</p>
+      <p class="body">Two approaches were possible for address/SSN:</p>
+      <ul class="bullet-list">
+        <li>Delay (existing approach) — collect address/SSN only when the user triggers bank-transfer or credit-card funding</li>
+        <li>Front-load — collect them during the wait; since this info is needed regardless once users fund in, doing it upfront avoids a second friction point later</li>
+      </ul>
+      <p class="body" style="margin-top:24px;">I front-loaded assessments too — EDD for US, and EDD, risk profile, and knowledge test for UK — into the same wait window, <strong>clearing these blockers early so users can access the rest of the product without interruption afterward.</strong> For address collection specifically, I also added Google-suggested autofill, speeding up entry compared to the static form previously in place.</p>
+      <p class="body">A user interview reinforced the opportunity: one participant described sitting on the loading screen unsure whether to quit or stay, since the wait had no clear purpose — creating abandonment risk.</p>
+      <p class="body">This diverges from Crypto.com's approach, which gates SSN to only the specific features that need it — we front-loaded instead because SSN will soon be required broadly for a major upcoming product feature.</p>
+      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+    </div>
+
+    <!-- ── PROBLEM 3 ── -->
+    <div class="section reveal" id="problem-3">
+      <span class="label">Standardizing template</span>
+      <p class="statement">Each region's EDD flow was a one-off build with no shared structure, making updates and rollouts costly, so I designed a standardized, reusable EDD template.</p>
+      <p class="body">Format: <strong>Questions collapse and auto-advance once answered</strong>; the same pattern applies across all regions, with only question content changing per region. This got an early real-world test when Issue 2's SSN requirement forced US into its own flow — since the structure was already standardized, this only meant adding US-specific questions, not building a new flow from scratch.</p>
+      <p class="body">UI: Compliance required keeping assessment copy exactly as-is, so I focused on structure instead — <strong>progress bars on longer flows, and clearer hierarchy for dense text blocks.</strong></p>
+      <p class="body">Technical pushback: I proposed native over webview, since webview looked visually detached from the rest of onboarding. Tech pushed back — webview is faster to update for compliance changes — so we kept webview and closed the visual gap through UI work instead.</p>
+      <div class="visual tall reveal" style="margin-top:40px;"><span>Visual</span></div>
+    </div>
+
+    <!-- ── WHAT I'D DO DIFFERENTLY ── -->
+    <div class="section reveal" id="differently">
+      <span class="label">What I'd do differently</span>
+      <p class="body">Copy was the one lever I couldn't pull. Given more room, I'd push to test shortened, more scannable copy — potentially as a controlled test to build a data-backed case for compliance to revisit the wording. Long, dense text is still the biggest usability barrier left in this flow.</p>
+    </div>
+
+    <!-- ── OUTCOME ── -->
+    <div class="section reveal" id="outcome">
+      <span class="label">Outcome</span>
+      <p class="body">UK EDD step completion rose from <strong>23% to 54%</strong> over the three months following this redesign — more than doubling. Given UK has the longest, most demanding EDD flow of any region, this was the strongest test of whether merging the assessments, moving them into the verification wait window, adding progress indicators, and improving text hierarchy could actually reduce drop-off, not just look cleaner.</p>
+      <p class="body">Standardizing the flow into a reusable template also <strong>reduced engineering lift for future rollouts</strong> — evidenced when US required its own variant and only needed new question content, not a new flow. Moving address, SSN, and assessment completion into the verification wait also <strong>turned previously idle time productive</strong>, instead of adding separate steps users must sit through afterward.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── NEXT PROJECT ── -->
+<a href="case-study.html" class="next-project reveal">
+  <div>
+    <div class="next-label">Next Project</div>
+    <div class="next-title">Friction-free Crypto Deposit</div>
+  </div>
+  <span class="next-arrow">→</span>
+</a>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <span class="footer-text">Currently: Hong Kong</span>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function tick() {
+    cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Section nav — highlight active link on scroll
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = Array.from(tocLinks).map(link => document.querySelector(link.getAttribute('href')));
+  const tocIo = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const idx = sections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        tocLinks[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => { if (s) tocIo.observe(s); });
+</script>
+
+</body>
+</html>

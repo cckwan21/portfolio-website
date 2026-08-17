@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inspirations — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+
+/* ─────────────────────────────────────────
+   GLOBAL OVERRIDES FOR LIGHT PAGE
+───────────────────────────────────────── */
+body {
+  background: #ffffff;
+  color: #000000;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nav always dark on white page */
+.nav-logo,
+.nav-links a {
+  color: #1a1a1a;
+}
+nav.scrolled {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+nav.scrolled .nav-logo,
+nav.scrolled .nav-links a {
+  color: #1a1a1a;
+}
+nav.scrolled::after {
+  opacity: 0;
+}
+
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+.inspo-header {
+  padding: 92px var(--pad) 12px;
+  flex-shrink: 0;
+}
+
+.inspo-title {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: clamp(22px, 2.2vw, 32px);
+  font-weight: 300;
+  color: #000;
+  letter-spacing: -0.4px;
+  line-height: 1;
+  margin: 0 0 8px;
+}
+
+.inspo-sub {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-weight: 300;
+  color: #555;
+  letter-spacing: -0.24px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   CATEGORY TAGS
+───────────────────────────────────────── */
+.category-nav {
+  padding: 14px var(--pad) 18px;
+  flex-shrink: 0;
+}
+
+.category-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  margin-bottom: 4px;
+}
+
+.cat-tag {
+  font-family: 'Ghost', 'Lausanne', sans-serif;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 300;
+  color: #000;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1.1;
+  white-space: nowrap;
+  position: relative;
+  transition: opacity 0.3s ease;
+}
+
+/* No underline on active */
+
+/* Dim inactive tags when a category is selected */
+.category-nav.has-active .cat-tag:not(.active) {
+  opacity: 0.25;
+}
+
+/* ─────────────────────────────────────────
+   CARDS AREA
+───────────────────────────────────────── */
+.cards-area {
+  position: relative;
+  padding: 0 var(--pad);
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─────────────────────────────────────────
+   CATEGORY PANELS
+───────────────────────────────────────── */
+.cat-panel {
+  display: none;
+  position: relative;
+  /* height comes from inline style per panel so body can scroll */
+}
+
+.cat-panel.visible {
+  display: block;
+}
+
+/* ─────────────────────────────────────────
+   CARDS
+───────────────────────────────────────── */
+.card {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity  0.5s cubic-bezier(.16, 1, .3, 1),
+    transform 0.5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.card.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-img {
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #d4cec6; /* fallback placeholder tint */
+}
+
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.card-info {
+  padding-top: 6px;
+}
+
+.card-number {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: #000;
+  line-height: 1;
+  margin: 0 0 10px;
+}
+
+.card-desc {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: #555;
+  line-height: 1.6;
+  max-width: 240px;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   SCATTERED ELEMENTS (substacks)
+   Images and text placed independently,
+   not in a flex pair
+───────────────────────────────────────── */
+.scatter-img {
+  position: absolute;
+  overflow: hidden;
+  background: #d4cec6;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.4s cubic-bezier(.16, 1, .3, 1),
+              transform 0.4s cubic-bezier(.16, 1, .3, 1);
+}
+.scatter-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+.scatter-info {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.4s cubic-bezier(.16, 1, .3, 1),
+              transform 0.4s cubic-bezier(.16, 1, .3, 1);
+}
+.scatter-img.in,
+.scatter-info.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────
+   QUOTE CARD (no image)
+───────────────────────────────────────── */
+.quote-card-text {
+  font-family: 'Ghost', 'Lausanne', sans-serif;
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 300;
+  color: #000;
+  line-height: 1.3;
+  max-width: 560px;
+  margin: 0 0 14px;
+}
+
+.quote-card-attr {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────
+   EMPTY STATE HINT
+───────────────────────────────────────── */
+.empty-hint {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #ccc;
+  padding: 0 0 12px;
+  padding-left: var(--pad);
+  flex-shrink: 0;
+  transition: opacity 0.4s;
+}
+
+.empty-hint.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="inspirations-v2.html">Inspirations</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HEADER ── -->
+<header class="inspo-header">
+  <h1 class="inspo-title">My brain, but make it organized</h1>
+  <p class="inspo-sub">where inspiration lives, wild ideas roam, and good taste gets documented</p>
+</header>
+
+<!-- ── CATEGORY TAGS ── -->
+<div class="category-nav" id="catNav" aria-label="Inspiration categories">
+  <div class="category-row">
+    <button class="cat-tag" data-cat="podcast">01_PODCAST //</button>
+    <button class="cat-tag" data-cat="substacks">02_SUBSTACKS THAT STOOD OUT //</button>
+    <button class="cat-tag" data-cat="quotes">03_QUOTES</button>
+  </div>
+  <div class="category-row">
+    <button class="cat-tag" data-cat="inspo">04_INSPIRATIONS SOURCE //</button>
+    <button class="cat-tag" data-cat="reading">05_CURRENTLY READING //</button>
+    <button class="cat-tag" data-cat="quotes2">06_QUOTES</button>
+  </div>
+</div>
+
+<!-- ── EMPTY STATE ── -->
+<p class="empty-hint" id="emptyHint">← Pick a category</p>
+
+<!-- ── CARDS AREA ── -->
+<div class="cards-area" id="cardsArea">
+
+  <!-- ① PODCAST — 1 card -->
+  <div class="cat-panel" id="panel-podcast" style="min-height:360px;">
+
+    <div class="card" style="left: 300px; top: 20px;" data-delay="0">
+      <div class="card-img" style="width: 210px; height: 280px;">
+        <img
+          src="https://www.figma.com/api/mcp/asset/6275b257-3bd1-49e5-bf0e-a38852fc1f7e"
+          alt="Acquired podcast cover"
+        />
+      </div>
+      <div class="card-info">
+        <p class="card-number">01 Podcast</p>
+        <p class="card-desc">One of my favourite podcasts to learn more about how successful businesses we know now start from ground 0</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ② SUBSTACKS — scattered, exact Figma positions
+       Figma frame: 1440×1024. Cards area starts at y=393 in frame.
+       All positions below are (figma_x, figma_y - 393).
+  -->
+  <div class="cat-panel" id="panel-substacks" style="min-height:620px;">
+
+    <!-- 01 Substack — image top-left -->
+    <div class="scatter-img" data-delay="0"
+         style="left:85px; top:88px; width:226px; height:180px; background:#c8c2b8;">
+      <!-- swap src with real image when available -->
+    </div>
+    <div class="scatter-info" data-delay="0"
+         style="left:330px; top:99px;">
+      <p class="card-number">01 Substack</p>
+      <p class="card-desc">One of my favourite substacks that changed how I think about building things people actually want</p>
+    </div>
+
+    <!-- 02 Substack — image bottom-left -->
+    <div class="scatter-img" data-delay="80"
+         style="left:135px; top:367px; width:247px; height:191px; background:#bfb9b0;">
+    </div>
+    <div class="scatter-info" data-delay="80"
+         style="left:402px; top:471px;">
+      <p class="card-number">02 Substack</p>
+      <p class="card-desc">Sharp, short, honest takes on design and culture. Never more than 5 minutes to read but stays with you</p>
+    </div>
+
+    <!-- 03 Substack — image top-right -->
+    <div class="scatter-img" data-delay="120"
+         style="left:830px; top:88px; width:241px; height:193px; background:#b5afa8;">
+    </div>
+    <div class="scatter-info" data-delay="120"
+         style="left:1088px; top:145px;">
+      <p class="card-number">03 Substack</p>
+      <p class="card-desc">A well-researched deep dive that I come back to every time I'm questioning my creative direction</p>
+    </div>
+
+    <!-- 04 Substack — text left, image right -->
+    <div class="scatter-info" data-delay="160"
+         style="left:735px; top:384px;">
+      <p class="card-number">04 Substack</p>
+      <p class="card-desc">The one I forward to people when they ask me what I read. Thoughtful, slow writing in a fast world</p>
+    </div>
+    <div class="scatter-img" data-delay="160"
+         style="left:1040px; top:356px; width:263px; height:214px; background:#c4beb5;">
+    </div>
+
+  </div>
+
+  <!-- ③ QUOTES — 2 cards -->
+  <div class="cat-panel" id="panel-quotes" style="min-height:320px;">
+
+    <div class="card" style="left: 0; top: 40px;" data-delay="0">
+      <div class="card-info">
+        <p class="quote-card-text">"Everything is a win if the goal is to experience."</p>
+        <p class="quote-card-attr">Unknown</p>
+      </div>
+    </div>
+
+    <div class="card" style="left: 460px; top: 120px;" data-delay="120">
+      <div class="card-info">
+        <p class="quote-card-text">"Good taste is the enemy of creativity."</p>
+        <p class="quote-card-attr">Pablo Picasso</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ④ INSPIRATIONS SOURCE — 2 cards -->
+  <div class="cat-panel" id="panel-inspo" style="min-height:280px;">
+
+    <div class="card" style="left: 0; top: 20px;" data-delay="0">
+      <div class="card-img" style="width: 190px; height: 140px; background: #c6bfb5;"></div>
+      <div class="card-info">
+        <p class="card-number">01 Source</p>
+        <p class="card-desc">Placeholder — add your inspiration source here</p>
+      </div>
+    </div>
+
+    <div class="card" style="left: 500px; top: 50px;" data-delay="100">
+      <div class="card-img" style="width: 190px; height: 140px; background: #b8b0a4;"></div>
+      <div class="card-info">
+        <p class="card-number">02 Source</p>
+        <p class="card-desc">Placeholder — add your inspiration source here</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑤ CURRENTLY READING — 2 cards -->
+  <div class="cat-panel" id="panel-reading" style="min-height:280px;">
+
+    <div class="card" style="left: 60px; top: 20px;" data-delay="0">
+      <div class="card-img" style="width: 130px; height: 180px; background: #c8c2b8;"></div>
+      <div class="card-info">
+        <p class="card-number">01 Reading</p>
+        <p class="card-desc">Placeholder — add the book or article here</p>
+      </div>
+    </div>
+
+    <div class="card" style="left: 500px; top: 40px;" data-delay="110">
+      <div class="card-img" style="width: 130px; height: 180px; background: #b5afa7;"></div>
+      <div class="card-info">
+        <p class="card-number">02 Reading</p>
+        <p class="card-desc">Placeholder — add the book or article here</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ⑥ QUOTES 2 — 2 cards -->
+  <div class="cat-panel" id="panel-quotes2" style="min-height:320px;">
+
+    <div class="card" style="left: 0; top: 40px;" data-delay="0">
+      <div class="card-info">
+        <p class="quote-card-text">"Design is not just what it looks like and feels like. Design is how it works."</p>
+        <p class="quote-card-attr">Steve Jobs</p>
+      </div>
+    </div>
+
+    <div class="card" style="left: 480px; top: 130px;" data-delay="130">
+      <div class="card-info">
+        <p class="quote-card-text">"Have nothing in your house that you do not know to be useful, or believe to be beautiful."</p>
+        <p class="quote-card-attr">William Morris</p>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /cards-area -->
+
+<!-- No footer — single viewport layout -->
+
+<script>
+/* ── NAV SCROLL ── */
+const nav = document.querySelector('nav:first-of-type');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+/* ── CUSTOM CURSOR ── */
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .cat-tag').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+});
+
+/* ── CATEGORY INTERACTION ── */
+const catNav    = document.getElementById('catNav');
+const tags      = document.querySelectorAll('.cat-tag');
+const panels    = document.querySelectorAll('.cat-panel');
+const emptyHint = document.getElementById('emptyHint');
+
+let activeCat = null;
+
+/* Detect touch-only devices (no fine pointer / hover) */
+const isTouch = () => window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+function activate(cat) {
+  if (activeCat === cat) return;   /* already showing — do nothing */
+  activeCat = cat;
+
+  /* Instantly hide all panels & reset animatable elements */
+  panels.forEach(panel => {
+    panel.querySelectorAll('.card, .scatter-img, .scatter-info').forEach(c => c.classList.remove('in'));
+    panel.classList.remove('visible');
+  });
+  tags.forEach(t => t.classList.remove('active'));
+
+  if (!cat) {
+    catNav.classList.remove('has-active');
+    emptyHint.classList.remove('hidden');
+    return;
+  }
+
+  /* Show chosen category */
+  const tag   = document.querySelector(`[data-cat="${cat}"]`);
+  const panel = document.getElementById(`panel-${cat}`);
+
+  tag?.classList.add('active');
+  catNav.classList.add('has-active');
+  emptyHint.classList.add('hidden');
+
+  if (panel) {
+    panel.classList.add('visible');
+    /* Stagger all animatable elements in */
+    panel.querySelectorAll('.card, .scatter-img, .scatter-info').forEach(el => {
+      const delay = parseInt(el.dataset.delay || 0);
+      setTimeout(() => el.classList.add('in'), delay + 20);
+    });
+  }
+}
+
+/* ── DESKTOP: hover triggers instantly, stays until new hover ── */
+tags.forEach(tag => {
+  tag.addEventListener('mouseenter', () => {
+    if (!isTouch()) activate(tag.dataset.cat);
+  });
+});
+
+/* ── MOBILE: tap to show, tap again to dismiss ── */
+tags.forEach(tag => {
+  tag.addEventListener('click', () => {
+    if (!isTouch()) return;          /* desktop handles via hover */
+    const cat = tag.dataset.cat;
+    activate(activeCat === cat ? null : cat);   /* toggle on/off */
+  });
+});
+</script>
+
+</body>
+</html>

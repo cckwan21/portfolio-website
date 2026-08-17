@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>[PROJECT TITLE] — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── CASE STUDY PAGE SPECIFIC ── */
+  :root { --max-w: 780px; }
+
+  /* nav starts white on dark pages */
+  .nav-logo,
+  .nav-links a { color: #ffffff; }
+
+  /* ── SHARED BLOCK ── */
+  .block {
+    padding: 80px var(--pad);
+    border-top: 1px solid var(--divider);
+  }
+
+  .block-inner {
+    max-width: var(--max-w);
+  }
+
+  /* ── LABELS ── */
+  .label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-highlight);
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* ── HEADINGS ── */
+  .heading {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: var(--type-line-height);
+    text-transform: uppercase;
+    color: var(--color-highlight);
+    margin-bottom: 24px;
+  }
+
+  /* ── BODY ── */
+  .body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.33;
+    color: var(--color-on-dark);
+  }
+
+  .body + .body { margin-top: 16px; }
+
+  /* ── BULLET LIST ── */
+  .bullet-list {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .bullet-list li {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.33;
+    color: var(--color-on-dark);
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .bullet-list li::before {
+    content: '—';
+    position: absolute; left: 0;
+    color: var(--color-highlight);
+  }
+
+  /* ── NUMBERED LIST ── */
+  .numbered-list {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .numbered-list li {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 0 16px;
+  }
+
+  .num {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--color-highlight);
+    letter-spacing: 0.01em;
+    padding-top: 2px;
+  }
+
+  .num-body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.33;
+    color: var(--color-on-dark);
+  }
+
+  /* ── BLOCK IMAGE ── */
+  .block-img {
+    width: 100%;
+    display: block;
+    margin-top: 48px;
+    background: #111;
+  }
+
+  .block-img img {
+    width: 100%; display: block; object-fit: cover;
+  }
+
+  .block-img.contained {
+    max-width: var(--max-w);
+  }
+
+  .img-caption {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: var(--type-tracking);
+    color: var(--color-muted);
+    margin-top: 12px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 160px var(--pad) 80px;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .hero-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-highlight);
+    margin-bottom: 28px;
+    display: block;
+    opacity: 0;
+    animation: fadeUp .7s .1s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--color-on-dark);
+    max-width: 820px;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp .9s .25s forwards;
+  }
+
+  .hero-sub {
+    font-family: var(--font-display);
+    font-size: var(--type-display-size);
+    font-weight: 400;
+    letter-spacing: var(--type-tracking);
+    line-height: 1.5;
+    color: var(--color-on-dark);
+    max-width: 600px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp .9s .4s forwards;
+  }
+
+  .hero-cta {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--color-highlight);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp .8s .55s forwards;
+    transition: gap .25s;
+  }
+  .hero-cta:hover { gap: 14px; }
+
+  /* ── HERO INTRO ── */
+  .hero-intro {
+    padding: 64px var(--pad);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  /* ── METADATA STRIP ── */
+  .meta-strip {
+    padding: 56px var(--pad);
+    border-top: 1px solid var(--divider);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .meta-col {}
+  .meta-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-highlight);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .meta-value {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    color: var(--color-on-dark);
+    line-height: 1.6;
+  }
+
+  /* ── HERO IMAGE ── */
+  .hero-img-block {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .hero-img-block img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    opacity: 0;
+    animation: fadeIn 1s .6s forwards;
+  }
+
+  /* ── SOLUTION GROUP ── */
+  .solution-group {
+    padding: 80px var(--pad) 0;
+    border-top: 1px solid var(--divider);
+  }
+
+  .solution-group-header {
+    max-width: var(--max-w);
+    margin-bottom: 72px;
+  }
+
+  .solution-sub {
+    padding: 72px 0;
+    border-top: 1px solid var(--divider);
+  }
+
+  .solution-sub:first-of-type { border-top: none; }
+
+  /* ── KPI CALLOUT ── */
+  .kpi {
+    margin-top: 40px;
+    padding: 32px 40px;
+    border: 1px solid var(--divider);
+    display: inline-block;
+    max-width: var(--max-w);
+  }
+
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-label-size);
+    letter-spacing: var(--type-tracking);
+    text-transform: uppercase;
+    color: var(--color-highlight);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: var(--type-display-size);
+    letter-spacing: var(--type-tracking);
+    color: var(--color-on-dark);
+    line-height: 1.5;
+  }
+
+  /* ── NEXT PROJECT ── */
+  .next-project {
+    border-top: 1px solid var(--divider);
+    padding: 72px var(--pad);
+    display: flex; justify-content: space-between; align-items: center;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .next-project::before {
+    content: ''; position: absolute; inset: 0;
+    background: #111; transform: scaleX(0); transform-origin: left;
+    transition: transform .5s cubic-bezier(.16,1,.3,1); z-index: 0;
+  }
+  .next-project:hover::before { transform: scaleX(1); }
+  .next-project > * { position: relative; z-index: 1; }
+  .next-label {
+    font-family: var(--font-mono);
+    font-size: var(--type-label-size);
+    letter-spacing: var(--type-tracking);
+    text-transform: uppercase;
+    color: var(--color-highlight); opacity: .7; margin-bottom: 12px;
+  }
+  .next-title {
+    font-family: var(--font-display);
+    font-size: var(--type-heading-size);
+    font-weight: 400;
+    letter-spacing: var(--type-tracking);
+    color: var(--color-on-dark);
+  }
+  .next-arrow {
+    font-size: 28px; color: var(--color-highlight);
+    transition: transform .3s cubic-bezier(.16,1,.3,1);
+  }
+  .next-project:hover .next-arrow { transform: translateX(12px); }
+
+  /* ── SCREENS LAYOUT ── */
+  .screens {
+    margin-top: 48px;
+    background: #0f0f0f;
+    padding: 56px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .screens img {
+    display: block;
+    height: 520px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 2px;
+  }
+
+  .screens.screens-1 img { height: 600px; }
+
+  .screens.screens-3 img:first-child,
+  .screens.screens-3 img:last-child {
+    height: 460px;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 600px) {
+    .screens { padding: 32px 20px; gap: 10px; overflow-x: auto; justify-content: flex-start; }
+    .screens img,
+    .screens.screens-1 img,
+    .screens.screens-3 img:first-child,
+    .screens.screens-3 img:last-child { height: 360px; opacity: 1; }
+  }
+
+  /* ── INSIGHT CARDS ── */
+  .insight-cards {
+    display: flex;
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .insight-card {
+    flex: 1;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .insight-num {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    color: var(--color-on-dark);
+  }
+
+  .insight-body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.33;
+    color: var(--color-on-dark);
+  }
+
+  @media (max-width: 600px) {
+    .insight-cards { flex-direction: column; }
+  }
+
+  /* ── PLACEHOLDER IMAGE ── */
+  .img-placeholder {
+    width: 100%; background: #111;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .img-placeholder span {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--color-muted); padding: 80px 0;
+  }
+
+  /* ── THEME TOGGLE BUTTON ── */
+  #theme-toggle {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 999;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-on-dark);
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  #theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  body.theme-light #theme-toggle {
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #0a0a0a;
+  }
+
+  body.theme-light #theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  /* ── LIGHT MODE ── */
+  /* Add class="theme-light" to <body> to switch the whole page */
+  body.theme-light {
+    background: #f5f4f0;
+    --color-surface:    #f5f4f0;
+    --color-on-dark:    #0a0a0a;
+    --color-highlight:  #0a0a0a;
+    --color-muted:      #666;
+    --color-muted-lg:   #999;
+    --divider:          #dddbd6;
+  }
+
+  body.theme-light .hero-img-block,
+  body.theme-light .img-placeholder,
+  body.theme-light .block-img,
+  body.theme-light .screens {
+    background: #e8e6e1;
+  }
+
+  body.theme-light .insight-card {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  body.theme-light .next-project::before {
+    background: #e8e6e1;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .meta-strip { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 120px var(--pad) 60px; }
+    .meta-strip { grid-template-columns: 1fr; gap: 32px; }
+    .block { padding: 60px var(--pad); }
+    .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
+  }
+</style>
+</head>
+<body class="theme-light">
+
+<div id="cursor"></div>
+<button id="theme-toggle" title="Toggle light/dark mode">Dark</button>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════
+     FIXED STRUCTURE — keep on every page
+     ════════════════════════════════════════ -->
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <span class="hero-label">[Company · Project type]</span>
+  <h1 class="hero-title">[Project title]</h1>
+</section>
+
+<!-- ── HERO IMAGE ── -->
+<div class="hero-img-block">
+  <div class="img-placeholder" style="aspect-ratio:16/9"><span>Cover image</span></div>
+  <!-- swap placeholder for: <img src="images/[cover].png" alt="[description]" /> -->
+</div>
+
+<!-- ── HERO INTRO ── -->
+<div class="hero-intro reveal">
+  <p class="hero-sub">[One or two sentences summarising the project and what you did.]</p>
+  <a href="#" class="hero-cta">View prototype →</a>
+</div>
+
+<!-- ── METADATA ── -->
+<div class="meta-strip reveal">
+  <div class="meta-col">
+    <span class="meta-label">Role</span>
+    <div class="meta-value">[Your role]</div>
+  </div>
+  <div class="meta-col">
+    <span class="meta-label">Involvement</span>
+    <div class="meta-value">[Skill]<br>[Skill]<br>[Skill]</div>
+  </div>
+  <div class="meta-col">
+    <span class="meta-label">Timeline</span>
+    <div class="meta-value">[Month–Month Year]</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CONTENT BLOCKS — pick, order, repeat
+     ════════════════════════════════════════ -->
+
+<!-- 1. TEXT ONLY -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy. Replace this with your content.]</p>
+  </div>
+</div>
+
+<!-- 2. TEXT + BULLET LIST -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Intro sentence.]</p>
+    <ul class="bullet-list">
+      <li>[Point one]</li>
+      <li>[Point two]</li>
+      <li>[Point three]</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 3. TEXT + INSIGHT CARDS -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Intro sentence.]</p>
+  </div>
+  <div class="insight-cards reveal">
+    <div class="insight-card">
+      <span class="insight-num">01</span>
+      <p class="insight-body">[Point one]</p>
+    </div>
+    <div class="insight-card">
+      <span class="insight-num">02</span>
+      <p class="insight-body">[Point two]</p>
+    </div>
+    <div class="insight-card">
+      <span class="insight-num">03</span>
+      <p class="insight-body">[Point three]</p>
+    </div>
+  </div>
+</div>
+
+<!-- 4. TEXT + WIDE IMAGE -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="block-img reveal">
+    <div class="img-placeholder" style="aspect-ratio:16/9"><span>Wide image</span></div>
+    <p class="img-caption">[Optional caption]</p>
+  </div>
+</div>
+
+<!-- 5. TEXT + 1 SCREEN -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="screens screens-1 reveal">
+    <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen</span></div>
+  </div>
+</div>
+
+<!-- 6. TEXT + 2 SCREENS -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="screens screens-2 reveal">
+    <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen A</span></div>
+    <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen B</span></div>
+  </div>
+</div>
+
+<!-- 7. TEXT + 3 SCREENS -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="screens screens-3 reveal">
+    <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen A</span></div>
+    <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen B</span></div>
+    <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen C</span></div>
+  </div>
+</div>
+
+<!-- 8. SOLUTION GROUP -->
+<div class="solution-group reveal">
+  <div class="solution-group-header">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Intro paragraph.]</p>
+  </div>
+  <div class="solution-sub reveal">
+    <div class="block-inner">
+      <h3 class="heading">[SUB-SECTION HEADING]</h3>
+      <p class="body">[Detail copy.]</p>
+    </div>
+    <div class="screens screens-2 reveal">
+      <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen A</span></div>
+      <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen B</span></div>
+    </div>
+  </div>
+  <div class="solution-sub reveal" style="padding-bottom:80px;">
+    <div class="block-inner">
+      <h3 class="heading">[SUB-SECTION HEADING]</h3>
+      <p class="body">[Detail copy.]</p>
+    </div>
+    <div class="screens screens-1 reveal">
+      <div class="img-placeholder" style="aspect-ratio:9/19.5"><span>Screen</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. TEXT + KPI CALLOUT -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+    <div class="kpi">
+      <span class="kpi-label">[Metric name]</span>
+      <p class="kpi-value">[Stat or result]</p>
+    </div>
+  </div>
+</div>
+
+<!-- 10. TEXT + GHOST QUOTE LINE -->
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+    <p class="body" style="margin-top:48px; margin-bottom:48px; padding-left:40px; font-family:'Ghost',sans-serif; font-size:28px; line-height:32px; color:var(--color-on-dark);">[Key statement or north star.]</p>
+    <p class="body">[Body copy continued.]</p>
+  </div>
+</div>
+
+
+
+<!-- ════════════════════════════════════════
+     FIXED STRUCTURE — keep on every page
+     ════════════════════════════════════════ -->
+
+<!-- ── NEXT PROJECT ── -->
+<a href="[next-case-study].html" class="next-project reveal">
+  <div>
+    <div class="next-label">Next Project</div>
+    <div class="next-title">[Next project title]</div>
+  </div>
+  <span class="next-arrow">→</span>
+</a>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <span class="footer-text">Currently: Hong Kong</span>
+</footer>
+
+<!-- ════════════════════════════════════════
+     BLOCK LIBRARY — copy from here
+     ════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  1. TEXT ONLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  2. TEXT + BULLET LIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Intro sentence.]</p>
+    <ul class="bullet-list">
+      <li>[Point one]</li>
+      <li>[Point two]</li>
+      <li>[Point three]</li>
+    </ul>
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  3. TEXT + INSIGHT CARDS (3 numbered points in boxes)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Intro sentence.]</p>
+  </div>
+  <div class="insight-cards reveal">
+    <div class="insight-card">
+      <span class="insight-num">01</span>
+      <p class="insight-body">[Point one]</p>
+    </div>
+    <div class="insight-card">
+      <span class="insight-num">02</span>
+      <p class="insight-body">[Point two]</p>
+    </div>
+    <div class="insight-card">
+      <span class="insight-num">03</span>
+      <p class="insight-body">[Point three]</p>
+    </div>
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  4. TEXT + WIDE IMAGE (landscape screenshots, diagrams)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="block-img reveal">
+    <img src="images/[image].png" alt="[description]" />
+    <p class="img-caption">[Optional caption]</p>
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  5. TEXT + 1 MOBILE SCREEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="screens screens-1 reveal">
+    <img src="images/[screen].png" alt="[description]" />
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  6. TEXT + 2 MOBILE SCREENS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="screens screens-2 reveal">
+    <img src="images/[screen-a].png" alt="[description]" />
+    <img src="images/[screen-b].png" alt="[description]" />
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  7. TEXT + 3 MOBILE SCREENS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+  </div>
+  <div class="screens screens-3 reveal">
+    <img src="images/[screen-a].png" alt="[description]" />
+    <img src="images/[screen-b].png" alt="[description]" />
+    <img src="images/[screen-c].png" alt="[description]" />
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  8. SOLUTION GROUP (multi-sub-section with screens)
+     — use when one section has several sub-points each with visuals
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="solution-group reveal">
+  <div class="solution-group-header">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Intro paragraph.]</p>
+  </div>
+
+  <div class="solution-sub reveal">
+    <div class="block-inner">
+      <h3 class="heading">[SUB-SECTION HEADING]</h3>
+      <p class="body">[Detail copy.]</p>
+    </div>
+    <div class="screens screens-2 reveal">
+      <img src="images/[screen-a].png" alt="[description]" />
+      <img src="images/[screen-b].png" alt="[description]" />
+    </div>
+  </div>
+
+  <!-- repeat .solution-sub as needed -->
+  <div class="solution-sub reveal" style="padding-bottom: 80px;">
+    <div class="block-inner">
+      <h3 class="heading">[SUB-SECTION HEADING]</h3>
+      <p class="body">[Detail copy.]</p>
+    </div>
+    <div class="screens screens-1 reveal">
+      <img src="images/[screen].png" alt="[description]" />
+    </div>
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  9. TEXT + KPI CALLOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<div class="block reveal">
+  <div class="block-inner">
+    <span class="label">[LABEL]</span>
+    <p class="body">[Body copy.]</p>
+    <div class="kpi">
+      <span class="kpi-label">[Metric name]</span>
+      <p class="kpi-value">[Stat or result]</p>
+    </div>
+  </div>
+</div>
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  10. GHOST QUOTE / HIGHLIGHT LINE
+      — use for a key insight or north star statement
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Inside any .block-inner, add:
+
+<p class="body" style="margin-top:48px; margin-bottom:48px; padding-left:40px; font-family:'Ghost',sans-serif; font-size:28px; line-height:32px; color:var(--color-on-dark);">[Key statement.]</p>
+
+-->
+
+<script>
+  // Nav scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function tick() {
+    cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // Theme toggle
+  const toggle = document.getElementById('theme-toggle');
+  toggle.addEventListener('click', () => {
+    document.body.classList.toggle('theme-light');
+    toggle.textContent = document.body.classList.contains('theme-light') ? 'Dark' : 'Light';
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

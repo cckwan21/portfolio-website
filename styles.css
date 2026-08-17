@@ -1,0 +1,331 @@
+/*
+  ═══════════════════════════════════════════
+  CHERYL KWAN — SHARED STYLES
+  styles.css
+
+  Shared across: portfolio.html, all case-study pages
+  ═══════════════════════════════════════════
+*/
+
+/* ── FONTS ── */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+@font-face {
+  font-family: 'Vercetti';
+  src: url('Vercetti-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-200.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-250.otf') format('opentype');
+  font-weight: 250;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-300 copy.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-400.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-450.otf') format('opentype');
+  font-weight: 450;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-500.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-550 copy.otf') format('opentype');
+  font-weight: 550;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('TWK Lausanne/TWKLausanne-600 copy.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ghost';
+  src: url('TWK Ghost/TWKGhost-Light copy.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── TOKENS ── */
+:root {
+  /* Colours */
+  --color-surface:   #080808;
+  --color-on-dark:   #f0ede5;
+  --color-highlight: #efffa4;
+  --color-muted:     #555;
+  --color-muted-lg:  #888;
+  --divider:         #1a1a1a;
+
+  /* Aliases (backwards compat with portfolio.html) */
+  --accent:      var(--color-highlight);
+  --bg:          var(--color-surface);
+  --white:       var(--color-on-dark);
+  --gray:        var(--color-muted);
+  --gray-light:  var(--color-muted-lg);
+
+  /* Fonts */
+  --font-display: 'Lausanne', Helvetica, sans-serif;
+  --font-mono:    'Roboto Mono', monospace;
+
+  /* Type scale — from case study typography.md */
+  --type-display-size: 20px;
+  --type-heading-size: 24px;
+  --type-body-size:    32px;
+  --type-label-size:   11px;
+  --type-stat-size:    36px;
+  --type-tracking:    0;
+  --type-line-height:  normal;
+
+  /* Layout */
+  --pad: 64px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── BASE ── */
+html {
+  background: var(--color-surface);
+  color: var(--color-on-dark);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-surface);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+#cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--color-highlight);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width .25s cubic-bezier(.16,1,.3,1),
+              height .25s cubic-bezier(.16,1,.3,1),
+              opacity .25s;
+  mix-blend-mode: difference;
+}
+#cursor.expanded {
+  width: 32px;
+  height: 32px;
+  opacity: .4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px var(--pad);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background .4s cubic-bezier(.16,1,.3,1),
+              backdrop-filter .4s cubic-bezier(.16,1,.3,1),
+              padding .4s cubic-bezier(.16,1,.3,1);
+}
+
+nav.scrolled {
+  background: rgba(8, 8, 8, .55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  padding: 18px var(--pad);
+}
+
+nav::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  height: 140px;
+  background: linear-gradient(to bottom, rgba(8,8,8,.22) 0%, rgba(8,8,8,.08) 45%, transparent 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  /* Tapers the blur itself (not just color) so the bar hands off to the
+     page gradually instead of cutting from 40px-blur to 0 in one line */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,.5) 40%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,.5) 40%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .4s cubic-bezier(.16,1,.3,1);
+}
+
+nav.scrolled::after { opacity: 1; }
+
+nav.scrolled .nav-logo,
+nav.scrolled .nav-links a {
+  color: #ffffff;
+}
+
+.nav-logo {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: #000000;
+  text-decoration: none;
+  opacity: 1;
+  transition: color .4s cubic-bezier(.16,1,.3,1);
+}
+
+.nav-logo sup {
+  font-size: 7px;
+  vertical-align: super;
+  letter-spacing: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0;
+  color: #000000;
+  text-decoration: none;
+  opacity: .6;
+  transition: opacity .2s, color .4s cubic-bezier(.16,1,.3,1);
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--color-highlight);
+  transition: width .3s;
+}
+
+.nav-links a:hover { opacity: 1; }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-links a.active { opacity: 1; }
+.nav-links a.active::after { width: 100%; }
+
+/* ── DIVIDER ── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--divider);
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--divider);
+  padding: 30px var(--pad);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--color-highlight);
+  opacity: .55;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .8s cubic-bezier(.16,1,.3,1),
+              transform .8s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── NAV SCROLL JS (shared) ── */
+/* Applied via JS: nav.classList.toggle('scrolled', scrollY > 20) */
+
+/* ── RESPONSIVE — shared breakpoints ── */
+@media (max-width: 900px) {
+  :root { --pad: 40px; }
+  nav.scrolled { padding: 16px var(--pad); }
+}
+
+@media (max-width: 600px) {
+  :root { --pad: 24px; }
+  body { cursor: auto; }
+  #cursor { display: none; }
+  nav { padding: 20px var(--pad); }
+  nav.scrolled { padding: 14px var(--pad); }
+  .nav-links { gap: 20px; }
+  footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+}

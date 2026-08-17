@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cheryl Kwan — Product Designer</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── PORTFOLIO PAGE SPECIFIC ── */
+  :root {
+    --content-max: 1100px;
+    --content-pad: 0px;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: calc(var(--content-max) + 96px);
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+
+  .content-indent {
+    padding-left: var(--content-pad);
+  }
+
+  /* ── LIGHT THEME OVERRIDE (whole page) ── */
+  html, body {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .divider {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* ── NAV — homepage-only typography override ── */
+  .nav-logo {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    text-transform: none;
+    color: #000000;
+  }
+
+  .nav-links { gap: 32px; }
+
+  .nav-links a {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    opacity: 1;
+  }
+
+  .nav-links a::after { background: #000000; }
+
+  /* Page is light top-to-bottom — override the shared dark glass nav */
+  nav.scrolled {
+    background: rgba(255, 255, 255, .88);
+  }
+  nav.scrolled .nav-logo,
+  nav.scrolled .nav-links a { color: #000000 !important; }
+  nav.scrolled::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,.35) 0%, rgba(255,255,255,.12) 45%, transparent 100%);
+  }
+
+  /* ── INTRO ── */
+  .intro {
+    padding: 200px 0 120px;
+    background: #ffffff;
+  }
+
+  .intro-flex {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .bio-text {
+    max-width: 736px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(24px, 3.1vw, 40px);
+    font-weight: 300;
+    line-height: 1.35;
+    color: #000000;
+    opacity: 0;
+    animation: fadeUp 1s .1s forwards;
+  }
+
+  .bio-highlight {
+    position: relative;
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    cursor: pointer;
+    display: inline-block;
+    letter-spacing: 0;
+    transition: letter-spacing .35s cubic-bezier(.16,1,.3,1);
+  }
+
+  .bio-highlight::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background: #000000;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s cubic-bezier(.16,1,.3,1);
+  }
+
+  .bio-highlight:hover::after {
+    transform: scaleX(1);
+  }
+
+  .bio-highlight:hover {
+    letter-spacing: 0.01em;
+  }
+
+  /* Reserve the column so hovering the photo in never shifts layout */
+  .bio-photo-slot {
+    flex-shrink: 0;
+    width: 142px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeUp 1s .2s forwards;
+  }
+
+  .bio-photo {
+    width: 142px;
+    height: 189px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .35s cubic-bezier(.16,1,.3,1), transform .35s cubic-bezier(.16,1,.3,1);
+  }
+
+  .bio-photo.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .bio-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .bio-photo-caption {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+    opacity: 0;
+    transition: opacity .35s cubic-bezier(.16,1,.3,1);
+  }
+
+  .bio-photo-caption.active { opacity: 1; }
+
+  /* Below this width there's no room for a side column — float the
+     photo centered on top of the paragraph instead of hiding it */
+  @media (max-width: 900px) {
+    /* Cap to the paragraph's own max-width so centering below is measured
+       against the text, not the full (now-empty) flex row */
+    .intro-flex { max-width: 736px; }
+
+    .bio-photo-slot {
+      position: absolute;
+      top: 14%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .bio-photo-caption {
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+  }
+
+  /* ── SELECTED WORKS ── */
+  .works {
+    padding: 100px 0;
+  }
+
+  .works-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(32px, 4.6vw, 56px);
+    font-weight: 400;
+    color: #000000;
+    margin-bottom: 48px;
+  }
+
+  .works-star {
+    display: inline-block;
+    animation: spinStar 6s linear infinite;
+  }
+
+  @keyframes spinStar {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .work-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  .work-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .work-item.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .work-link {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .work-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .work-title {
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    font-size: clamp(22px, 2.4vw, 32px);
+    letter-spacing: 0.02em;
+    color: #000000;
+  }
+
+  .work-tagline {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(15px, 1.4vw, 20px);
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .work-visual {
+    width: 100%;
+    height: 531px;
+    background: rgba(217, 217, 217, 0.31);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .work-visual span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.28px;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .work-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .work-link:hover .work-visual img {
+    transform: scale(1.03);
+  }
+
+  .work-visual--video {
+    position: relative;
+  }
+
+  .work-visual-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    background: #000;
+    transition: opacity 0.4s ease;
+  }
+
+  .work-visual-screen.fading {
+    opacity: 0;
+  }
+
+  .work-tags {
+    display: flex;
+    gap: 16px;
+  }
+
+  .work-tag {
+    border: 1px solid #000000;
+    border-radius: 32px;
+    padding: 8px 18px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #000000;
+  }
+
+  /* ── FOOTER CTA — dark closing section, Ebb Scandinavia-inspired layout ──
+     Resets the shared styles.css `footer{}` element rule (flex/max-width/
+     centered/padding), which would otherwise still apply here. */
+  .footer-cta {
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 140px 0 0;
+    background: #080808;
+    color: var(--color-on-dark);
+    overflow: hidden;
+  }
+
+  .footer-cta-inner {
+    position: relative;
+    padding: 0 64px 100px;
+    text-align: left;
+  }
+
+  .footer-cta-heading {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-weight: 250;
+    font-size: clamp(44px, 9vw, 140px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--color-on-dark);
+  }
+
+  .footer-cta-heading .accent {
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    color: var(--color-highlight);
+  }
+
+  .footer-cta-badge {
+    position: absolute;
+    top: 50%;
+    right: 8%;
+    transform: translateY(-50%);
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background: var(--color-highlight);
+    color: #080808;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .footer-cta-badge:hover {
+    transform: translateY(-50%) scale(1.06);
+  }
+
+  .footer-cta-link {
+    display: inline-block;
+    margin-top: 48px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--color-on-dark);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .footer-cta-link:hover {
+    opacity: 1;
+  }
+
+  .footer-cta-bottom {
+    border-top: 1px solid rgba(240, 237, 229, 0.15);
+    padding: 28px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-cta-nav {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    flex-shrink: 0;
+  }
+
+  .footer-cta-nav li {
+    flex-shrink: 0;
+  }
+
+  .footer-cta-nav a {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--color-on-dark);
+    text-decoration: none;
+    opacity: 0.7;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .footer-cta-nav a:hover {
+    opacity: 1;
+  }
+
+  .footer-cta-meta {
+    display: flex;
+    gap: 24px;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-on-dark);
+    opacity: 0.5;
+  }
+
+  .footer-cta-meta span {
+    white-space: nowrap;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .container { padding: 0 40px; }
+    .footer-cta-inner { padding: 0 40px 80px; }
+    .footer-cta-bottom { padding: 24px 40px; }
+    .footer-cta-badge { width: 100px; height: 100px; font-size: 13px; }
+    .intro { padding: 160px 0 90px; }
+    .works { padding: 80px 0; }
+    .work-visual { height: 400px; }
+  }
+
+  @media (max-width: 600px) {
+    /* Container */
+    .container { padding: 0 24px; }
+
+    /* Nav */
+    .nav-logo { font-size: 18px; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: 16px; }
+
+    /* Intro */
+    .intro { padding: 120px 0 64px; }
+    .bio-text { font-size: 22px; line-height: 1.4; }
+
+    /* Selected works */
+    .works { padding: 64px 0; }
+    .works-label { margin-bottom: 56px; }
+    .work-list { gap: 56px; }
+    .work-visual { height: 260px; }
+    .work-tags { flex-wrap: wrap; gap: 10px; }
+    .work-tag { padding: 6px 14px; font-size: 14px; }
+
+    /* Footer — badge drops into normal flow above the heading instead of floating */
+    .footer-cta { padding-top: 80px; }
+    .footer-cta-inner { display: flex; flex-direction: column; align-items: flex-start; padding: 0 24px 64px; }
+    .footer-cta-badge { position: static; transform: none; width: 90px; height: 90px; font-size: 12px; margin-bottom: 32px; order: -1; }
+    .footer-cta-link { font-size: 17px; margin-top: 32px; }
+    .footer-cta-bottom { padding: 20px 24px; flex-direction: column; gap: 16px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">cheryl_kwan</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- ── INTRO ── -->
+<section class="intro" id="about">
+  <div class="container">
+    <div class="content-indent intro-flex">
+      <p class="bio-text">
+        I'm <span class="bio-highlight" data-photo="images/cheryl-portrait.jpg" data-caption="Cheryl.jpeg">(Cheryl)</span> — a <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(Hong Kong-based)</span> product designer who finds the <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(real constraint)</span> before designing anything, usually buried in <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(fintech and crypto's)</span> compliance rules and legacy systems.
+      </p>
+      <div class="bio-photo-slot">
+        <div class="bio-photo"><img src="images/hongkong-taxi.png" alt="" /></div>
+        <span class="bio-photo-caption">Hong Kong.jpeg</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SELECTED WORKS ── -->
+<section class="works" id="work">
+  <div class="container">
+    <div class="content-indent">
+      <div class="works-label reveal"><span class="works-star">✦</span> SELECTED WORKS</div>
+      <ul class="work-list">
+        <li class="work-item">
+          <a href="kyc-edd.html" class="work-link" aria-label="Standardizing Cross-Region Compliance case study">
+            <div class="work-heading">
+              <h3 class="work-title">01 — Standardizing Cross-Region Compliance</h3>
+              <p class="work-tagline">Merging fragmented compliance flows into one consistent template.</p>
+            </div>
+            <div class="work-visual"><span>Visual</span></div>
+            <div class="work-tags">
+              <span class="work-tag">2026</span>
+              <span class="work-tag">Onboarding</span>
+            </div>
+          </a>
+        </li>
+        <li class="work-item">
+          <a href="case-study.html" class="work-link" aria-label="Simplifying the Crypto Deposit Flow case study">
+            <div class="work-heading">
+              <h3 class="work-title">02 — Simplifying the Crypto Deposit Flow</h3>
+              <p class="work-tagline">Removing friction from the path to first trade.</p>
+            </div>
+            <div class="work-visual work-visual--video">
+              <img src="images/deposit-thumbnail-bg.jpg" alt="" />
+              <video class="work-visual-screen" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
+            </div>
+            <div class="work-tags">
+              <span class="work-tag">2026</span>
+              <span class="work-tag">Payments</span>
+            </div>
+          </a>
+        </li>
+        <li class="work-item">
+          <a href="portfolio-visibility.html" class="work-link" aria-label="Portfolio Visibility for Active Traders case study">
+            <div class="work-heading">
+              <h3 class="work-title">03 — Portfolio Visibility for Active Traders</h3>
+              <p class="work-tagline">Giving traders clarity into every position.</p>
+            </div>
+            <div class="work-visual"><span>Visual</span></div>
+            <div class="work-tags">
+              <span class="work-tag">2024</span>
+              <span class="work-tag">Trading</span>
+            </div>
+          </a>
+        </li>
+        <li class="work-item">
+          <a href="browser-extension.html" class="work-link" aria-label="Building the Wallet Extension from 0 to 1 case study">
+            <div class="work-heading">
+              <h3 class="work-title">04 — Building the Wallet Extension from 0 to 1</h3>
+              <p class="work-tagline">Bringing DeFi to the browser, one click away.</p>
+            </div>
+            <div class="work-visual"><img src="images/wallet-extension-thumbnail.jpg" alt="" /></div>
+            <div class="work-tags">
+              <span class="work-tag">2022</span>
+              <span class="work-tag">MVP</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider"></div></div>
+
+<!-- ── FOOTER ── -->
+<footer id="contact" class="footer-cta">
+  <div class="footer-cta-inner">
+    <a href="mailto:hello@cherylkwan.com" class="footer-cta-badge">Say<br>hello</a>
+    <h2 class="footer-cta-heading">Let's <span class="accent">connect</span></h2>
+    <a href="mailto:hello@cherylkwan.com" class="footer-cta-link">[ Get in touch ]</a>
+  </div>
+  <div class="footer-cta-bottom">
+    <ul class="footer-cta-nav">
+      <li><a href="#work">[ Work ]</a></li>
+      <li><a href="inspirations.html">[ Inspirations ]</a></li>
+      <li><a href="mailto:hello@cherylkwan.com">[ Contact ]</a></li>
+    </ul>
+    <div class="footer-cta-meta">
+      <span>© 2026 Cheryl Kwan</span>
+      <span>Currently: Hong Kong</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Nav glass effect
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // ── Custom cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  (function tick() {
+    cx += (mx - cx) * 0.16;
+    cy += (my - cy) * 0.16;
+    cursor.style.left = cx + 'px';
+    cursor.style.top  = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+
+  document.querySelectorAll('a, .work-item, .bio-highlight').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // ── Bio photo reveal on hover
+  const bioPhotoBox = document.querySelector('.bio-photo');
+  const bioPhotoImg = bioPhotoBox.querySelector('img');
+  const bioPhotoCaption = document.querySelector('.bio-photo-caption');
+  document.querySelectorAll('.bio-highlight').forEach(span => {
+    span.addEventListener('mouseenter', () => {
+      bioPhotoImg.src = span.dataset.photo;
+      bioPhotoCaption.textContent = span.dataset.caption;
+      bioPhotoBox.classList.add('active');
+      bioPhotoCaption.classList.add('active');
+    });
+    span.addEventListener('mouseleave', () => {
+      bioPhotoBox.classList.remove('active');
+      bioPhotoCaption.classList.remove('active');
+    });
+  });
+
+  // ── Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+
+  document.querySelectorAll('.reveal, .work-item').forEach(el => io.observe(el));
+
+  // ── Work items stagger
+  document.querySelectorAll('.work-item').forEach((row, i) => {
+    row.style.transitionDelay = `${i * 0.09}s`;
+  });
+
+  // ── Work thumbnail video — play on hover, crossfade through the loop point
+  document.querySelectorAll('.work-visual-screen').forEach(video => {
+    const link = video.closest('.work-link');
+    let loopTimer;
+
+    video.addEventListener('ended', () => {
+      video.classList.add('fading');
+      loopTimer = setTimeout(() => {
+        video.currentTime = 0;
+        video.play();
+        requestAnimationFrame(() => requestAnimationFrame(() => video.classList.remove('fading')));
+      }, 400); // matches the CSS opacity transition duration
+    });
+
+    link.addEventListener('mouseenter', () => {
+      clearTimeout(loopTimer);
+      video.classList.remove('fading');
+      video.currentTime = 0;
+      video.play();
+    });
+    link.addEventListener('mouseleave', () => {
+      clearTimeout(loopTimer);
+      video.classList.remove('fading');
+      video.pause();
+      video.currentTime = 0;
+    });
+  });
+
+  // ── Nav — underline Work/About based on which section is in view
+  const navSpyLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  const navSpySections = Array.from(navSpyLinks).map(link => document.querySelector(link.getAttribute('href')));
+  const navSpyIo = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const idx = navSpySections.indexOf(entry.target);
+      if (idx === -1 || !entry.isIntersecting) return;
+      navSpyLinks.forEach(l => l.classList.remove('active'));
+      navSpyLinks[idx].classList.add('active');
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+  navSpySections.forEach(s => { if (s) navSpyIo.observe(s); });
+</script>
+
+</body>
+</html>

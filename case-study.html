@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simplifying the Crypto Deposit Flow — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── CASE STUDY PAGE SPECIFIC — LIGHT / MONOCHROME TEMPLATE ── */
+  :root { --max-w: 954px; }
+
+  body { background: #ffffff; }
+
+  /* nav — always black text, page is white top to bottom */
+  .nav-logo,
+  .nav-links a { color: #000000 !important; }
+  .nav-links a::after { background: #000000; }
+  nav.scrolled {
+    background: rgba(255, 255, 255, .88);
+  }
+  nav.scrolled .nav-logo,
+  nav.scrolled .nav-links a { color: #000000 !important; }
+  nav.scrolled::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,.35) 0%, rgba(255,255,255,.12) 45%, transparent 100%);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 180px var(--pad) 64px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #000000;
+    opacity: .5;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: opacity .2s, gap .2s;
+  }
+  .back-link:hover { opacity: 1; gap: 12px; }
+
+  .hero-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 1.08;
+    color: #000000;
+    max-width: 1000px;
+    opacity: 0;
+    animation: fadeUp .9s .15s forwards;
+  }
+
+  /* ── LAYOUT — sticky side nav + content column ── */
+  .cs-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 64px;
+    padding: 0 var(--pad) 120px;
+  }
+
+  .cs-sidenav {
+    position: sticky;
+    top: 140px;
+    flex: 0 0 260px;
+    width: 260px;
+  }
+
+  .toc {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .toc-link {
+    font-family: 'Ghost', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.16px;
+    color: #000000;
+    text-decoration: none;
+    opacity: .4;
+    transition: opacity .25s;
+  }
+
+  .toc-link:hover { opacity: .7; }
+  .toc-link.active { opacity: 1; }
+
+  .cs-content {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--max-w);
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .cs-content .section[id] { scroll-margin-top: 140px; }
+
+  /* ── LABELS ── */
+  .label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* ── STATEMENT (large heading — Challenge / Issue sections) ── */
+  .statement {
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: 0.4px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+
+  /* ── BODY ── */
+  .body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .body + .body { margin-top: 16px; }
+  .body strong { font-weight: 600; color: #000000; }
+
+  /* ── BULLET LIST ── */
+  .bullet-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .bullet-list li {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+    padding-left: 28px;
+    position: relative;
+  }
+
+  .bullet-list li::before {
+    content: '•';
+    position: absolute; left: 0;
+    color: #000000;
+  }
+
+  /* ── NUMBERED LIST ── */
+  .numbered-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .numbered-list li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 0 12px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .numbered-list .num {
+    font-weight: 600;
+    color: #000000;
+  }
+
+  /* ── VISUAL PLACEHOLDER ── */
+  .visual {
+    width: 100%;
+    height: 412px;
+    background: rgba(217, 217, 217, 0.31);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .visual.tall { height: 465px; }
+  .visual span {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.28px;
+    text-transform: uppercase;
+    color: #000000;
+  }
+
+  .visual-pair {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .visual-pair .visual {
+    flex: 1;
+    height: 320px;
+  }
+
+  /* ── METADATA ROW ── */
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .meta-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .meta-value {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  /* ── NEXT PROJECT ── */
+  .next-project {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    padding: 72px var(--pad);
+    display: flex; justify-content: space-between; align-items: center;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .next-project::before {
+    content: ''; position: absolute; inset: 0;
+    background: #000000; transform: scaleX(0); transform-origin: left;
+    transition: transform .5s cubic-bezier(.16,1,.3,1); z-index: 0;
+  }
+  .next-project:hover::before { transform: scaleX(1); }
+  .next-project > * { position: relative; z-index: 1; }
+  .next-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #000000; opacity: .5; margin-bottom: 12px;
+    transition: color .3s;
+  }
+  .next-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #000000;
+    transition: color .3s;
+  }
+  .next-arrow {
+    font-size: 28px; color: #000000;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), color .3s;
+  }
+  .next-project:hover .next-label,
+  .next-project:hover .next-title,
+  .next-project:hover .next-arrow { color: #ffffff; }
+  .next-project:hover .next-arrow { transform: translateX(12px); }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid rgba(0, 0, 0, .1); }
+  .footer-text {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    color: #000000;
+    opacity: .5;
+  }
+
+  @media (max-width: 900px) {
+    .cs-sidenav { display: none; }
+    .meta-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 130px var(--pad) 48px; }
+    .cs-layout { padding: 0 var(--pad) 80px; gap: 32px; }
+    .meta-row { grid-template-columns: 1fr; gap: 24px; }
+    .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .visual, .visual.tall { height: 260px; }
+    .visual-pair { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="inspirations.html">Inspirations</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a href="portfolio.html#work" class="back-link">← Back</a>
+  <h1 class="hero-title">Simplifying the crypto deposit flow</h1>
+</section>
+
+<!-- ════════════════════════════════════════
+     CONTENT — sticky section nav + blocks
+     ════════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <aside class="cs-sidenav">
+    <div class="toc">
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#challenge" class="toc-link">Challenge</a>
+      <a href="#problem-1" class="toc-link">Personalizing coin selection</a>
+      <a href="#problem-2" class="toc-link">Isolating network selection</a>
+      <a href="#problem-3" class="toc-link">Prioritizing the deposit screen</a>
+      <a href="#outcome" class="toc-link">Outcome</a>
+    </div>
+  </aside>
+
+  <div class="cs-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="section reveal" id="overview">
+      <span class="label">Overview</span>
+      <p class="body">The crypto deposit flow was one of the most critical — and most friction-heavy — parts of the app, and a legacy flow that hadn't been improved since 2021. At the same time, the team was rebuilding the design system, and deposit became the first flow to be redesigned under it, given the time and effort available. I wasn't involved in building the new design system itself, but I worked in parallel to migrate it into the deposit flow redesign as I went, given the limited timeline.</p>
+      <p class="body">Deposit sits directly on the critical path. A user cannot place their first trade without depositing funds first, making it one of the highest-leverage flows to get right.</p>
+    </div>
+
+    <!-- ── METADATA ── -->
+    <div class="meta-row reveal">
+      <div>
+        <span class="meta-label">Role</span>
+        <div class="meta-value">Product Designer</div>
+      </div>
+      <div>
+        <span class="meta-label">Involvement</span>
+        <div class="meta-value">UX Design<br>User Flow<br>Copy &amp; Instructional Design<br>Competitive Benchmarking</div>
+      </div>
+      <div>
+        <span class="meta-label">Timeline</span>
+        <div class="meta-value">Oct–Dec 2025</div>
+      </div>
+    </div>
+
+    <!-- ── CHALLENGE ── -->
+    <div class="section reveal" id="challenge">
+      <span class="label">Challenge</span>
+      <p class="statement">How might we simplify the crypto deposit flow so that both new and experienced traders can complete their first deposit with confidence?</p>
+      <p class="body">Metrics were limited at the company, so I relied heavily on competitive analysis, current UX patterns, and heuristics rather than quantitative data to drive this redesign.</p>
+      <p class="body">From a design audit of our existing flow — compared against current industry standards and competitor patterns — I identified three main issues.</p>
+      <p class="body">The deposit information screen had become a dense wall of detail, mixing essential information with content users didn't need. For experienced traders it was manageable. For newer crypto users, it created immediate hesitation.</p>
+      <ul class="numbered-list">
+        <li><span class="num">01</span><span>Excessive detail on a single screen obscured what actually mattered</span></li>
+        <li><span class="num">02</span><span>Unnecessary information made it hard to distinguish critical steps</span></li>
+        <li><span class="num">03</span><span>The coin list was static and alphabetical, with no display order that made sense to the user — unhelpful, especially for first-time users</span></li>
+      </ul>
+    </div>
+
+    <!-- ── ISSUE 1 ── -->
+    <div class="section reveal" id="problem-1">
+      <span class="label">Personalizing coin selection</span>
+      <p class="statement">Every user saw the same undifferentiated list regardless of their existing holdings, so I introduced a "Quick Select" section that surfaces personalized options first.</p>
+      <ul class="bullet-list">
+        <li>The original list worked reasonably well for new users with no funds, but for users who already held tokens, it did nothing to reflect that</li>
+        <li>Quick Select is ordered by the user's actual holdings: if a user already has certain tokens in their wallet, those surface first, since they're the most likely tokens to be re-deposited</li>
+        <li>For users with no wallet holdings, the list defaults to popular market tokens instead, to support decision-making with no personal signal to draw on</li>
+      </ul>
+      <div class="visual-pair reveal">
+        <div class="visual"><span>Before</span></div>
+        <div class="visual"><span>After</span></div>
+      </div>
+    </div>
+
+    <!-- ── ISSUE 2 ── -->
+    <div class="section reveal" id="problem-2">
+      <span class="label">Isolating network selection</span>
+      <p class="statement">This step lived bundled with coin selection — a technical decision folded into a simple one, and not even applicable to every token — so I split it into its own dedicated step.</p>
+      <ul class="bullet-list">
+        <li>One of the more confusing concepts for beginners; giving it a dedicated step gave users the focus to actually understand it</li>
+        <li>Added processing time and required confirmations per network</li>
+        <li>Added an explicit note that the selected network must match the network the user is transferring from, to reduce mismatched transfers</li>
+      </ul>
+      <p class="body" style="margin-top:24px;">Stakeholders and engineering assumed fewer screens meant faster, simpler completion. I argued the bundling, not the screen count, was the real source of hesitation — backed by benchmarking against Binance, Kraken, OKX, and Coinbase, all of which isolate this step.</p>
+      <p class="body">This follows Miller's Law: breaking a complex decision into smaller steps reduces cognitive load, even at the cost of an extra screen. Making the step conditional — shown only when a token required it — meant the added structure never penalized the simpler, more common case.</p>
+    </div>
+
+    <!-- ── ISSUE 3 ── -->
+    <div class="section reveal" id="problem-3">
+      <span class="label">Prioritizing the deposit screen</span>
+      <p class="statement">Too much low-priority information surfaced on first landing, so I re-prioritized what actually appeared on that first layer.</p>
+      <ul class="bullet-list">
+        <li>Identified the core information users actually need on landing: selected token, QR code, selected network, processing time</li>
+        <li>Moved secondary actions out of the primary view: create deposit address, share deposit address</li>
+        <li>Converted the deposit address dropdown into an address book, hidden behind a secondary action — since not every user needs it, and surfacing it by default added confusion rather than utility</li>
+      </ul>
+      <div class="visual-pair reveal">
+        <div class="visual"><span>Before</span></div>
+        <div class="visual"><span>After</span></div>
+      </div>
+    </div>
+
+    <!-- ── OUTCOME ── -->
+    <div class="section reveal" id="outcome">
+      <span class="label">Outcome</span>
+      <p class="body">Crypto deposit metrics weren't accessible, so this can't be backed by a completion-rate or conversion number. What I do have: the redesigned flow was well received by both stakeholders and users.</p>
+      <ul class="bullet-list">
+        <li>Post-launch, we conducted a small number of user interviews; participants were able to move through the new flow easily compared to the existing design</li>
+        <li>User feedback included comments that the information they needed was easier and cleaner to find, and that the processing time detail was helpful</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── NEXT PROJECT ── -->
+<a href="portfolio-visibility.html" class="next-project reveal">
+  <div>
+    <div class="next-label">Next Project</div>
+    <div class="next-title">Portfolio Visibility for Active Trades</div>
+  </div>
+  <span class="next-arrow">→</span>
+</a>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <span class="footer-text">Currently: Hong Kong</span>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function tick() {
+    cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Section nav — highlight active link on scroll
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = Array.from(tocLinks).map(link => document.querySelector(link.getAttribute('href')));
+  const tocIo = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const idx = sections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        tocLinks[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => { if (s) tocIo.observe(s); });
+</script>
+
+</body>
+</html>

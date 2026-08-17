@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EDD Prototype (UK) — Cheryl Kwan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #f4f4f2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .proto-header {
+    width: 100%;
+    max-width: 900px;
+    padding: 48px 24px 32px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #000;
+    opacity: .5;
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: opacity .2s, gap .2s;
+  }
+  .back-link:hover { opacity: 1; gap: 12px; }
+
+  .proto-title {
+    font-weight: 600;
+    font-size: clamp(26px, 4vw, 36px);
+    color: #000;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .proto-sub {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 22px;
+    color: rgba(0,0,0,.6);
+    max-width: 620px;
+    margin: 0;
+  }
+
+  .proto-stage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 24px 64px;
+  }
+
+  .proto-note {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,.35);
+    margin: 20px 0 8px;
+    text-align: center;
+  }
+
+  /* recording-only status readout — sits outside the phone frame so it's
+     naturally excluded if you crop your screen recording to the device */
+  .demo-status {
+    font-size: 13px;
+    color: rgba(0,0,0,.45);
+    margin: 0 0 64px;
+    text-align: center;
+    min-height: 18px;
+  }
+  .demo-status strong { color: #000; font-weight: 600; }
+
+  /* ── PHONE FRAME ── */
+  .phone {
+    width: 402px;
+    height: 874px;
+    max-width: 100%;
+    background: linear-gradient(180deg, #0d0d10 0%, #09090a 45%);
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.28), 0 4px 16px rgba(0,0,0,.15);
+    color: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    animation: phoneIn .5s cubic-bezier(.16,1,.3,1);
+  }
+  .phone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 40px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(255,255,255,.05);
+    pointer-events: none;
+  }
+  @keyframes phoneIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    height: 60px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px 12px;
+    position: relative;
+  }
+  .status-time {
+    font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+  }
+  .dynamic-island {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 124px;
+    height: 36px;
+    border-radius: 18px;
+    background: #000;
+    pointer-events: none;
+  }
+  .status-icons { display: flex; align-items: center; gap: 7.33px; }
+  .status-icons svg { display: block; }
+  .status-battery { position: relative; width: 27.333px; height: 13.667px; }
+  .status-battery .battery-fill {
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 21px;
+    height: 9px;
+    border-radius: 2.667px;
+    background: #fff;
+  }
+  .status-battery svg { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+
+  /* ── TOP NAV ── */
+  .top-nav {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 12px;
+  }
+  .nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    isolation: isolate;
+    background: rgba(123,125,142,0.16);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    padding: 0;
+    text-decoration: none;
+    box-shadow:
+      0 1px 8px rgba(0,0,0,0.18),
+      0 4px 14px rgba(0,0,0,0.14);
+    transition: box-shadow .25s ease, transform .15s ease;
+  }
+  /* soft internal light diffusion */
+  .nav-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(255,255,255,0.07);
+    filter: blur(4px);
+    mix-blend-mode: plus-lighter;
+    pointer-events: none;
+  }
+  /* curved rim-light: mimics light bending around a convex glass edge —
+     top-left highlight, bottom-right falloff, thin all-around edge glow */
+  .nav-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+      inset 2px 2px 1.5px -1.5px rgba(255,255,255,0.95),
+      inset 1.5px 2px 1.5px -1px rgba(255,255,255,0.7),
+      inset -1.5px -1.5px 1px -1.5px rgba(255,255,255,0.5),
+      inset 0 0 0 1px rgba(255,255,255,0.14);
+    mix-blend-mode: plus-lighter;
+    pointer-events: none;
+  }
+  .nav-btn > * { position: relative; z-index: 1; }
+  .nav-btn:hover { box-shadow: 0 1px 8px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.18); }
+  .nav-btn:active { transform: scale(.92); }
+  .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* ── HELP TOOLTIP ── */
+  .help-tip {
+    position: absolute;
+    top: 106px;
+    right: 16px;
+    width: 240px;
+    background: #1a1a1d;
+    border: 1px solid rgba(123,125,142,0.32);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #d5d6de;
+    z-index: 5;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+    box-shadow: 0 12px 24px rgba(0,0,0,.4);
+  }
+  .help-tip::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 11px;
+    height: 11px;
+    background: #1a1a1d;
+    border-left: 1px solid rgba(123,125,142,0.32);
+    border-top: 1px solid rgba(123,125,142,0.32);
+    transform: rotate(45deg);
+  }
+  .help-tip.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .help-tip strong { color: #fff; font-weight: 600; }
+
+  /* ── STEPPER (badge + heading + progress) ── */
+  .stepper { flex-shrink: 0; padding: 8px 16px 22px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(146,209,255,0.16);
+    color: #92d1ff;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .stepper h1 {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 30px;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+  }
+  .progress-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(123,125,142,0.32);
+    overflow: hidden;
+  }
+  .progress-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #92d1ff;
+    border-radius: 3px;
+    transition: width .4s cubic-bezier(.16,1,.3,1);
+  }
+
+  /* ── QUESTIONS ── */
+  /* the only region that scrolls internally — keeps the phone's own
+     height constant and the submit bar flush against the bottom edge
+     no matter how many questions are open/answered */
+  .questions {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 24px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .questions::-webkit-scrollbar { display: none; }
+
+  .question {
+    border-bottom: 1px solid rgba(123,125,142,0.32);
+    padding: 16px;
+    transition: background .3s ease;
+  }
+  .question.open {
+    background: rgba(146,209,255,0.045);
+  }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+  }
+  .question.locked .q-header { cursor: default; }
+
+  .q-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 20px;
+    color: #9597a8;
+    transition: color .2s;
+  }
+  .question.open .q-text { color: #fff; }
+
+  .q-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9597a8;
+    transform: rotate(180deg);
+    transition: transform .25s ease, color .2s;
+  }
+  .question.open .q-chevron { color: #fff; transform: rotate(0deg); }
+  .question.locked .q-chevron { opacity: .5; }
+
+  /* answer summary (collapsed + answered) */
+  .q-summary {
+    list-style: none;
+    padding: 0 48px 0 0;
+    margin: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, opacity .25s ease, margin .3s ease;
+  }
+  .question.answered:not(.open) .q-summary {
+    max-height: 60px;
+    opacity: 1;
+    margin: 6px 0 0;
+  }
+  .q-summary li {
+    list-style: disc;
+    margin-left: 21px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #fff;
+  }
+
+  /* options list — height-animated wrapper */
+  .q-options-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .38s cubic-bezier(.16,1,.3,1);
+  }
+  .q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: rgba(123,125,142,0.08);
+    border: none;
+    border-radius: 8px;
+    padding: 16px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    text-align: left;
+    transition: background .15s ease, transform .1s ease, box-shadow .2s ease;
+  }
+  .option:hover, .option.demo-hover { background: rgba(123,125,142,0.16); }
+  .option:active { transform: scale(.98); }
+  .option.selected {
+    background: rgba(146,209,255,0.16);
+    box-shadow: inset 0 0 0 1px rgba(146,209,255,0.35);
+  }
+  .option.selected.has-desc { background: rgba(146,209,255,0.12); }
+
+  .option-text { flex: 1; }
+  .option-label {
+    font-size: 14px;
+    line-height: 20px;
+    color: #fff;
+    display: block;
+  }
+  .option-desc {
+    font-size: 12px;
+    line-height: 16px;
+    color: #9597a8;
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* exact geometry from Figma's Radio component: ring and dot share the
+     same center (12,11) in the source 24x24 viewBox */
+  .radio {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+  .radio svg { display: block; width: 100%; height: 100%; }
+  .radio-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+  }
+  .option.selected .radio-dot { transform: scale(1); }
+
+  /* ── SUBMIT BAR ── */
+  .submit-bar {
+    flex-shrink: 0;
+    background: #09090a;
+    padding: 16px 16px 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .submit-btn {
+    width: 100%;
+    height: 44px;
+    background: #92d1ff;
+    color: #09090a;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: .5;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: opacity .25s ease, transform .15s ease, background .2s ease;
+  }
+  .submit-btn.enabled { opacity: 1; pointer-events: auto; }
+  .submit-btn.enabled:active, .submit-btn.demo-press { transform: scale(.98); }
+
+  .home-indicator {
+    width: 134px;
+    height: 5px;
+    border-radius: 100px;
+    background: #fff;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .proto-stage { padding: 0 12px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="proto-header">
+  <a href="../kyc-edd.html#problem-3" class="back-link">← Back to case study</a>
+  <h1 class="proto-title">EDD Prototype — UK</h1>
+  <p class="proto-sub">Clickable prototype of the standardized EDD template from "Standardizing template." Questions expand one at a time — answer one and it collapses into a bullet summary while the next question opens automatically.</p>
+</div>
+
+<div class="proto-stage">
+  <div class="phone" id="phone">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="dynamic-island"></div>
+      <div class="status-icons">
+        <svg width="19.3333" height="12.3333" viewBox="0 0 19.3333 12.3333" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Cellular"><path d="M17 0C16.4477 0 16 0.447715 16 0.999999V11.3333C16 11.8856 16.4477 12.3333 17 12.3333H18.3333C18.8856 12.3333 19.3333 11.8856 19.3333 11.3333V1C19.3333 0.447715 18.8856 0 18.3333 0H17Z" fill="#fff"/><path d="M10.6667 3.66667C10.6667 3.11438 11.1144 2.66667 11.6667 2.66667H13C13.5523 2.66667 14 3.11438 14 3.66667V11.3333C14 11.8856 13.5523 12.3333 13 12.3333H11.6667C11.1144 12.3333 10.6667 11.8856 10.6667 11.3333V3.66667Z" fill="#fff"/><path d="M6.33333 5.33333C5.78105 5.33333 5.33333 5.78105 5.33333 6.33333V11.3333C5.33333 11.8856 5.78105 12.3333 6.33333 12.3333H7.66667C8.21895 12.3333 8.66667 11.8856 8.66667 11.3333V6.33333C8.66667 5.78105 8.21895 5.33333 7.66667 5.33333H6.33333Z" fill="#fff"/><path d="M1 7.66667C0.447715 7.66667 0 8.11438 0 8.66667V11.3333C0 11.8856 0.447715 12.3333 0.999999 12.3333H2.33333C2.88562 12.3333 3.33333 11.8856 3.33333 11.3333V8.66667C3.33333 8.11438 2.88562 7.66667 2.33333 7.66667H1Z" fill="#fff"/></g></svg>
+        <svg width="17" height="12.3333" viewBox="0 0 17 12.3333" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="Wifi" fill-rule="evenodd" clip-rule="evenodd" d="M8.50046 2.56141C10.967 2.56152 13.3393 3.51917 15.1269 5.23644C15.2615 5.36901 15.4766 5.36734 15.6092 5.23269L16.896 3.92048C16.9631 3.85219 17.0005 3.75967 17 3.66342C16.9994 3.56716 16.9609 3.4751 16.893 3.4076C12.2011 -1.13587 4.79908 -1.13587 0.107163 3.4076C0.0391973 3.47505 0.000634479 3.56708 7.75932e-06 3.66334C-0.00061896 3.7596 0.0367421 3.85214 0.103824 3.92048L1.39096 5.23269C1.52346 5.36754 1.73878 5.36922 1.87331 5.23644C3.66116 3.51906 6.03367 2.56141 8.50046 2.56141ZM8.50049 6.8305C9.8557 6.83041 11.1626 7.3394 12.1671 8.25855C12.303 8.389 12.517 8.38617 12.6495 8.25217L13.9347 6.93997C14.0024 6.87114 14.04 6.77777 14.039 6.68074C14.038 6.58372 13.9986 6.49114 13.9296 6.42371C10.8705 3.54843 6.1331 3.54843 3.07403 6.42371C3.00493 6.49114 2.9655 6.58376 2.9646 6.68082C2.96369 6.77788 3.00138 6.87124 3.0692 6.93997L4.35412 8.25217C4.48656 8.38617 4.7006 8.389 4.83647 8.25855C5.84036 7.34 7.14617 6.83106 8.50049 6.8305ZM11.0751 9.70276C11.0771 9.80006 11.0392 9.89387 10.9705 9.96203L8.74721 12.2291C8.68203 12.2958 8.59318 12.3333 8.50047 12.3333C8.40775 12.3333 8.3189 12.2958 8.25373 12.2291L6.03008 9.96203C5.96139 9.89382 5.9236 9.79998 5.92564 9.70268C5.92767 9.60538 5.96935 9.51325 6.04084 9.44803C7.46071 8.23456 9.54023 8.23456 10.9601 9.44803C11.0315 9.5133 11.0731 9.60547 11.0751 9.70276Z" fill="#fff"/></svg>
+        <div class="status-battery">
+          <div class="battery-fill"></div>
+          <svg width="27.3333" height="13" viewBox="0 0 27.3333 13" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="battery" opacity="0.4"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.5188 0H6.48123C5.56534 0 4.85217 0 4.27734 0.03922C3.69406 0.0790172 3.21655 0.160859 2.77792 0.342542C1.6753 0.799265 0.799265 1.6753 0.342542 2.77792C0.160859 3.21655 0.0790172 3.69406 0.03922 4.27734C0 4.85217 0 5.56511 0 6.481V6.51877C0 7.43467 0 8.14783 0.03922 8.72266C0.0790172 9.30594 0.160859 9.78345 0.342542 10.2221C0.799265 11.3247 1.6753 12.2007 2.77792 12.6575C3.21655 12.8391 3.69406 12.921 4.27734 12.9608C4.85221 13 5.56522 13 6.48122 13H18.5188C19.4348 13 20.1478 13 20.7227 12.9608C21.3059 12.921 21.7835 12.8391 22.2221 12.6575C23.3247 12.2007 24.2007 11.3247 24.6575 10.2221C24.8391 9.78345 24.921 9.30594 24.9608 8.72266C25 8.14779 25 7.43479 25 6.51881V6.48123C25 5.56524 25 4.85221 24.9608 4.27734C24.921 3.69406 24.8391 3.21655 24.6575 2.77792C24.2007 1.6753 23.3247 0.799265 22.2221 0.342542C21.7835 0.160859 21.3059 0.0790172 20.7227 0.03922C20.1478 0 19.4347 0 18.5188 0ZM3.16061 1.26642C3.45707 1.14362 3.81304 1.07322 4.34541 1.0369C4.88227 1.00027 5.56128 1 6.5 1H18.5C19.4387 1 20.1177 1.00027 20.6546 1.0369C21.187 1.07322 21.5429 1.14362 21.8394 1.26642C22.697 1.62165 23.3783 2.30301 23.7336 3.16061C23.8564 3.45707 23.9268 3.81304 23.9631 4.34541C23.9997 4.88227 24 5.56128 24 6.5C24 7.43872 23.9997 8.11773 23.9631 8.65459C23.9268 9.18696 23.8564 9.54293 23.7336 9.83939C23.3783 10.697 22.697 11.3783 21.8394 11.7336C21.5429 11.8564 21.187 11.9268 20.6546 11.9631C20.1177 11.9997 19.4387 12 18.5 12H6.5C5.56128 12 4.88227 11.9997 4.34541 11.9631C3.81304 11.9268 3.45707 11.8564 3.16061 11.7336C2.30301 11.3783 1.62165 10.697 1.26642 9.83939C1.14362 9.54293 1.07322 9.18696 1.0369 8.65459C1.00027 8.11773 1 7.43872 1 6.5C1 5.56128 1.00027 4.88227 1.0369 4.34541C1.07322 3.81304 1.14362 3.45707 1.26642 3.16061C1.62165 2.30301 2.30301 1.62165 3.16061 1.26642Z" fill="#fff"/><path d="M26 4.49927C26.783 4.82579 27.3333 5.59856 27.3333 6.49988C27.3333 7.4012 26.783 8.17397 26 8.50049V4.49927Z" fill="#fff"/></g></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top nav -->
+    <div class="top-nav">
+      <a href="../kyc-edd.html#problem-3" class="nav-btn" aria-label="Back">
+        <svg width="12.917" height="9.5834" viewBox="0 0 12.917 9.5834" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="Union" d="M4.34966 0.182649C4.59363 -0.0608957 4.98947 -0.0608702 5.23345 0.182649C5.47746 0.426651 5.4773 0.823318 5.23345 1.06741L2.13384 4.16702H12.292C12.6369 4.16727 12.9169 4.44715 12.917 4.79202C12.9169 5.1369 12.6369 5.41678 12.292 5.41702H2.13384L5.23345 8.51663C5.47746 8.76064 5.4773 9.15633 5.23345 9.40042C4.98936 9.64434 4.59369 9.64445 4.34966 9.40042L0.182673 5.23343C-0.0303475 5.02 -0.057088 4.69066 0.102594 4.44827L0.182673 4.34964L4.34966 0.182649Z" fill="#fff"/></svg>
+      </a>
+      <span class="nav-title">Financial background</span>
+      <button class="nav-btn help" id="helpBtn" aria-label="Help">
+        <svg width="16.667" height="16.667" viewBox="0 0 16.667 16.667" fill="none" xmlns="http://www.w3.org/2000/svg"><path id="Union" d="M8.33301 0C12.9351 0.000175928 16.6668 3.73089 16.667 8.33301L16.6562 8.76172C16.4331 13.1648 12.7915 16.6668 8.33301 16.667L7.9043 16.6562C3.50141 16.433 0.000170434 12.7913 0 8.33301C0.000175744 3.73089 3.73089 0.000175747 8.33301 0ZM8.33301 1.25C4.42125 1.25018 1.25018 4.42125 1.25 8.33301C1.25018 12.2448 4.42125 15.4168 8.33301 15.417C12.2448 15.4168 15.4168 12.2448 15.417 8.33301C15.4168 4.42125 12.2448 1.25018 8.33301 1.25ZM8.33301 10.833C8.79314 10.833 9.16584 11.2059 9.16602 11.666C9.16601 12.1263 8.79324 12.5 8.33301 12.5C7.87278 12.5 7.5 12.1262 7.5 11.666C7.50018 11.2059 7.87288 10.833 8.33301 10.833ZM8.47461 4.375C10.5518 4.375 11.2133 7.17543 9.35547 8.10449C9.11211 8.22624 8.95801 8.47494 8.95801 8.74707V9.16699C8.95765 9.51187 8.67797 9.79199 8.33301 9.79199C7.98805 9.79199 7.70836 9.51187 7.70801 9.16699V8.74707C7.70801 8.00158 8.12921 7.31986 8.7959 6.98633C9.4741 6.64723 9.23287 5.625 8.47461 5.625H8.33301C8.03099 5.625 7.77899 5.83923 7.7207 6.12402L7.69531 6.37598C7.6369 6.66061 7.38492 6.875 7.08301 6.875C6.73794 6.87499 6.45819 6.59502 6.45801 6.25C6.45801 5.21447 7.29748 4.37501 8.33301 4.375H8.47461Z" fill="#fff"/></svg>
+      </button>
+      <div class="help-tip" id="helpTip"><strong>Why we ask this.</strong> These answers help us verify your identity and meet UK regulatory requirements before you can trade. Your responses are encrypted and reviewed only for compliance purposes.</div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <span class="badge">Part 1 of 3</span>
+      <h1>Your financial background</h1>
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Questions -->
+    <div class="questions" id="questions"></div>
+
+    <!-- Submit -->
+    <div class="submit-bar">
+      <button class="submit-btn" id="submitBtn"><span class="submit-label">Submit</span></button>
+      <div class="home-indicator"></div>
+    </div>
+
+  </div>
+</div>
+
+<p class="proto-note">Prototype · tap an answer to advance</p>
+<p class="demo-status" id="demoStatus">Press <strong>D</strong> to auto-play once, <strong>L</strong> to loop (for screen recording — no cursor)</p>
+
+<script>
+  const QUESTIONS = [
+    {
+      text: 'What is your expected annual transaction volume (in GBP)?',
+      options: [
+        { label: '0-20,000' },
+        { label: '20,001-40,000' },
+        { label: '40,001-60,000' },
+        { label: '60,001-80,000' },
+        { label: '80,001-100,000' },
+        { label: 'Over 100,000' },
+      ],
+    },
+    {
+      text: 'What is your annual income (in GBP)?',
+      options: [
+        { label: '0-20,000' },
+        { label: '20,001-40,000' },
+        { label: '40,001-60,000' },
+        { label: '60,001-80,000' },
+        { label: '80,001-100,000' },
+        { label: 'Over 100,000' },
+      ],
+    },
+    {
+      text: 'What is your employment status?',
+      options: [
+        { label: 'Employed' },
+        { label: 'Self-employed' },
+        { label: 'Student' },
+        { label: 'Pensioner' },
+        { label: 'Unemployed' },
+      ],
+    },
+    {
+      text: 'Which of the following best describes your experience with trading crypto assets?',
+      options: [
+        { label: 'Very Experienced', desc: 'I have traded crypto assets many times already' },
+        { label: 'Some Experience', desc: 'I have traded crypto assets on one or more occasions already' },
+        { label: 'No Experience', desc: 'I have never traded crypto assets before but I do believe I know enough about them to start trading now' },
+      ],
+    },
+  ];
+
+  const answers = new Array(QUESTIONS.length).fill(null);
+  let editIndex = null; // an already-answered question re-opened for editing
+
+  const questionsEl = document.getElementById('questions');
+  const progressEl = document.getElementById('progressBar');
+  const submitBtn = document.getElementById('submitBtn');
+
+  const chevronSvg = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 12L10 7L15 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function firstUnanswered() {
+    return answers.findIndex(a => a === null);
+  }
+
+  // Build the DOM once. Elements persist across interactions so CSS
+  // transitions (height, opacity, transform) actually have something
+  // to animate between — no more innerHTML wipe-and-redraw per click.
+  function buildProgress() {
+    progressEl.innerHTML = '<div class="progress-fill"></div>';
+  }
+
+  function buildQuestions() {
+    questionsEl.innerHTML = QUESTIONS.map((q, i) => {
+      const optionsHtml = q.options.map((opt, oi) => `
+        <button class="option" data-qi="${i}" data-oi="${oi}">
+          <span class="option-text">
+            <span class="option-label">${opt.label}</span>
+            ${opt.desc ? `<span class="option-desc">${opt.desc}</span>` : ''}
+          </span>
+          <span class="radio">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 1.5C17.2467 1.5 21.5 5.7533 21.5 11C21.5 16.2467 17.2467 20.5 12 20.5C6.7533 20.5 2.5 16.2467 2.5 11C2.5 5.7533 6.7533 1.5 12 1.5Z" stroke="#5D606F"/>
+              <circle class="radio-dot" cx="12" cy="11" r="6" fill="#92d1ff"/>
+            </svg>
+          </span>
+        </button>`).join('');
+
+      return `
+        <div class="question" data-qi="${i}">
+          <button class="q-header" data-qi="${i}">
+            <span class="q-text">${q.text}</span>
+            <span class="q-chevron">${chevronSvg}</span>
+          </button>
+          <ul class="q-summary"></ul>
+          <div class="q-options-wrap"><div class="q-options">${optionsHtml}</div></div>
+        </div>`;
+    }).join('');
+  }
+
+  // Applies current state to the existing DOM by toggling classes/content,
+  // so transitions defined in CSS play instead of snapping instantly.
+  function update() {
+    const answeredCount = answers.filter(a => a !== null).length;
+    progressEl.querySelector('.progress-fill').style.width =
+      (answeredCount / QUESTIONS.length) * 100 + '%';
+
+    const nextOpen = firstUnanswered();
+
+    QUESTIONS.forEach((q, i) => {
+      const qEl = questionsEl.querySelector(`.question[data-qi="${i}"]`);
+      const answer = answers[i];
+      const isAnswered = answer !== null;
+      const isOpen = editIndex === i || (editIndex === null && !isAnswered && i === nextOpen);
+      const isLocked = !isOpen && !isAnswered && i !== nextOpen;
+
+      qEl.classList.toggle('open', isOpen);
+      qEl.classList.toggle('answered', isAnswered);
+      qEl.classList.toggle('locked', isLocked);
+      qEl.querySelector('.q-header').disabled = isLocked;
+
+      qEl.querySelectorAll('.option').forEach(optEl => {
+        const oi = Number(optEl.dataset.oi);
+        optEl.classList.toggle('selected', answer === oi);
+      });
+
+      qEl.querySelector('.q-summary').innerHTML = isAnswered
+        ? `<li>${q.options[answer].label}</li>`
+        : '';
+
+      const wrap = qEl.querySelector('.q-options-wrap');
+      wrap.style.maxHeight = isOpen ? wrap.scrollHeight + 'px' : '0px';
+    });
+
+    const allAnswered = answers.every(a => a !== null);
+    submitBtn.classList.toggle('enabled', allAnswered);
+  }
+
+  questionsEl.addEventListener('click', (e) => {
+    const optBtn = e.target.closest('.option');
+    if (optBtn) {
+      const qi = Number(optBtn.dataset.qi);
+      const oi = Number(optBtn.dataset.oi);
+      answers[qi] = oi;
+      editIndex = null;
+      update();
+      return;
+    }
+    const headerBtn = e.target.closest('.q-header');
+    if (headerBtn && !headerBtn.disabled) {
+      const qi = Number(headerBtn.dataset.qi);
+      if (answers[qi] !== null) {
+        editIndex = editIndex === qi ? null : qi;
+        update();
+      }
+    }
+  });
+
+  const helpBtn = document.getElementById('helpBtn');
+  const helpTip = document.getElementById('helpTip');
+  helpBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    helpTip.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!helpTip.contains(e.target) && e.target !== helpBtn) {
+      helpTip.classList.remove('open');
+    }
+  });
+
+  buildProgress();
+  buildQuestions();
+  update();
+
+  // ── DEMO MODE (for screen recording) ──────────────────────────────
+  // Drives the exact same .click() calls a real user would trigger, so
+  // every existing animation (accordion, radio pop, checkmark draw-in)
+  // plays normally — but since no real mouse ever moves, no cursor
+  // shows up in a recording. Press D to play once, L to loop, Esc to
+  // stop. Also triggerable via URL: ?autoplay=1 or ?autoplay=loop.
+  const demoStatusEl = document.getElementById('demoStatus');
+  const DEMO_ANSWERS = [1, 2, 0, 1]; // option index to pick per question, in order
+  const DEFAULT_STATUS = 'Press <strong>D</strong> to auto-play once, <strong>L</strong> to loop (for screen recording — no cursor)';
+  let demoActive = false;
+  let demoStopRequested = false;
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  function setDemoStatus(html) {
+    demoStatusEl.innerHTML = html;
+  }
+
+  function resetForDemo() {
+    answers.fill(null);
+    editIndex = null;
+    buildQuestions();
+    update();
+  }
+
+  async function runDemo(loop) {
+    do {
+      resetForDemo();
+      await sleep(700);
+
+      for (let qi = 0; qi < QUESTIONS.length && !demoStopRequested; qi++) {
+        const oi = DEMO_ANSWERS[qi];
+        const optionEl = questionsEl.querySelector(`.option[data-qi="${qi}"][data-oi="${oi}"]`);
+        await sleep(450); // let the accordion open animation settle first
+        optionEl.classList.add('demo-hover');
+        await sleep(700); // hold the hover state so it reads clearly before the click
+        optionEl.classList.remove('demo-hover');
+        optionEl.click();
+        await sleep(750); // let the selection + collapse animation play out
+      }
+      if (demoStopRequested) break;
+
+      await sleep(500);
+      submitBtn.classList.add('demo-press');
+      setDemoStatus('Demo playing — press <strong>Esc</strong> to stop');
+      await sleep(140);
+      submitBtn.classList.remove('demo-press');
+      await sleep(2500);
+
+      if (loop && !demoStopRequested) {
+        setDemoStatus('Looping — press <strong>Esc</strong> to stop');
+        await sleep(1200);
+      }
+    } while (loop && !demoStopRequested);
+  }
+
+  async function startDemoCountdown(loop) {
+    demoActive = true;
+    demoStopRequested = false;
+    for (let n = 3; n > 0 && !demoStopRequested; n--) {
+      setDemoStatus(`Starting in <strong>${n}</strong>… move your cursor away now`);
+      await sleep(1000);
+    }
+    if (!demoStopRequested) await runDemo(loop);
+    demoActive = false;
+    setDemoStatus(DEFAULT_STATUS);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && demoActive) {
+      demoStopRequested = true;
+      return;
+    }
+    if (demoActive) return;
+    if (e.key === 'd' || e.key === 'D') startDemoCountdown(false);
+    else if (e.key === 'l' || e.key === 'L') startDemoCountdown(true);
+  });
+
+  const demoParam = new URLSearchParams(location.search).get('autoplay');
+  if (demoParam === '1') startDemoCountdown(false);
+  else if (demoParam === 'loop') startDemoCountdown(true);
+</script>
+
+</body>
+</html>

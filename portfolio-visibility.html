@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Improving Portfolio Visibility for Active Traders — Cheryl Kwan</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── CASE STUDY PAGE SPECIFIC — LIGHT / MONOCHROME TEMPLATE ── */
+  :root { --max-w: 954px; }
+
+  body { background: #ffffff; }
+
+  /* nav — always black text, page is white top to bottom */
+  .nav-logo,
+  .nav-links a { color: #000000 !important; }
+  .nav-links a::after { background: #000000; }
+  nav.scrolled {
+    background: rgba(255, 255, 255, .88);
+  }
+  nav.scrolled .nav-logo,
+  nav.scrolled .nav-links a { color: #000000 !important; }
+  nav.scrolled::after {
+    background: linear-gradient(to bottom, rgba(255,255,255,.35) 0%, rgba(255,255,255,.12) 45%, transparent 100%);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 180px var(--pad) 64px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #000000;
+    opacity: .5;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: opacity .2s, gap .2s;
+  }
+  .back-link:hover { opacity: 1; gap: 12px; }
+
+  .hero-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 300;
+    letter-spacing: 0;
+    line-height: 1.08;
+    color: #000000;
+    max-width: 1000px;
+    opacity: 0;
+    animation: fadeUp .9s .15s forwards;
+  }
+
+  /* ── LAYOUT — sticky side nav + content column ── */
+  .cs-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 64px;
+    padding: 0 var(--pad) 120px;
+  }
+
+  .cs-sidenav {
+    position: sticky;
+    top: 140px;
+    flex: 0 0 260px;
+    width: 260px;
+  }
+
+  .toc {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .toc-link {
+    font-family: 'Ghost', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.16px;
+    color: #000000;
+    text-decoration: none;
+    opacity: .4;
+    transition: opacity .25s;
+  }
+
+  .toc-link:hover { opacity: .7; }
+  .toc-link.active { opacity: 1; }
+
+  .cs-content {
+    flex: 1;
+    min-width: 0;
+    max-width: var(--max-w);
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  .cs-content .section[id] { scroll-margin-top: 140px; }
+
+  /* ── LABELS ── */
+  .label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  /* ── STATEMENT (large heading) ── */
+  .statement {
+    font-family: 'Ghost', sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: 0.4px;
+    color: #000000;
+    margin-bottom: 24px;
+  }
+
+  /* ── BODY ── */
+  .body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .body + .body { margin-top: 16px; }
+  .body strong { font-weight: 600; color: #000000; }
+
+  /* ── BULLET LIST ── */
+  .bullet-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .bullet-list li {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+    padding-left: 28px;
+    position: relative;
+  }
+
+  .bullet-list li::before {
+    content: '•';
+    position: absolute; left: 0;
+    color: #000000;
+  }
+
+  /* ── NUMBERED LIST ── */
+  .numbered-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .numbered-list li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 0 12px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  .numbered-list .num {
+    font-weight: 600;
+    color: #000000;
+  }
+
+  /* ── TEXT COLUMNS (Key Learnings) ── */
+  .text-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 16px;
+  }
+
+  .text-col-heading {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 30px;
+    min-height: 60px;
+    color: #000000;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .text-col-body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 22px;
+    color: #000000;
+  }
+
+  /* ── VISUAL PLACEHOLDER ── */
+  .visual {
+    width: 100%;
+    height: 412px;
+    background: rgba(217, 217, 217, 0.31);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .visual span {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.28px;
+    text-transform: uppercase;
+    color: #000000;
+  }
+
+  /* ── METADATA ROW ── */
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .meta-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .meta-value {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    color: #000000;
+  }
+
+  /* ── NEXT PROJECT ── */
+  .next-project {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    padding: 72px var(--pad);
+    display: flex; justify-content: space-between; align-items: center;
+    text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .next-project::before {
+    content: ''; position: absolute; inset: 0;
+    background: #000000; transform: scaleX(0); transform-origin: left;
+    transition: transform .5s cubic-bezier(.16,1,.3,1); z-index: 0;
+  }
+  .next-project:hover::before { transform: scaleX(1); }
+  .next-project > * { position: relative; z-index: 1; }
+  .next-label {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #000000; opacity: .5; margin-bottom: 12px;
+    transition: color .3s;
+  }
+  .next-title {
+    font-family: 'Ghost', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #000000;
+    transition: color .3s;
+  }
+  .next-arrow {
+    font-size: 28px; color: #000000;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), color .3s;
+  }
+  .next-project:hover .next-label,
+  .next-project:hover .next-title,
+  .next-project:hover .next-arrow { color: #ffffff; }
+  .next-project:hover .next-arrow { transform: translateX(12px); }
+
+  /* ── FOOTER ── */
+  footer { border-top: 1px solid rgba(0, 0, 0, .1); }
+  .footer-text {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    color: #000000;
+    opacity: .5;
+  }
+
+  @media (max-width: 900px) {
+    .cs-sidenav { display: none; }
+    .meta-row { grid-template-columns: 1fr 1fr; }
+    .text-cols { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 130px var(--pad) 48px; }
+    .cs-layout { padding: 0 var(--pad) 80px; gap: 32px; }
+    .meta-row { grid-template-columns: 1fr; gap: 24px; }
+    .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
+    .visual { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="portfolio.html" class="nav-logo">Cheryl_Kwan<sup>™</sup></a>
+  <ul class="nav-links">
+    <li><a href="portfolio.html#work">Work</a></li>
+    <li><a href="portfolio.html#about">About</a></li>
+    <li><a href="inspirations.html">Inspirations</a></li>
+    <li><a href="portfolio.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a href="portfolio.html#work" class="back-link">← Back</a>
+  <h1 class="hero-title">Improving portfolio visibility for active traders</h1>
+</section>
+
+<!-- ════════════════════════════════════════
+     CONTENT — sticky section nav + blocks
+     ════════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <aside class="cs-sidenav">
+    <div class="toc">
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#challenge" class="toc-link">Challenge</a>
+      <a href="#workshop" class="toc-link">Team workshop</a>
+      <a href="#constraint" class="toc-link">Working within constraints</a>
+      <a href="#product-offerings" class="toc-link">Surfacing product offerings</a>
+      <a href="#positions-history" class="toc-link">Consolidating positions &amp; history</a>
+      <a href="#regional-modules" class="toc-link">Modularizing by region</a>
+      <a href="#learnings" class="toc-link">Key learnings</a>
+      <a href="#outcome" class="toc-link">Outcome</a>
+    </div>
+  </aside>
+
+  <div class="cs-content">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="section reveal" id="overview">
+      <span class="label">Overview</span>
+      <p class="body">The Crypto.com Exchange App's wallet tab hadn't been updated since 2021. As trading behaviours evolved and the product expanded, the tab struggled to keep up — users had no visibility into PnL, no easy access to their positions, and no sense of the full range of products available to them. I redesigned it from the ground up to give traders the clarity and confidence they needed to make better decisions.</p>
+    </div>
+
+    <!-- ── METADATA ── -->
+    <div class="meta-row reveal">
+      <div>
+        <span class="meta-label">Role</span>
+        <div class="meta-value">Product Designer</div>
+      </div>
+      <div>
+        <span class="meta-label">Involvement</span>
+        <div class="meta-value">Research<br>Information Architecture<br>User Flow<br>UX Design</div>
+      </div>
+      <div>
+        <span class="meta-label">Timeline</span>
+        <div class="meta-value">Jul–Sep 2024</div>
+      </div>
+    </div>
+
+    <!-- ── CHALLENGE ── -->
+    <div class="section reveal" id="challenge">
+      <span class="label">Challenge</span>
+      <p class="statement">How might we give active traders a clearer, more actionable view of their portfolio, with less friction accessing positions and transaction history?</p>
+      <p class="body">The original wallet tab, built in 2021, served a simpler product at a simpler time. By the time I began this redesign, it was showing its age:</p>
+      <ul class="bullet-list">
+        <li>Tab items were grouped inconsistently, with no clear hierarchy</li>
+        <li>There was no dedicated space to highlight product offerings</li>
+        <li>Key trading data was either missing or hard to find</li>
+        <li>The overall structure was too basic to support the decisions traders were trying to make</li>
+      </ul>
+      <p class="body" style="margin-top:24px;">Users weren't lacking the data — the product just wasn't surfacing it in a way that was useful.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+    <!-- ── TEAM WORKSHOP ── -->
+    <div class="section reveal" id="workshop">
+      <span class="label">Team workshop</span>
+      <p class="body">I ran a workshop to align the team on where the existing wallet tab fell short. Four pain points came out of that process, and became the foundation for every design decision that followed:</p>
+      <ul class="numbered-list">
+        <li><span class="num">01</span><span>Insufficient data and visual representation of the portfolio's performance</span></li>
+        <li><span class="num">02</span><span>Lack of visibility into stats such as PnL and daily changes</span></li>
+        <li><span class="num">03</span><span>Absence of token-specific details, including token cost and average price</span></li>
+        <li><span class="num">04</span><span>Inability to view PnL across all product features</span></li>
+      </ul>
+    </div>
+
+    <!-- ── CONSTRAINT ── -->
+    <div class="section reveal" id="constraint">
+      <span class="label">Working within constraints</span>
+      <p class="body">With limited engineering resources, I prioritised solutions that reused existing data and components, presenting them in a more meaningful way rather than building net-new infrastructure.</p>
+      <p class="body">I analysed two key competitors — Binance and Kraken — to understand how leading exchanges approached wallet-level information architecture. No single competitor had a complete solution, but collectively they pointed to a clear industry direction: the wallet tab should be a hub for portfolio insight, not just a balance summary. Kraken offered the most complete experience among those I studied, while Binance had stronger cross-sell integration but lacked transaction visibility. Crypto.com Exchange App trailed on all fronts — which represented a clear opportunity to close the gap while driving cross-sell through existing product offerings in a way competitors hadn't fully explored.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+    <!-- ── ISSUE 1: PRODUCT OFFERINGS ── -->
+    <div class="section reveal" id="product-offerings">
+      <span class="label">Surfacing product offerings</span>
+      <p class="statement">There was no space in the wallet tab to highlight Crypto.com Exchange App's product offerings, so I introduced a section combining product performance data with a discovery path into unexplored products.</p>
+      <p class="body">I introduced a new section to the wallet tab that highlights Crypto.com Exchange App's product offerings alongside key performance data, including PnL and daily changes. For users already engaged with a product, it provides at-a-glance insight. For those who haven't explored it yet, it serves as a natural entry point to learn more.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+    <!-- ── ISSUE 2: POSITIONS & HISTORY ── -->
+    <div class="section reveal" id="positions-history">
+      <span class="label">Consolidating positions &amp; history</span>
+      <p class="statement">Positions were buried within the trading UI and transaction history was hard to find, so I brought both into the wallet tab in one place.</p>
+      <p class="body">Based on user feedback, this fragmentation made it hard to get a complete picture while actively trading. I brought both into the wallet tab, giving users everything they needed in one place without interrupting their trading flow.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+    <!-- ── ISSUE 3: REGIONAL MODULES ── -->
+    <div class="section reveal" id="regional-modules">
+      <span class="label">Modularizing by region</span>
+      <p class="statement">Product availability varied by region but the tab presented one fixed structure to everyone, so I restructured it into modules that could be configured independently by region.</p>
+      <p class="body">Once I understood the extent of regional variation in product availability — some regions didn't have access to certain products, like Trading Bots — I recognised the wallet tab couldn't keep treating every user the same. I restructured the wallet tab into distinct modules, separating Trading Bots from Balances so each could be configured independently by region. This gave the flexibility to serve users accurately regardless of where they were, while keeping the overall experience consistent.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+    <!-- ── KEY LEARNINGS ── -->
+    <div class="section reveal" id="learnings">
+      <span class="label">Key learnings</span>
+      <div class="text-cols">
+        <div>
+          <span class="text-col-heading">Constraints are a design tool</span>
+          <p class="text-col-body">The restrictions I was working within — limited engineering resources, regional variation in product availability, and an existing component library — pushed me toward more creative, deliberate solutions. My strongest ideas came from reframing what already existed rather than building something new.</p>
+        </div>
+        <div>
+          <span class="text-col-heading">Raise complexity early</span>
+          <p class="text-col-body">I didn't anticipate the extent of regional variation until I was already deep into the design process. It's a pattern I now actively work against — I push to surface technical and geo constraints as design requirements at the start of a project, not as discoveries midway through.</p>
+        </div>
+        <div>
+          <span class="text-col-heading">Redesigns are rarely linear</span>
+          <p class="text-col-body">This project involved more back-and-forth than almost anything I'd worked on before. Navigating competing constraints while still delivering something meaningful taught me how to stay anchored to the core problem when everything else around it kept shifting.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OUTCOME ── -->
+    <div class="section reveal" id="outcome">
+      <span class="label">Outcome</span>
+      <p class="body">The redesigned wallet tab launched in late 2024, consolidating portfolio performance, product discovery, and transaction history into a single, cohesive experience. While post-launch analytics were owned by the product team, internal feedback highlighted the improved clarity of the PnL section and the value of bringing positions into the wallet tab.</p>
+      <p class="body">This project also laid the groundwork for a larger, ongoing redesign of the full Crypto.com Exchange App — informed by what I learned here about user needs and the limitations of the existing design system.</p>
+      <div class="visual reveal"><span>Visual</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── NEXT PROJECT ── -->
+<a href="browser-extension.html" class="next-project reveal">
+  <div>
+    <div class="next-label">Next Project</div>
+    <div class="next-title">Crypto.com Browser Extension</div>
+  </div>
+  <span class="next-arrow">→</span>
+</a>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <span class="footer-text">Currently: Hong Kong</span>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function tick() {
+    cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Section nav — highlight active link on scroll
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = Array.from(tocLinks).map(link => document.querySelector(link.getAttribute('href')));
+  const tocIo = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const idx = sections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting) {
+        tocLinks.forEach(l => l.classList.remove('active'));
+        tocLinks[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => { if (s) tocIo.observe(s); });
+</script>
+
+</body>
+</html>
