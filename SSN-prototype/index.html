@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SSN Input Prototype — Cheryl Kwan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #f4f4f2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  .proto-header { width: 100%; max-width: 900px; padding: 48px 24px 32px; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase;
+    color: #000; opacity: .5; text-decoration: none; margin-bottom: 24px;
+    transition: opacity .2s, gap .2s;
+  }
+  .back-link:hover { opacity: 1; gap: 12px; }
+  .proto-title { font-weight: 600; font-size: clamp(26px, 4vw, 36px); color: #000; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .proto-sub { font-weight: 400; font-size: 15px; line-height: 22px; color: rgba(0,0,0,.6); max-width: 620px; margin: 0; }
+
+  .proto-stage { width: 100%; display: flex; justify-content: center; padding: 0 24px 64px; }
+  .proto-note { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(0,0,0,.35); margin: 20px 0 8px; text-align: center; }
+  .demo-status { font-size: 13px; color: rgba(0,0,0,.45); margin: 0 0 64px; text-align: center; min-height: 18px; }
+  .demo-status strong { color: #000; font-weight: 600; }
+
+  /* ── PHONE FRAME ── */
+  .phone {
+    width: 402px;
+    height: 874px;
+    max-width: 100%;
+    background: linear-gradient(180deg, #0d0d10 0%, #09090a 45%);
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.28), 0 4px 16px rgba(0,0,0,.15);
+    color: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    animation: phoneIn .5s cubic-bezier(.16,1,.3,1);
+  }
+  .phone::after {
+    content: ''; position: absolute; inset: 0; border-radius: 40px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 0 0 1px rgba(255,255,255,.05);
+    pointer-events: none;
+  }
+  @keyframes phoneIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── STATUS BAR ── */
+  .status-bar { height: 60px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px 12px; position: relative; }
+  .status-time { font-family: -apple-system, 'SF Pro Text', 'Inter', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: -0.4px; }
+  .dynamic-island { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 124px; height: 36px; border-radius: 18px; background: #000; pointer-events: none; }
+  .status-icons { display: flex; align-items: center; gap: 7.33px; }
+  .status-icons svg { display: block; }
+  .status-battery { position: relative; width: 27.333px; height: 13.667px; }
+  .status-battery .battery-fill { position: absolute; left: 2px; top: 50%; transform: translateY(-50%); width: 21px; height: 9px; border-radius: 2.667px; background: #fff; }
+  .status-battery svg { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+
+  /* ── TOP NAV ── */
+  .top-nav { position: sticky; top: 0; z-index: 5; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px 12px; background: linear-gradient(180deg, #0d0d10 0%, #09090a 45%); }
+  .nav-spacer { width: 44px; height: 44px; }
+  .nav-btn {
+    width: 44px; height: 44px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+    position: relative; isolation: isolate; background: rgba(123,125,142,0.16);
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: none; cursor: pointer; color: #fff; padding: 0; text-decoration: none;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.18), 0 4px 14px rgba(0,0,0,0.14);
+    transition: box-shadow .25s ease, transform .15s ease;
+  }
+  .nav-btn::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: rgba(255,255,255,0.07); filter: blur(4px); mix-blend-mode: plus-lighter; pointer-events: none; }
+  .nav-btn::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: inset 2px 2px 1.5px -1.5px rgba(255,255,255,0.95), inset 1.5px 2px 1.5px -1px rgba(255,255,255,0.7), inset -1.5px -1.5px 1px -1.5px rgba(255,255,255,0.5), inset 0 0 0 1px rgba(255,255,255,0.14);
+    mix-blend-mode: plus-lighter; pointer-events: none;
+  }
+  .nav-btn > * { position: relative; z-index: 1; }
+  .nav-btn:hover { box-shadow: 0 1px 8px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.18); }
+  .nav-btn:active { transform: scale(.92); }
+
+  /* ── HELP TOOLTIP ── */
+  .help-tip {
+    position: absolute; top: 106px; right: 16px; width: 240px; background: #1a1a1d;
+    border: 1px solid rgba(123,125,142,0.32); border-radius: 10px; padding: 14px;
+    font-size: 12px; line-height: 18px; color: #d5d6de; z-index: 25;
+    opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease; box-shadow: 0 12px 24px rgba(0,0,0,.4);
+  }
+  .help-tip::before {
+    content: ''; position: absolute; top: -6px; right: 20px; width: 11px; height: 11px; background: #1a1a1d;
+    border-left: 1px solid rgba(123,125,142,0.32); border-top: 1px solid rgba(123,125,142,0.32); transform: rotate(45deg);
+  }
+  .help-tip.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .help-tip strong { color: #fff; font-weight: 600; }
+
+  /* ── HEADER ── */
+  .header-block { flex-shrink: 0; padding: 24px 16px; }
+  .header-block h1 { font-size: 24px; font-weight: 400; line-height: 32px; letter-spacing: 0; margin: 0 0 8px; }
+  .header-block p { font-size: 14px; line-height: 22px; color: #9597a8; margin: 0; }
+
+  /* ── SSN FIELD ── */
+  .ssn-field-wrap { flex-shrink: 0; padding: 0 16px; }
+  .ssn-field {
+    width: 100%; height: 52px; background: rgba(255,255,255,0.03); border: 1px solid rgba(177,178,191,0.5);
+    border-radius: 8px; padding: 0 14px; font-family: inherit; font-size: 14px; letter-spacing: 1.5px;
+    color: #fff; outline: none; transition: border-color .15s ease, background .15s ease;
+  }
+  .ssn-field::placeholder { color: #5f6070; letter-spacing: 1.5px; }
+  .ssn-field:focus { border-color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); }
+
+  /* ── SECURITY ROW ── */
+  .security-row { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 16px 16px 0; }
+  .security-row span { font-size: 13px; line-height: 18px; color: #9597a8; }
+
+  .flex-spacer { flex: 1 1 auto; min-height: 0; }
+
+  /* ── CONTINUE BUTTON ── */
+  .continue-wrap { flex-shrink: 0; padding: 14px 16px 10px; background: #050505; border-radius: 24px 24px 0 0; }
+  .submit-btn {
+    width: 100%; height: 44px; background: #92d1ff; color: #09090a; border: none; border-radius: 8px;
+    font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; opacity: .5; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .25s ease, transform .15s ease, background .2s ease;
+  }
+  .submit-btn.enabled { opacity: 1; pointer-events: auto; }
+  .submit-btn.enabled:active, .submit-btn.demo-press { transform: scale(.98); }
+
+  /* ── NUMERIC KEYPAD ── */
+  .keypad-area {
+    flex-shrink: 0; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 6px 8px 4px; background: #050505;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  }
+  .keypad { display: grid; grid-template-columns: repeat(3, 125px); gap: 9px; justify-content: center; }
+  .keypad-key {
+    width: 125px; height: 50px; border-radius: 16px; background: #565658; border: none; color: #fff;
+    font-family: inherit; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+    transition: background .12s ease;
+  }
+  .keypad-key .digit { font-size: 27px; font-weight: 400; line-height: 1; }
+  .keypad-key .letters { font-size: 9px; font-weight: 600; letter-spacing: 1px; color: #d5d6de; line-height: 1; }
+  .keypad-key:hover { background: #626264; }
+  .keypad-key:active, .keypad-key.demo-press { background: #6c6c6e; }
+  .keypad-key.empty { background: none; box-shadow: none; cursor: default; pointer-events: none; }
+  .keypad-key.backspace { background: none; font-size: 20px; color: #fff; }
+  .keypad-key.backspace svg { display: block; }
+
+  .end-only { flex-shrink: 0; display: flex; justify-content: center; padding: 8px 0 14px; background: #050505; }
+  .home-indicator { width: 134px; height: 5px; border-radius: 100px; background: #fff; }
+
+  @media (max-width: 480px) { .proto-stage { padding: 0 12px 48px; } }
+</style>
+</head>
+<body>
+
+<div class="proto-header">
+  <a href="../portfolio.html" class="back-link">← Back to portfolio</a>
+  <h1 class="proto-title">SSN Input Prototype</h1>
+  <p class="proto-sub">Clickable prototype of an SSN entry screen: type on the device's own numeric keypad or your keyboard — the field auto-formats into XXX-XX-XXXX as you go.</p>
+</div>
+
+<div class="proto-stage">
+  <div class="phone" id="phone">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="dynamic-island"></div>
+      <div class="status-icons">
+        <svg width="19.3333" height="12.3333" viewBox="0 0 19.3333 12.3333" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M17 0C16.4477 0 16 0.447715 16 0.999999V11.3333C16 11.8856 16.4477 12.3333 17 12.3333H18.3333C18.8856 12.3333 19.3333 11.8856 19.3333 11.3333V1C19.3333 0.447715 18.8856 0 18.3333 0H17Z" fill="#fff"/><path d="M10.6667 3.66667C10.6667 3.11438 11.1144 2.66667 11.6667 2.66667H13C13.5523 2.66667 14 3.11438 14 3.66667V11.3333C14 11.8856 13.5523 12.3333 13 12.3333H11.6667C11.1144 12.3333 10.6667 11.8856 10.6667 11.3333V3.66667Z" fill="#fff"/><path d="M6.33333 5.33333C5.78105 5.33333 5.33333 5.78105 5.33333 6.33333V11.3333C5.33333 11.8856 5.78105 12.3333 6.33333 12.3333H7.66667C8.21895 12.3333 8.66667 11.8856 8.66667 11.3333V6.33333C8.66667 5.78105 8.21895 5.33333 7.66667 5.33333H6.33333Z" fill="#fff"/><path d="M1 7.66667C0.447715 7.66667 0 8.11438 0 8.66667V11.3333C0 11.8856 0.447715 12.3333 0.999999 12.3333H2.33333C2.88562 12.3333 3.33333 11.8856 3.33333 11.3333V8.66667C3.33333 8.11438 2.88562 7.66667 2.33333 7.66667H1Z" fill="#fff"/></g></svg>
+        <svg width="17" height="12.3333" viewBox="0 0 17 12.3333" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.50046 2.56141C10.967 2.56152 13.3393 3.51917 15.1269 5.23644C15.2615 5.36901 15.4766 5.36734 15.6092 5.23269L16.896 3.92048C16.9631 3.85219 17.0005 3.75967 17 3.66342C16.9994 3.56716 16.9609 3.4751 16.893 3.4076C12.2011 -1.13587 4.79908 -1.13587 0.107163 3.4076C0.0391973 3.47505 0.000634479 3.56708 7.75932e-06 3.66334C-0.00061896 3.7596 0.0367421 3.85214 0.103824 3.92048L1.39096 5.23269C1.52346 5.36754 1.73878 5.36922 1.87331 5.23644C3.66116 3.51906 6.03367 2.56141 8.50046 2.56141ZM8.50049 6.8305C9.8557 6.83041 11.1626 7.3394 12.1671 8.25855C12.303 8.389 12.517 8.38617 12.6495 8.25217L13.9347 6.93997C14.0024 6.87114 14.04 6.77777 14.039 6.68074C14.038 6.58372 13.9986 6.49114 13.9296 6.42371C10.8705 3.54843 6.1331 3.54843 3.07403 6.42371C3.00493 6.49114 2.9655 6.58376 2.9646 6.68082C2.96369 6.77788 3.00138 6.87124 3.0692 6.93997L4.35412 8.25217C4.48656 8.38617 4.7006 8.389 4.83647 8.25855C5.84036 7.34 7.14617 6.83106 8.50049 6.8305ZM11.0751 9.70276C11.0771 9.80006 11.0392 9.89387 10.9705 9.96203L8.74721 12.2291C8.68203 12.2958 8.59318 12.3333 8.50047 12.3333C8.40775 12.3333 8.3189 12.2958 8.25373 12.2291L6.03008 9.96203C5.96139 9.89382 5.9236 9.79998 5.92564 9.70268C5.92767 9.60538 5.96935 9.51325 6.04084 9.44803C7.46071 8.23456 9.54023 8.23456 10.9601 9.44803C11.0315 9.5133 11.0731 9.60547 11.0751 9.70276Z" fill="#fff"/></svg>
+        <div class="status-battery">
+          <div class="battery-fill"></div>
+          <svg width="27.3333" height="13" viewBox="0 0 27.3333 13" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.4"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.5188 0H6.48123C5.56534 0 4.85217 0 4.27734 0.03922C3.69406 0.0790172 3.21655 0.160859 2.77792 0.342542C1.6753 0.799265 0.799265 1.6753 0.342542 2.77792C0.160859 3.21655 0.0790172 3.69406 0.03922 4.27734C0 4.85217 0 5.56511 0 6.481V6.51877C0 7.43467 0 8.14783 0.03922 8.72266C0.0790172 9.30594 0.160859 9.78345 0.342542 10.2221C0.799265 11.3247 1.6753 12.2007 2.77792 12.6575C3.21655 12.8391 3.69406 12.921 4.27734 12.9608C4.85221 13 5.56522 13 6.48122 13H18.5188C19.4348 13 20.1478 13 20.7227 12.9608C21.3059 12.921 21.7835 12.8391 22.2221 12.6575C23.3247 12.2007 24.2007 11.3247 24.6575 10.2221C24.8391 9.78345 24.921 9.30594 24.9608 8.72266C25 8.14779 25 7.43479 25 6.51881V6.48123C25 5.56524 25 4.85221 24.9608 4.27734C24.921 3.69406 24.8391 3.21655 24.6575 2.77792C24.2007 1.6753 23.3247 0.799265 22.2221 0.342542C21.7835 0.160859 21.3059 0.0790172 20.7227 0.03922C20.1478 0 19.4347 0 18.5188 0ZM3.16061 1.26642C3.45707 1.14362 3.81304 1.07322 4.34541 1.0369C4.88227 1.00027 5.56128 1 6.5 1H18.5C19.4387 1 20.1177 1.00027 20.6546 1.0369C21.187 1.07322 21.5429 1.14362 21.8394 1.26642C22.697 1.62165 23.3783 2.30301 23.7336 3.16061C23.8564 3.45707 23.9268 3.81304 23.9631 4.34541C23.9997 4.88227 24 5.56128 24 6.5C24 7.43872 23.9997 8.11773 23.9631 8.65459C23.9268 9.18696 23.8564 9.54293 23.7336 9.83939C23.3783 10.697 22.697 11.3783 21.8394 11.7336C21.5429 11.8564 21.187 11.9268 20.6546 11.9631C20.1177 11.9997 19.4387 12 18.5 12H6.5C5.56128 12 4.88227 11.9997 4.34541 11.9631C3.81304 11.9268 3.45707 11.8564 3.16061 11.7336C2.30301 11.3783 1.62165 10.697 1.26642 9.83939C1.14362 9.54293 1.07322 9.18696 1.0369 8.65459C1.00027 8.11773 1 7.43872 1 6.5C1 5.56128 1.00027 4.88227 1.0369 4.34541C1.07322 3.81304 1.14362 3.45707 1.26642 3.16061C1.62165 2.30301 2.30301 1.62165 3.16061 1.26642Z" fill="#fff"/><path d="M26 4.49927C26.783 4.82579 27.3333 5.59856 27.3333 6.49988C27.3333 7.4012 26.783 8.17397 26 8.50049V4.49927Z" fill="#fff"/></g></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top nav -->
+    <div class="top-nav">
+      <a href="../kyc-edd.html#problem-2" class="nav-btn" aria-label="Back">
+        <svg width="12.917" height="9.5834" viewBox="0 0 12.917 9.5834" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.34966 0.182649C4.59363 -0.0608957 4.98947 -0.0608702 5.23345 0.182649C5.47746 0.426651 5.4773 0.823318 5.23345 1.06741L2.13384 4.16702H12.292C12.6369 4.16727 12.9169 4.44715 12.917 4.79202C12.9169 5.1369 12.6369 5.41678 12.292 5.41702H2.13384L5.23345 8.51663C5.47746 8.76064 5.4773 9.15633 5.23345 9.40042C4.98936 9.64434 4.59369 9.64445 4.34966 9.40042L0.182673 5.23343C-0.0303475 5.02 -0.057088 4.69066 0.102594 4.44827L0.182673 4.34964L4.34966 0.182649Z" fill="#fff"/></svg>
+      </a>
+      <span></span>
+      <button class="nav-btn help" id="helpBtn" aria-label="Help">
+        <svg width="16.667" height="16.667" viewBox="0 0 16.667 16.667" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.33301 0C12.9351 0.000175928 16.6668 3.73089 16.667 8.33301L16.6562 8.76172C16.4331 13.1648 12.7915 16.6668 8.33301 16.667L7.9043 16.6562C3.50141 16.433 0.000170434 12.7913 0 8.33301C0.000175744 3.73089 3.73089 0.000175747 8.33301 0ZM8.33301 1.25C4.42125 1.25018 1.25018 4.42125 1.25 8.33301C1.25018 12.2448 4.42125 15.4168 8.33301 15.417C12.2448 15.4168 15.4168 12.2448 15.417 8.33301C15.4168 4.42125 12.2448 1.25018 8.33301 1.25ZM8.33301 10.833C8.79314 10.833 9.16584 11.2059 9.16602 11.666C9.16601 12.1263 8.79324 12.5 8.33301 12.5C7.87278 12.5 7.5 12.1262 7.5 11.666C7.50018 11.2059 7.87288 10.833 8.33301 10.833ZM8.47461 4.375C10.5518 4.375 11.2133 7.17543 9.35547 8.10449C9.11211 8.22624 8.95801 8.47494 8.95801 8.74707V9.16699C8.95765 9.51187 8.67797 9.79199 8.33301 9.79199C7.98805 9.79199 7.70836 9.51187 7.70801 9.16699V8.74707C7.70801 8.00158 8.12921 7.31986 8.7959 6.98633C9.4741 6.64723 9.23287 5.625 8.47461 5.625H8.33301C8.03099 5.625 7.77899 5.83923 7.7207 6.12402L7.69531 6.37598C7.6369 6.66061 7.38492 6.875 7.08301 6.875C6.73794 6.87499 6.45819 6.59502 6.45801 6.25C6.45801 5.21447 7.29748 4.37501 8.33301 4.375H8.47461Z" fill="#fff"/></svg>
+      </button>
+      <div class="help-tip" id="helpTip"><strong>Why we ask this.</strong> Your Social Security Number is required to comply with US identity-verification regulations. It's encrypted in transit and at rest, and only used for compliance checks.</div>
+    </div>
+
+    <!-- Header -->
+    <div class="header-block">
+      <h1>What is your social security number?</h1>
+      <p>Your data is used solely for verification. It is handled securely and will never be used for credit checks.</p>
+    </div>
+
+    <!-- SSN field -->
+    <div class="ssn-field-wrap">
+      <input class="ssn-field" id="ssnField" type="text" inputmode="numeric" placeholder="XXX-XX-XXXX" autocomplete="off" maxlength="11" />
+    </div>
+
+    <!-- Security row -->
+    <div class="security-row">
+      <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7 0C4.79 0 3 1.79 3 4V6H2C0.9 6 0 6.9 0 8V14C0 15.1 0.9 16 2 16H12C13.1 16 14 15.1 14 14V8C14 6.9 13.1 6 12 6H11V4C11 1.79 9.21 0 7 0ZM9 6V4C9 2.9 8.1 2 7 2C5.9 2 5 2.9 5 4V6H9ZM7 9C7.83 9 8.5 9.67 8.5 10.5C8.5 11.11 8.14 11.63 7.62 11.87L8 13.5H6L6.38 11.87C5.86 11.63 5.5 11.11 5.5 10.5C5.5 9.67 6.17 9 7 9Z" fill="#9597a8"/></svg>
+      <span>Your data is encrypted and 100% secure</span>
+    </div>
+
+    <div class="flex-spacer"></div>
+
+    <!-- Continue -->
+    <div class="continue-wrap">
+      <button class="submit-btn" id="continueBtn"><span>Continue</span></button>
+    </div>
+
+    <!-- Numeric keypad -->
+    <div class="keypad-area">
+      <div class="keypad" id="keypad"></div>
+    </div>
+
+    <div class="end-only"><div class="home-indicator"></div></div>
+
+  </div>
+</div>
+
+<p class="proto-note">Prototype · type an SSN to see it auto-format</p>
+<p class="demo-status" id="demoStatus">Press <strong>D</strong> to auto-play once, <strong>L</strong> to loop (for screen recording — no cursor)</p>
+
+<script>
+  const ssnField = document.getElementById('ssnField');
+  const continueBtn = document.getElementById('continueBtn');
+  const keypadEl = document.getElementById('keypad');
+
+  function formatSSN(digits) {
+    digits = digits.slice(0, 9);
+    const parts = [digits.slice(0, 3), digits.slice(3, 5), digits.slice(5, 9)].filter(Boolean);
+    if (digits.length <= 3) return parts[0] || '';
+    if (digits.length <= 5) return `${parts[0]}-${parts[1]}`;
+    return `${parts[0]}-${parts[1]}-${parts[2]}`;
+  }
+
+  function getDigits() {
+    return ssnField.value.replace(/\D/g, '').slice(0, 9);
+  }
+
+  function render() {
+    const digits = getDigits();
+    ssnField.value = formatSSN(digits);
+    continueBtn.classList.toggle('enabled', digits.length === 9);
+  }
+
+  function appendDigit(d) {
+    const digits = getDigits();
+    if (digits.length >= 9) return;
+    ssnField.value = formatSSN(digits + d);
+    render();
+  }
+
+  function backspace() {
+    const digits = getDigits();
+    ssnField.value = formatSSN(digits.slice(0, -1));
+    render();
+  }
+
+  ssnField.addEventListener('input', render);
+  ssnField.addEventListener('keydown', (e) => {
+    if (e.key >= '0' && e.key <= '9') return; // let native typing flow through, formatted on 'input'
+    if (e.key !== 'Backspace' && e.key !== 'Tab' && e.key !== 'Shift' &&
+        !(e.metaKey || e.ctrlKey)) e.preventDefault();
+  });
+
+  // ── numeric keypad ──
+  const KEY_LETTERS = { '2': 'ABC', '3': 'DEF', '4': 'GHI', '5': 'JKL', '6': 'MNO', '7': 'PQRS', '8': 'TUV', '9': 'WXYZ' };
+  const KEYS = ['1','2','3','4','5','6','7','8','9','','0','back'];
+  const backspaceSvg = '<svg width="26" height="19" viewBox="0 0 26 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1H22C23.1046 1 24 1.89543 24 3V16C24 17.1046 23.1046 18 22 18H8L1 9.5L8 1Z" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 6.5L17.5 12.5M17.5 6.5L11.5 12.5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  keypadEl.innerHTML = KEYS.map(k => {
+    if (k === '') return '<div class="keypad-key empty"></div>';
+    if (k === 'back') return `<button class="keypad-key backspace" type="button" data-key="back" aria-label="Delete">${backspaceSvg}</button>`;
+    const letters = KEY_LETTERS[k] ? `<span class="letters">${KEY_LETTERS[k]}</span>` : '';
+    return `<button class="keypad-key" type="button" data-key="${k}"><span class="digit">${k}</span>${letters}</button>`;
+  }).join('');
+
+  keypadEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.keypad-key');
+    if (!btn || btn.classList.contains('empty')) return;
+    const key = btn.dataset.key;
+    if (key === 'back') backspace();
+    else appendDigit(key);
+    ssnField.focus();
+  });
+
+  continueBtn.addEventListener('click', () => {
+    if (!continueBtn.classList.contains('enabled')) return;
+  });
+
+  // ── help tooltip ──
+  const helpBtn = document.getElementById('helpBtn');
+  const helpTip = document.getElementById('helpTip');
+  helpBtn.addEventListener('click', (e) => { e.stopPropagation(); helpTip.classList.toggle('open'); });
+  document.addEventListener('click', (e) => {
+    if (!helpTip.contains(e.target) && e.target !== helpBtn) helpTip.classList.remove('open');
+  });
+
+  render();
+
+  // ── DEMO MODE (for screen recording) ──────────────────────────────
+  const demoStatusEl = document.getElementById('demoStatus');
+  const DEFAULT_STATUS = 'Press <strong>D</strong> to auto-play once, <strong>L</strong> to loop (for screen recording — no cursor)';
+  const DEMO_DIGITS = '123456789';
+  let demoActive = false;
+  let demoStopRequested = false;
+
+  function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+  function setDemoStatus(html) { demoStatusEl.innerHTML = html; }
+
+  function resetForDemo() {
+    ssnField.value = '';
+    render();
+  }
+
+  async function runDemo(loop) {
+    do {
+      resetForDemo();
+      await sleep(700);
+
+      for (const d of DEMO_DIGITS) {
+        if (demoStopRequested) break;
+        const keyBtn = keypadEl.querySelector(`.keypad-key[data-key="${d}"]`);
+        keyBtn.classList.add('demo-press');
+        await sleep(160);
+        keyBtn.classList.remove('demo-press');
+        keyBtn.click();
+        await sleep(280);
+      }
+      if (demoStopRequested) break;
+
+      await sleep(500);
+      continueBtn.classList.add('demo-press');
+      setDemoStatus('Demo playing — press <strong>Esc</strong> to stop');
+      await sleep(140);
+      continueBtn.classList.remove('demo-press');
+      await sleep(2200);
+
+      if (loop && !demoStopRequested) {
+        setDemoStatus('Looping — press <strong>Esc</strong> to stop');
+        await sleep(1000);
+      }
+    } while (loop && !demoStopRequested);
+  }
+
+  async function startDemoCountdown(loop) {
+    demoActive = true;
+    demoStopRequested = false;
+    for (let n = 3; n > 0 && !demoStopRequested; n--) {
+      setDemoStatus(`Starting in <strong>${n}</strong>… move your cursor away now`);
+      await sleep(1000);
+    }
+    if (!demoStopRequested) await runDemo(loop);
+    demoActive = false;
+    setDemoStatus(DEFAULT_STATUS);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && demoActive) { demoStopRequested = true; return; }
+    if (demoActive) return;
+    if (e.key === 'd' || e.key === 'D') startDemoCountdown(false);
+    else if (e.key === 'l' || e.key === 'L') startDemoCountdown(true);
+  });
+
+  const demoParam = new URLSearchParams(location.search).get('autoplay');
+  if (demoParam === '1') startDemoCountdown(false);
+  else if (demoParam === 'loop') startDemoCountdown(true);
+</script>
+
+</body>
+</html>

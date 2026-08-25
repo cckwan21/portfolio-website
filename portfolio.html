@@ -313,6 +313,16 @@
     opacity: 0;
   }
 
+  .work-visual-backer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    border-radius: 20px;
+    background: #0a0e14;
+  }
+
   .work-tags {
     display: flex;
     gap: 16px;
@@ -528,7 +538,7 @@
 <section class="works" id="work">
   <div class="container">
     <div class="content-indent">
-      <div class="works-label reveal"><span class="works-star">✦</span> SELECTED WORKS</div>
+      <div class="works-label reveal"><span class="works-star">✦</span> SELECTED WORK</div>
       <ul class="work-list">
         <li class="work-item">
           <a href="kyc-edd.html" class="work-link" aria-label="Standardizing Cross-Region Compliance case study">
@@ -536,7 +546,11 @@
               <h3 class="work-title">01 — Standardizing Cross-Region Compliance</h3>
               <p class="work-tagline">Merging fragmented compliance flows into one consistent template.</p>
             </div>
-            <div class="work-visual"><span>Visual</span></div>
+            <div class="work-visual work-visual--video">
+              <img src="images/edd-thumbnail-bg.jpg" alt="" />
+              <div class="work-visual-backer" style="aspect-ratio: 642 / 1398;"></div>
+              <video class="work-visual-screen" src="images/edd-prototype.mp4" muted playsinline preload="metadata"></video>
+            </div>
             <div class="work-tags">
               <span class="work-tag">2026</span>
               <span class="work-tag">Onboarding</span>
@@ -551,7 +565,8 @@
             </div>
             <div class="work-visual work-visual--video">
               <img src="images/deposit-thumbnail-bg.jpg" alt="" />
-              <video class="work-visual-screen" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
+              <div class="work-visual-backer" style="aspect-ratio: 662 / 1348; border-radius: 36px;"></div>
+              <video class="work-visual-screen" style="border-radius: 36px;" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
             <div class="work-tags">
               <span class="work-tag">2026</span>
@@ -565,7 +580,11 @@
               <h3 class="work-title">03 — Portfolio Visibility for Active Traders</h3>
               <p class="work-tagline">Giving traders clarity into every position.</p>
             </div>
-            <div class="work-visual"><span>Visual</span></div>
+            <div class="work-visual work-visual--video">
+              <img src="images/wallet-tab-thumbnail-bg.jpg" alt="" />
+              <div class="work-visual-backer" style="aspect-ratio: 764 / 1528; border-radius: 44px;"></div>
+              <video class="work-visual-screen" style="border-radius: 44px;" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
+            </div>
             <div class="work-tags">
               <span class="work-tag">2024</span>
               <span class="work-tag">Trading</span>

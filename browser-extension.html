@@ -140,6 +140,51 @@
   }
   .mini-heading:first-child { margin-top: 0; }
 
+  /* ── COMPARISON TABLE ── */
+  .comparison-table {
+    width: 100%;
+    margin-top: 40px;
+    background: #FFFFFF;
+    border: 1.5px solid #D9D9D9;
+    border-radius: 20px;
+    padding: 32px 40px;
+    overflow-x: auto;
+  }
+  .comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+  }
+  .comparison-table th {
+    text-align: left;
+    vertical-align: top;
+    font-weight: 700;
+    font-size: 16px;
+    color: #000000;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+  }
+  .comparison-table th:not(:first-child),
+  .comparison-table td:not(:first-child) {
+    text-align: center;
+  }
+  .comparison-table td {
+    font-weight: 300;
+    font-size: 16px;
+    color: #000000;
+    padding: 20px 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    white-space: normal;
+  }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table td:first-child,
+  .comparison-table th:first-child { padding-left: 0; }
+  .comparison-table .icon-yes,
+  .comparison-table .icon-no {
+    font-size: 16px;
+    line-height: 1;
+  }
+
   /* ── BODY ── */
   .body {
     font-family: 'Lausanne', Helvetica, sans-serif;
@@ -253,6 +298,97 @@
     text-transform: uppercase;
     color: #000000;
   }
+
+  .visual--video { position: relative; overflow: hidden; }
+  .visual--video img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .visual-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    background: #000;
+    transition: opacity 0.4s ease;
+  }
+  .visual-screen.fading { opacity: 0; }
+
+  .visual-backer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    border-radius: 20px;
+    background: #0a0e14;
+  }
+
+  /* ── CAROUSEL ── */
+  .carousel { position: relative; margin-top: 40px; }
+  .carousel-caption {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000;
+    text-align: center;
+    margin-top: 16px;
+  }
+  .carousel-track {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    aspect-ratio: 2400 / 1199;
+  }
+  .carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    height: 100%;
+    transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .carousel-slide:first-child { left: 0%; }
+  .carousel-slide .visual { margin-top: 0; width: 100%; height: 100%; }
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: #000000;
+    transition: background 0.2s ease;
+    z-index: 2;
+  }
+  .carousel-nav:hover { background: #ffffff; }
+  .carousel-nav--prev { left: 16px; }
+  .carousel-nav--next { right: 16px; }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .carousel-dot.is-active { background: #000000; }
 
   /* ── METADATA ROW ── */
   .meta-row {
@@ -373,6 +509,7 @@
       <a href="#challenge" class="toc-link">Challenge</a>
       <a href="#research" class="toc-link">Research</a>
       <a href="#wallet-modes" class="toc-link">Clarifying wallet modes</a>
+      <a href="#key-flows" class="toc-link">Key flows</a>
       <a href="#learnings" class="toc-link">Key learnings</a>
       <a href="#outcome" class="toc-link">Outcome</a>
     </div>
@@ -387,6 +524,9 @@
       <p class="body">Given the popularity of wallet extensions in Web3, I led the design of the Crypto.com Wallet Extension as a one-stop-shop solution for DeFi users, building the essential foundation as the extension's first stage.</p>
       <p class="body">As the sole designer on this project, I was responsible for the overall user experience, information architecture, and visual design of the wallet — advocating for users to ensure the features implemented were both intuitive and easy to use.</p>
       <p class="body"><strong>Scope:</strong> Building the foundation of the wallet extension as the initial stage — essential wallet features only.</p>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;">
+        <img src="images/wallet-extension-thumbnail.jpg" alt="" style="width:100%; display:block;" />
+      </div>
     </div>
 
     <!-- ── METADATA ── -->
@@ -437,6 +577,72 @@
         <li><span class="num">02</span><span>Network management: edit + add new networks</span></li>
         <li><span class="num">03</span><span>dApp management: browse + disconnect dApps</span></li>
       </ul>
+
+      <p class="body" style="margin-top:32px;">I benchmarked against three established wallet extensions — Phantom, Trust Wallet, and MetaMask — to confirm which features were table stakes versus where Crypto.com's dual-mode architecture introduced complexity none of them had to solve for.</p>
+      <div class="comparison-table reveal">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Phantom</th>
+              <th>Trust Wallet</th>
+              <th>MetaMask</th>
+              <th>Crypto.com<br>Wallet Extension</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Add wallet</td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+            <tr>
+              <td>Import existing wallet</td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+            <tr>
+              <td>Select modes: Bridge &amp; Standalone</td>
+              <td><span class="icon-no">❌</span></td>
+              <td><span class="icon-no">❌</span></td>
+              <td><span class="icon-no">❌</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+            <tr>
+              <td>Send tokens</td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+            <tr>
+              <td>Receive tokens</td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+            <tr>
+              <td>Network management</td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+            <tr>
+              <td>dApp management</td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+              <td><span class="icon-yes">✅</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- ── WALLET MODES ── -->
@@ -444,7 +650,56 @@
       <span class="label">Clarifying wallet modes</span>
       <p class="statement">The wallet extension needed to support both Bridge and Standalone modes without confusing users already familiar with the legacy Bridge experience, so I gave both modes clear, distinct naming and folded explanations into onboarding.</p>
       <p class="body">I developed clear and straightforward terms for the wallet modes — Bridge mode and Standalone mode — supplemented with detailed explanations of each mode, integrated into the onboarding flow as part of the introductory screens. Users are also reminded to select their preferred mode during onboarding and again in the Settings menu.</p>
-      <div class="visual reveal"><span>Visual</span></div>
+      <p class="body">I also mapped out the onboarding flow, since introducing two distinct modes meant I needed to see how each path played out end-to-end.</p>
+      <div class="comparison-table reveal">
+        <svg viewBox="0 0 1881 417" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto; display:block; min-width:1300px;">
+          <defs>
+            <marker id="arrowhead" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="rgba(0,0,0,0.35)" />
+            </marker>
+          </defs>
+          <text x="0" y="20" font-family="Lausanne, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#000000">New user onboarding (After download)</text><rect x="0" y="50" width="148" height="64" rx="10" fill="#F5F5F5" /><text x="74.0" y="64.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">WELCOME SCREENS</text><text x="74.0" y="79.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">Introduction of products</text><text x="74.0" y="92.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">in 3 screens</text><line x1="152" y1="82.0" x2="186" y2="82.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="198" y="50" width="128" height="64" rx="10" fill="#F5F5F5" /><text x="262.0" y="71.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">SELECT MODES</text><text x="262.0" y="86.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">With explanation</text><line x1="330" y1="82.0" x2="364" y2="82.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><path d="M 431 36.0 L 486.0 82.0 L 431 128.0 L 376.0 82.0 Z" fill="#ffffff" stroke="#16A34A" stroke-width="1.5" /><text x="431" y="80.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#16A34A">Bridge or</text><text x="431" y="94.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#16A34A">Standalone?</text><line x1="490.0" y1="82.0" x2="534.0" y2="82.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><text x="516.0" y="74.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="400" fill="rgba(0,0,0,0.6)">Bridge</text><rect x="546.0" y="50" width="128" height="64" rx="10" fill="#F5F5F5" /><text x="610.0" y="71.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">BRIDGE MODE</text><text x="610.0" y="86.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">With QR code</text><line x1="678.0" y1="82.0" x2="712.0" y2="82.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><text x="726.0" y="86.0" text-anchor="start" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" fill="#000000">END</text><rect x="531" y="210" width="168" height="72" rx="10" fill="#F5F5F5" /><text x="615.0" y="228.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">SELECT IMPORT OPTION</text><text x="615.0" y="243.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">• Import existing wallet</text><text x="615.0" y="256.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">• Create new wallet</text><path d="M 431 132.0 L 431 238.0 Q 431 246.0 439 246.0 L 523 246.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" fill="none" marker-end="url(#arrowhead)" /><text x="481.0" y="238.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="400" fill="rgba(0,0,0,0.6)">Standalone</text><line x1="703" y1="246.0" x2="737" y2="246.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="749" y="210" width="88" height="72" rx="10" fill="#F5F5F5" /><text x="793.0" y="250.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">TNC</text><line x1="841" y1="246.0" x2="919" y2="246.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><text x="884.0" y="238.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="400" fill="rgba(0,0,0,0.6)">Import existing</text><rect x="931" y="210" width="148" height="72" rx="10" fill="#F5F5F5" /><text x="1005.0" y="235.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">IMPORT EXISTING</text><text x="1005.0" y="250.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">Enter recovery phrase</text><line x1="1083" y1="246.0" x2="1117" y2="246.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="1129" y="210" width="158" height="72" rx="10" fill="#F5F5F5" /><text x="1208.0" y="235.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">CREATE WALLET</text><text x="1208.0" y="250.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">PASSWORD</text><line x1="1291" y1="246.0" x2="1325" y2="246.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="1337" y="233.0" width="108" height="26" rx="13" fill="#ffffff" stroke="rgba(0,0,0,0.15)" stroke-width="1" /><circle cx="1353" cy="246.0" r="4" fill="#16A34A" /><text x="1363" y="250.0" text-anchor="start" font-family="Lausanne, Helvetica, sans-serif" font-size="10" font-weight="400" fill="#000000">Wallet created</text><rect x="923.0" y="335" width="140" height="72" rx="10" fill="#F5F5F5" /><text x="993.0" y="360.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">NEW WALLET</text><text x="993.0" y="375.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">Enter recovery phrase</text><path d="M 793.0 286 L 793.0 363.0 Q 793.0 371.0 801.0 371.0 L 915.0 371.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" fill="none" marker-end="url(#arrowhead)" /><text x="858.0" y="363.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="400" fill="rgba(0,0,0,0.6)">Create new wallet</text><line x1="1067.0" y1="371.0" x2="1101.0" y2="371.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="1113.0" y="335" width="180" height="72" rx="10" fill="#F5F5F5" /><text x="1203.0" y="360.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">RECOVERY PHRASE INTRO</text><text x="1203.0" y="375.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">Importance of recovery phrases</text><line x1="1297.0" y1="371.0" x2="1331.0" y2="371.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="1343.0" y="335" width="160" height="72" rx="10" fill="#F5F5F5" /><text x="1423.0" y="375.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">RECOVERY PHRASE REVEAL</text><line x1="1507.0" y1="371.0" x2="1541.0" y2="371.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="1553.0" y="335" width="160" height="72" rx="10" fill="#F5F5F5" /><text x="1633.0" y="360.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="10.5" font-weight="700" letter-spacing="0.3" fill="#000000">CONFIRM RECOVERY</text><text x="1633.0" y="375.0" text-anchor="middle" font-family="Lausanne, Helvetica, sans-serif" font-size="9.5" font-weight="300" fill="rgba(0,0,0,0.45)">PHRASE</text><line x1="1717.0" y1="371.0" x2="1751.0" y2="371.0" stroke="rgba(0,0,0,0.35)" stroke-width="1.2" marker-end="url(#arrowhead)" /><rect x="1763.0" y="358.0" width="108" height="26" rx="13" fill="#ffffff" stroke="rgba(0,0,0,0.15)" stroke-width="1" /><circle cx="1779.0" cy="371.0" r="4" fill="#16A34A" /><text x="1789.0" y="375.0" text-anchor="start" font-family="Lausanne, Helvetica, sans-serif" font-size="10" font-weight="400" fill="#000000">Wallet created</text>
+        </svg>
+      </div>
+      <p class="body" style="margin-top:32px;">The onboarding carousel walks new users through picking a mode, then explains what each one actually means before they commit — Bridge mode confirms transactions through the DeFi Wallet mobile app, while Standalone mode stores wallet credentials directly in the extension so everything happens in the browser.</p>
+      <div class="visual reveal" style="margin-top:24px; height:auto; background:none;">
+        <img src="images/extension-modes.png" alt="Three onboarding screens: selecting between Bridge and Standalone modes, then an explanation screen for each" style="width:100%; display:block;" />
+      </div>
+      <p class="body" style="margin-top:32px;">That choice was never meant to be permanent, so I made sure it was just as easy to revisit later. The same mode options resurface in Settings, using consistent naming and descriptions so switching modes after onboarding feels familiar rather than like a new decision.</p>
+      <div class="visual reveal" style="margin-top:24px; height:auto; background:none;">
+        <img src="images/extension-modes2.png" alt="Side-by-side comparison of the onboarding mode-selection screen and the matching Wallet Mode settings screen" style="width:100%; display:block;" />
+      </div>
+    </div>
+
+    <!-- ── KEY FLOWS ── -->
+    <div class="section reveal" id="key-flows">
+      <span class="label">Key flows</span>
+      <p class="body">A look at two of the core flows in the extension: importing an existing wallet, and sending tokens.</p>
+      <div class="carousel reveal" data-carousel>
+        <div class="carousel-track">
+          <div class="carousel-slide" data-caption="Import existing wallet">
+            <div class="visual visual--video" style="width:100%; height:100%; background:none;">
+              <img src="images/extension-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
+              <div class="visual-backer" style="aspect-ratio: 718/1156; border-radius:20px; background:#F4F6F9;"></div>
+              <video class="visual-screen" src="images/extension-prototype.mp4" muted playsinline preload="metadata"></video>
+            </div>
+          </div>
+          <div class="carousel-slide" data-caption="Send tokens">
+            <div class="visual visual--video" style="width:100%; height:100%; background:none;">
+              <img src="images/extension-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
+              <div class="visual-backer" style="aspect-ratio: 714/1152; border-radius:20px; background:#F4F6F9;"></div>
+              <video class="visual-screen" src="images/extension-send-prototype.mp4" muted playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="carousel-nav carousel-nav--prev" aria-label="Previous flow">‹</button>
+        <button type="button" class="carousel-nav carousel-nav--next" aria-label="Next flow">›</button>
+        <div class="carousel-caption" data-carousel-caption>Import existing wallet</div>
+        <div class="carousel-dots">
+          <button type="button" class="carousel-dot is-active" aria-label="Show flow 1"></button>
+          <button type="button" class="carousel-dot" aria-label="Show flow 2"></button>
+        </div>
+      </div>
     </div>
 
     <!-- ── KEY LEARNINGS ── -->
@@ -475,6 +730,9 @@
           <div class="stat-value">14K+</div>
           <span class="stat-label">MAU</span>
         </div>
+      </div>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;">
+        <img src="images/extension-all.png" alt="A collage of the shipped extension screens: unlock, wallet home, send flow, onboarding mode selection, and token selection" style="width:100%; display:block;" />
       </div>
     </div>
 
@@ -522,6 +780,88 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Carousel — autoplays the active slide's video on scroll into view, crossfades through each loop point
+  document.querySelectorAll('[data-carousel]').forEach(carousel => {
+    const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+    const dots = Array.from(carousel.querySelectorAll('.carousel-dot'));
+    const captionEl = carousel.querySelector('[data-carousel-caption]');
+    const prevBtn = carousel.querySelector('.carousel-nav--prev');
+    const nextBtn = carousel.querySelector('.carousel-nav--next');
+    let activeIndex = 0;
+    let inView = false;
+
+    const getVideo = i => slides[i].querySelector('.visual-screen');
+
+    slides.forEach((slide, i) => {
+      const video = getVideo(i);
+      let loopTimer;
+      video.addEventListener('ended', () => {
+        video.classList.add('fading');
+        loopTimer = setTimeout(() => {
+          video.currentTime = 0;
+          if (i === activeIndex) video.play();
+          requestAnimationFrame(() => requestAnimationFrame(() => video.classList.remove('fading')));
+        }, 400);
+      });
+    });
+
+    function goTo(index) {
+      const newIndex = (index + slides.length) % slides.length;
+      if (newIndex === activeIndex) return;
+      const forward = newIndex > activeIndex;
+
+      const outgoingEl = slides[activeIndex];
+      const incomingEl = slides[newIndex];
+      const outgoingVideo = getVideo(activeIndex);
+      const incomingVideo = getVideo(newIndex);
+
+      outgoingVideo.pause();
+      outgoingVideo.currentTime = 0;
+      outgoingVideo.classList.remove('fading');
+
+      // Place the incoming slide off-screen on the correct side with no transition,
+      // then animate both slides across on the next frame.
+      incomingEl.style.transition = 'none';
+      incomingEl.style.left = forward ? '100%' : '-100%';
+      void incomingEl.offsetWidth;
+      incomingEl.style.transition = '';
+
+      requestAnimationFrame(() => {
+        outgoingEl.style.left = forward ? '-100%' : '100%';
+        incomingEl.style.left = '0%';
+      });
+
+      activeIndex = newIndex;
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === activeIndex));
+      captionEl.textContent = incomingEl.dataset.caption;
+
+      if (inView) {
+        incomingVideo.currentTime = 0;
+        incomingVideo.play();
+      }
+    }
+
+    prevBtn.addEventListener('click', () => goTo(activeIndex - 1));
+    nextBtn.addEventListener('click', () => goTo(activeIndex + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+    const playIo = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        inView = entry.isIntersecting;
+        const video = getVideo(activeIndex);
+        if (inView) {
+          video.currentTime = 0;
+          video.play();
+        } else {
+          video.classList.remove('fading');
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+    }, { threshold: 0.4 });
+    playIo.observe(carousel);
+  });
 
   // Section nav — highlight active link on scroll
   const tocLinks = document.querySelectorAll('.toc-link');

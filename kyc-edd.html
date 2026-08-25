@@ -186,6 +186,53 @@
     color: #000000;
   }
 
+  .visual--video { position: relative; overflow: hidden; }
+  .visual--video img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .visual--imgpair { background: none; gap: 16px; }
+  .visual--imgpair img { flex: 1 1 0; width: 50%; height: 100%; object-fit: contain; border-radius: 4px; }
+  .visual-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    background: #000;
+  }
+
+  /* ── OUTCOME POINTS ── */
+  .outcome-points {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+    gap: 4px;
+  }
+  .outcome-point {
+    background: #F2F2F7;
+    padding: 24px;
+  }
+  .outcome-point-title {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.16px;
+    color: #000000;
+    margin: 0 0 8px;
+    display: block;
+  }
+  .outcome-point-desc {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0;
+  }
+
   /* ── METADATA ROW ── */
   .meta-row {
     display: grid;
@@ -260,12 +307,14 @@
   @media (max-width: 900px) {
     .cs-sidenav { display: none; }
     .meta-row { grid-template-columns: 1fr 1fr; }
+    .outcome-points { grid-template-columns: 1fr 1fr; }
   }
 
   @media (max-width: 600px) {
     .hero { padding: 130px var(--pad) 48px; }
     .cs-layout { padding: 0 var(--pad) 80px; gap: 32px; }
     .meta-row { grid-template-columns: 1fr; gap: 24px; }
+    .outcome-points { grid-template-columns: 1fr; gap: 24px; }
     .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
     .visual, .visual.tall { height: 260px; }
   }
@@ -321,7 +370,6 @@
         <li>Requirements vary by region — UK has the most steps of any region</li>
         <li>As a result, EDD generally sits outside the core KYC flow rather than being integrated into it</li>
       </ul>
-      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
     </div>
 
     <!-- ── METADATA ── -->
@@ -350,6 +398,7 @@
         <li>US — our largest overall user base</li>
       </ul>
       <p class="body" style="margin-top:24px;">We also referenced competitors' UK EDD flows for comparison.</p>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-regions.png" alt="Diagram comparing per-region requirements: UK requires EDD, risk profile, and knowledge test; US requires EDD and SSN" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── RESEARCH & DISCOVERY ── -->
@@ -357,7 +406,7 @@
       <span class="label">Research &amp; discovery</span>
       <p class="body">Before proposing changes, I audited our existing KYC EDD flows across regions to understand current limitations and the reasoning behind past decisions. I also reviewed the Crypto.com app's EDD flow — both its overall structure and its approach to SSN collection — and spoke with their PM to understand the reasoning behind their design decisions, using it as a reference throughout the redesign.</p>
       <p class="body">Alongside the audit, I conducted user interviews with two participants, which surfaced specific findings referenced in the issues below.</p>
-      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-audit.png" alt="Audit board mapping Crypto.com's Wallet app and Exchange EDD flows, including UK risk profile, knowledge assessment, and educational guide screens" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── PROBLEM 1 ── -->
@@ -367,7 +416,7 @@
       <p class="body">EDD, risk profile, and knowledge assessment were originally <strong>split into three flows with separate entry points</strong>, based on the assumption that showing steps only when needed would reduce upfront friction and let users start browsing sooner. <strong>I merged them into one continuous assessment instead.</strong></p>
       <p class="body">In practice, triggering these assessments at unpredictable points created a more disjointed experience, not a lighter one.</p>
       <p class="body">A UK user interview confirmed this — he accepted EDD itself as standard across banking apps, but found being interrupted by unrelated questions more frustrating than the form's length. Combining the three into one upfront assessment set clear expectations and removed the surprise factor, trading three short interruptions for one longer session.</p>
-      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-merging.png" alt="Before/after diagram showing EDD, risk profile, and knowledge test triggering separately at unpredictable points, versus merged into one continuous assessment flow" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── PROBLEM 2 ── -->
@@ -379,10 +428,22 @@
         <li>Delay (existing approach) — collect address/SSN only when the user triggers bank-transfer or credit-card funding</li>
         <li>Front-load — collect them during the wait; since this info is needed regardless once users fund in, doing it upfront avoids a second friction point later</li>
       </ul>
-      <p class="body" style="margin-top:24px;">I front-loaded assessments too — EDD for US, and EDD, risk profile, and knowledge test for UK — into the same wait window, <strong>clearing these blockers early so users can access the rest of the product without interruption afterward.</strong> For address collection specifically, I also added Google-suggested autofill, speeding up entry compared to the static form previously in place.</p>
-      <p class="body">A user interview reinforced the opportunity: one participant described sitting on the loading screen unsure whether to quit or stay, since the wait had no clear purpose — creating abandonment risk.</p>
+      <p class="body" style="margin-top:24px;">I front-loaded assessments too — EDD for US, and EDD, risk profile, and knowledge test for UK — into the same wait window, <strong>clearing these blockers early so users can access the rest of the product without interruption afterward.</strong></p>
+      <div class="visual visual--imgpair reveal" style="margin-top:24px;">
+        <img src="images/before-frontload.png" alt="Before: KYC verification in progress leads straight to a 30-second wait, then resubmit, success, or failed" />
+        <img src="images/after-frontload.png" alt="After: KYC verification in progress leads into address input, then EDD, risk profile, and knowledge test, filling the same 30-second wait window, before reaching KYC status" />
+      </div>
+      <p class="body" style="margin-top:24px;">For address collection specifically, I also added Google-suggested autofill, speeding up entry compared to the static form previously in place.</p>
+      <div class="visual visual--video reveal" style="margin-top:24px;">
+        <img src="images/google-address-thumbnail-bg.jpg" alt="" />
+        <video class="visual-screen" src="images/google-address-prototype.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
+      <p class="body" style="margin-top:24px;">A user interview reinforced the opportunity: one participant described sitting on the loading screen unsure whether to quit or stay, since the wait had no clear purpose — creating abandonment risk.</p>
       <p class="body">This diverges from Crypto.com's approach, which gates SSN to only the specific features that need it — we front-loaded instead because SSN will soon be required broadly for a major upcoming product feature.</p>
-      <div class="visual reveal" style="margin-top:40px;"><span>Visual</span></div>
+      <div class="visual visual--video reveal" style="margin-top:40px;">
+        <img src="images/ssn-thumbnail-bg.jpg" alt="" />
+        <video class="visual-screen" src="images/ssn-prototype.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
     </div>
 
     <!-- ── PROBLEM 3 ── -->
@@ -392,7 +453,10 @@
       <p class="body">Format: <strong>Questions collapse and auto-advance once answered</strong>; the same pattern applies across all regions, with only question content changing per region. This got an early real-world test when Issue 2's SSN requirement forced US into its own flow — since the structure was already standardized, this only meant adding US-specific questions, not building a new flow from scratch.</p>
       <p class="body">UI: Compliance required keeping assessment copy exactly as-is, so I focused on structure instead — <strong>progress bars on longer flows, and clearer hierarchy for dense text blocks.</strong></p>
       <p class="body">Technical pushback: I proposed native over webview, since webview looked visually detached from the rest of onboarding. Tech pushed back — webview is faster to update for compliance changes — so we kept webview and closed the visual gap through UI work instead.</p>
-      <div class="visual tall reveal" style="margin-top:40px;"><span>Visual</span></div>
+      <div class="visual tall visual--video reveal" style="margin-top:40px;">
+        <img src="images/edd-thumbnail-bg.jpg" alt="" />
+        <video class="visual-screen" src="images/edd-prototype.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
     </div>
 
     <!-- ── WHAT I'D DO DIFFERENTLY ── -->
@@ -404,8 +468,21 @@
     <!-- ── OUTCOME ── -->
     <div class="section reveal" id="outcome">
       <span class="label">Outcome</span>
-      <p class="body">UK EDD step completion rose from <strong>23% to 54%</strong> over the three months following this redesign — more than doubling. Given UK has the longest, most demanding EDD flow of any region, this was the strongest test of whether merging the assessments, moving them into the verification wait window, adding progress indicators, and improving text hierarchy could actually reduce drop-off, not just look cleaner.</p>
-      <p class="body">Standardizing the flow into a reusable template also <strong>reduced engineering lift for future rollouts</strong> — evidenced when US required its own variant and only needed new question content, not a new flow. Moving address, SSN, and assessment completion into the verification wait also <strong>turned previously idle time productive</strong>, instead of adding separate steps users must sit through afterward.</p>
+      <p class="statement">The redesign more than doubled UK EDD completion, while making the flow cheaper to extend and the wait time worth something.</p>
+      <div class="outcome-points">
+        <div class="outcome-point">
+          <span class="outcome-point-title">2x completion</span>
+          <p class="outcome-point-desc">UK EDD step completion rose from 23% to 54% over three months — the strongest test case, since UK has the longest EDD flow of any region.</p>
+        </div>
+        <div class="outcome-point">
+          <span class="outcome-point-title">Lower engineering lift</span>
+          <p class="outcome-point-desc">The reusable template meant US only needed new question content for its own variant, not a new flow.</p>
+        </div>
+        <div class="outcome-point">
+          <span class="outcome-point-title">Idle time, made useful</span>
+          <p class="outcome-point-desc">Moving address, SSN, and assessments into the verification wait turned idle time productive, instead of adding separate steps afterward.</p>
+        </div>
+      </div>
     </div>
 
   </div>

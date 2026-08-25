@@ -220,7 +220,40 @@
   }
   .visual-pair .visual {
     flex: 1;
-    height: 320px;
+    height: 412px;
+  }
+
+  .visual--video { position: relative; overflow: hidden; }
+  .visual--video img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .visual-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    width: auto;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    background: #000;
+    transition: opacity 0.4s ease;
+  }
+  .visual-screen.fading { opacity: 0; }
+
+  .visual-backer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 86%;
+    border-radius: 20px;
+    background: #0a0e14;
+  }
+
+  /* matches the exact device position/size measured from deposit-ui-before.png,
+     so the video lines up with where the phone sits in the paired before shot */
+  .visual-screen--deposit-detail {
+    top: 56.3%;
+    height: 69%;
   }
 
   /* ── METADATA ROW ── */
@@ -353,6 +386,11 @@
       <span class="label">Overview</span>
       <p class="body">The crypto deposit flow was one of the most critical — and most friction-heavy — parts of the app, and a legacy flow that hadn't been improved since 2021. At the same time, the team was rebuilding the design system, and deposit became the first flow to be redesigned under it, given the time and effort available. I wasn't involved in building the new design system itself, but I worked in parallel to migrate it into the deposit flow redesign as I went, given the limited timeline.</p>
       <p class="body">Deposit sits directly on the critical path. A user cannot place their first trade without depositing funds first, making it one of the highest-leverage flows to get right.</p>
+      <div class="visual visual--video reveal" style="margin-top:40px; height:auto; aspect-ratio: 2400/1199; background:none;">
+        <img src="images/deposit-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
+        <div class="visual-backer" style="aspect-ratio: 662/1348; border-radius:36px;"></div>
+        <video class="visual-screen visual-screen--autoplay-loop" style="border-radius:36px;" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
+      </div>
     </div>
 
     <!-- ── METADATA ── -->
@@ -383,6 +421,7 @@
         <li><span class="num">02</span><span>Unnecessary information made it hard to distinguish critical steps</span></li>
         <li><span class="num">03</span><span>The coin list was static and alphabetical, with no display order that made sense to the user — unhelpful, especially for first-time users</span></li>
       </ul>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/deposit-before.png" alt="Before: static alphabetical coin list with no hierarchy, and a deposit screen burying important information below the fold amid too many irrelevant details" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── ISSUE 1 ── -->
@@ -395,8 +434,8 @@
         <li>For users with no wallet holdings, the list defaults to popular market tokens instead, to support decision-making with no personal signal to draw on</li>
       </ul>
       <div class="visual-pair reveal">
-        <div class="visual"><span>Before</span></div>
-        <div class="visual"><span>After</span></div>
+        <div class="visual" style="background:none;"><img src="images/coinlist-before.png" alt="Before: static, undifferentiated coin list with no personalization" style="width:100%; height:100%; object-fit:contain;" /></div>
+        <div class="visual" style="background:none;"><img src="images/coinlist-after.png" alt="After: Quick Select section prioritizing the user's held assets, then popular coins, followed by the full alphabetical list" style="width:100%; height:100%; object-fit:contain;" /></div>
       </div>
     </div>
 
@@ -411,6 +450,10 @@
       </ul>
       <p class="body" style="margin-top:24px;">Stakeholders and engineering assumed fewer screens meant faster, simpler completion. I argued the bundling, not the screen count, was the real source of hesitation — backed by benchmarking against Binance, Kraken, OKX, and Coinbase, all of which isolate this step.</p>
       <p class="body">This follows Miller's Law: breaking a complex decision into smaller steps reduces cognitive load, even at the cost of an extra screen. Making the step conditional — shown only when a token required it — meant the added structure never penalized the simpler, more common case.</p>
+      <div class="visual-pair reveal">
+        <div class="visual" style="background:none;"><img src="images/network-before.png" alt="Before: network selection bundled into the deposit screen alongside unrelated information" style="width:100%; height:100%; object-fit:contain;" /></div>
+        <div class="visual" style="background:none;"><img src="images/network-after.png" alt="After: network selection split into its own dedicated screen, showing only information relevant to that choice" style="width:100%; height:100%; object-fit:contain;" /></div>
+      </div>
     </div>
 
     <!-- ── ISSUE 3 ── -->
@@ -423,8 +466,11 @@
         <li>Converted the deposit address dropdown into an address book, hidden behind a secondary action — since not every user needs it, and surfacing it by default added confusion rather than utility</li>
       </ul>
       <div class="visual-pair reveal">
-        <div class="visual"><span>Before</span></div>
-        <div class="visual"><span>After</span></div>
+        <div class="visual" style="background:none; height:auto; aspect-ratio:2092/2124;"><img src="images/deposit-ui-before.png" alt="Before: dense deposit screen mixing essential and secondary information with no clear hierarchy" style="width:100%; height:100%; object-fit:contain;" /></div>
+        <div class="visual visual--video" style="background:none; height:auto; aspect-ratio:2092/2124;">
+          <img src="images/deposit-ui-after.png" alt="After" />
+          <video class="visual-screen visual-screen--deposit-detail" src="images/deposit-more.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
       </div>
     </div>
 
@@ -482,6 +528,37 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Autoplay video on scroll into view — plays once visible, crossfades through the loop point
+  document.querySelectorAll('.visual-screen--autoplay-loop').forEach(video => {
+    let loopTimer;
+
+    video.addEventListener('ended', () => {
+      video.classList.add('fading');
+      loopTimer = setTimeout(() => {
+        video.currentTime = 0;
+        video.play();
+        requestAnimationFrame(() => requestAnimationFrame(() => video.classList.remove('fading')));
+      }, 400);
+    });
+
+    const playIo = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          clearTimeout(loopTimer);
+          video.classList.remove('fading');
+          video.currentTime = 0;
+          video.play();
+        } else {
+          clearTimeout(loopTimer);
+          video.classList.remove('fading');
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+    }, { threshold: 0.4 });
+    playIo.observe(video);
+  });
 
   // Section nav — highlight active link on scroll
   const tocLinks = document.querySelectorAll('.toc-link');

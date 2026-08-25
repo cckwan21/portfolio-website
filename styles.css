@@ -329,3 +329,10 @@ footer {
   .nav-links { gap: 20px; }
   footer { flex-direction: column; gap: 8px; align-items: flex-start; }
 }
+
+@media (max-width: 480px) {
+  :root { --pad: 16px; }
+  .nav-logo { font-size: 11px; }
+  .nav-links { gap: 8px; }
+  .nav-links a { font-size: 11px; }
+}
