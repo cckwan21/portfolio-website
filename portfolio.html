@@ -270,6 +270,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
   }
 
   .work-visual span {
@@ -280,7 +281,34 @@
     color: rgba(0, 0, 0, 0.4);
   }
 
-  .work-visual img {
+  /* Parallax layer: taller than its container so it has room to drift on scroll
+     without exposing empty edges; offset is driven by JS via transform. */
+  .work-visual-parallax {
+    position: absolute;
+    top: -22%;
+    left: 0;
+    width: 100%;
+    height: 144%;
+    will-change: transform;
+  }
+
+  /* Items 01-03 have a phone-mockup video sitting on top, so cropping into the
+     background image for overscan room isn't very noticeable. Item 04 has no
+     such overlay, and its source photo's own aspect ratio (1600x799) already
+     almost exactly matches this box's — so it needs no oversizing/crop at all
+     to sit correctly; the same photo is shown uncropped elsewhere on the site
+     (browser-extension.html, first Overview image). No drift room means no
+     parallax for this one (see PARALLAX_RANGE fallback in the JS below). */
+  .work-visual:not(.work-visual--video) .work-visual-parallax {
+    top: 0;
+    height: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work-visual-parallax { transform: none !important; }
+  }
+
+  .work-visual-parallax img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -288,7 +316,7 @@
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .work-link:hover .work-visual img {
+  .work-link:hover .work-visual-parallax img {
     transform: scale(1.03);
   }
 
@@ -547,7 +575,7 @@
               <p class="work-tagline">Merging fragmented compliance flows into one consistent template.</p>
             </div>
             <div class="work-visual work-visual--video">
-              <img src="images/edd-thumbnail-bg.jpg" alt="" />
+              <div class="work-visual-parallax"><img src="images/edd-thumbnail-bg.jpg" alt="" /></div>
               <div class="work-visual-backer" style="aspect-ratio: 642 / 1398;"></div>
               <video class="work-visual-screen" src="images/edd-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
@@ -564,7 +592,7 @@
               <p class="work-tagline">Removing friction from the path to first trade.</p>
             </div>
             <div class="work-visual work-visual--video">
-              <img src="images/deposit-thumbnail-bg.jpg" alt="" />
+              <div class="work-visual-parallax"><img src="images/deposit-thumbnail-bg.jpg" alt="" /></div>
               <div class="work-visual-backer" style="aspect-ratio: 662 / 1348; border-radius: 36px;"></div>
               <video class="work-visual-screen" style="border-radius: 36px;" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
@@ -581,7 +609,7 @@
               <p class="work-tagline">Giving traders clarity into every position.</p>
             </div>
             <div class="work-visual work-visual--video">
-              <img src="images/wallet-tab-thumbnail-bg.jpg" alt="" />
+              <div class="work-visual-parallax"><img src="images/wallet-tab-thumbnail-bg.jpg" alt="" /></div>
               <div class="work-visual-backer" style="aspect-ratio: 764 / 1528; border-radius: 44px;"></div>
               <video class="work-visual-screen" style="border-radius: 44px;" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
@@ -597,7 +625,7 @@
               <h3 class="work-title">04 — Building the Wallet Extension from 0 to 1</h3>
               <p class="work-tagline">Bringing DeFi to the browser, one click away.</p>
             </div>
-            <div class="work-visual"><img src="images/wallet-extension-thumbnail.jpg" alt="" /></div>
+            <div class="work-visual"><div class="work-visual-parallax"><img src="images/wallet-extension-thumbnail.jpg" alt="" /></div></div>
             <div class="work-tags">
               <span class="work-tag">2022</span>
               <span class="work-tag">MVP</span>
@@ -685,6 +713,41 @@
   document.querySelectorAll('.work-item').forEach((row, i) => {
     row.style.transitionDelay = `${i * 0.09}s`;
   });
+
+  // ── Selected Work parallax — background images drift as each card scrolls through view
+  const parallaxLayers = Array.from(document.querySelectorAll('.work-visual-parallax'));
+  const PARALLAX_RANGE = 70; // max px of vertical drift in each direction
+
+  function updateParallax() {
+    const viewportH = window.innerHeight;
+    parallaxLayers.forEach(layer => {
+      const rect = layer.parentElement.getBoundingClientRect();
+      const centerOffset = (rect.top + rect.height / 2) - viewportH / 2;
+      const span = viewportH / 2 + rect.height / 2;
+      const progress = Math.max(-1, Math.min(1, centerOffset / span));
+      // Items without the video overlay have no oversizing on their background
+      // (see .work-visual:not(.work-visual--video) .work-visual-parallax) since
+      // that photo's own aspect ratio already matches the box — so there's no
+      // buffer for drift without exposing edges. No parallax for those.
+      const range = layer.closest('.work-visual--video') ? PARALLAX_RANGE : 0;
+      layer.style.transform = `translateY(${(-progress * range).toFixed(1)}px)`;
+    });
+  }
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (parallaxLayers.length && !prefersReducedMotion) {
+    let parallaxTicking = false;
+    function onParallaxScroll() {
+      if (!parallaxTicking) {
+        requestAnimationFrame(() => { updateParallax(); parallaxTicking = false; });
+        parallaxTicking = true;
+      }
+    }
+    window.addEventListener('scroll', onParallaxScroll, { passive: true });
+    window.addEventListener('resize', onParallaxScroll);
+    updateParallax();
+  }
 
   // ── Work thumbnail video — play on hover, crossfade through the loop point
   document.querySelectorAll('.work-visual-screen').forEach(video => {

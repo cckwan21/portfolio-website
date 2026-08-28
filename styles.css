@@ -140,11 +140,13 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  /* Kept on the root element (not body) so it doesn't turn body into a nested
+     scroll container — that specifically breaks position: sticky in Safari. */
+  overflow-x: hidden;
 }
 
 body {
   background: var(--color-surface);
-  overflow-x: hidden;
   cursor: none;
 }
 
