@@ -65,7 +65,7 @@ nav.scrolled::after { opacity: 0; }
   color: #bbb;
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: none;
   padding: 7px 12px;
   border-radius: 4px;
   transition: color 0.2s, background 0.2s;
@@ -231,7 +231,11 @@ nav.scrolled::after { opacity: 0; }
     <li><a href="inspirations.html">Inspirations</a></li>
     <li><a href="portfolio.html#contact">Contact</a></li>
   </ul>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-overlay"></div>
 
 <!-- ── HEADER ── -->
 <header class="inspo-header">
@@ -402,7 +406,7 @@ const cursor = document.getElementById('cursor');
 let mx = 0, my = 0, cx = 0, cy = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 (function tick() {
-  cx += (mx - cx) * 0.16; cy += (my - cy) * 0.16;
+  cx += (mx - cx) * 0.35; cy += (my - cy) * 0.35;
   cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
   requestAnimationFrame(tick);
 })();
@@ -411,6 +415,7 @@ document.querySelectorAll('a, button').forEach(el => {
   el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
 });
 </script>
+<script src="nav-menu.js" defer></script>
 
 </body>
 </html>

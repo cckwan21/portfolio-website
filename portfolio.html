@@ -10,6 +10,10 @@
   :root {
     --content-max: 1100px;
     --content-pad: 0px;
+    /* Keeps the phone mockups' corner radius proportional to their size as
+       .work-visual's height shrinks at each breakpoint below — otherwise a
+       fixed px radius looks progressively rounder on a smaller device. */
+    --device-radius-scale: 1;
   }
 
   /* ── LAYOUT ── */
@@ -25,7 +29,7 @@
 
   /* ── LIGHT THEME OVERRIDE (whole page) ── */
   html, body {
-    background: #ffffff;
+    background: #F2F2F2;
     color: #000000;
   }
 
@@ -34,39 +38,87 @@
   }
 
   /* ── NAV — homepage-only typography override ── */
+  nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    transition: transform 1.1s cubic-bezier(.16,1,.3,1);
+  }
+  nav.nav-hidden {
+    transform: translateY(-120%);
+  }
+
   .nav-logo {
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-size: 24px;
     font-weight: 300;
     text-transform: none;
     color: #000000;
+    justify-self: start;
   }
 
-  .nav-links { gap: 32px; }
+  .nav-links {
+    justify-self: center;
+    gap: 24px;
+    align-items: center;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid transparent;
+    box-shadow: none;
+    border-radius: 999px;
+    padding: 8px;
+    transition: background .5s cubic-bezier(.16,1,.3,1),
+                backdrop-filter .5s cubic-bezier(.16,1,.3,1),
+                -webkit-backdrop-filter .5s cubic-bezier(.16,1,.3,1),
+                border-color .5s cubic-bezier(.16,1,.3,1),
+                box-shadow .5s cubic-bezier(.16,1,.3,1);
+  }
+  nav.scrolled .nav-links {
+    background: linear-gradient(180deg, rgba(242, 242, 242, 0.98), rgba(242, 242, 242, 0.9));
+    backdrop-filter: blur(200px) saturate(200%);
+    -webkit-backdrop-filter: blur(200px) saturate(200%);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.2),
+      inset 0 1px 1px rgba(255, 255, 255, 1),
+      inset 0 -1px 3px rgba(0, 0, 0, 0.08);
+  }
 
   .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 300;
     opacity: 1;
+    padding: 0 24px;
+    border-radius: 32px;
+    transition: background .3s cubic-bezier(.16,1,.3,1), color .3s cubic-bezier(.16,1,.3,1), opacity .2s, padding .3s cubic-bezier(.16,1,.3,1);
   }
 
-  .nav-links a::after { background: #000000; }
-
-  /* Page is light top-to-bottom — override the shared dark glass nav */
-  nav.scrolled {
-    background: rgba(255, 255, 255, .88);
+  .nav-links a::after { display: none; }
+  .nav-links a:hover:not(.active) { opacity: .55; padding: 16px 24px; }
+  .nav-links a.active {
+    background: #000000;
+    color: #ffffff;
+    padding: 16px 24px;
   }
+
   nav.scrolled .nav-logo,
-  nav.scrolled .nav-links a { color: #000000 !important; }
-  nav.scrolled::after {
-    background: linear-gradient(to bottom, rgba(255,255,255,.35) 0%, rgba(255,255,255,.12) 45%, transparent 100%);
+  nav.scrolled .nav-links a:not(.active) { color: #000000 !important; }
+  nav::after { display: none; }
+  nav.scrolled {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 28px var(--pad);
   }
 
   /* ── INTRO ── */
   .intro {
     padding: 200px 0 120px;
-    background: #ffffff;
+    background: #F2F2F2;
   }
 
   .intro-flex {
@@ -92,7 +144,7 @@
     position: relative;
     font-family: 'Ghost', sans-serif;
     font-weight: 300;
-    cursor: pointer;
+    cursor: none;
     display: inline-block;
     letter-spacing: 0;
     transition: letter-spacing .35s cubic-bezier(.16,1,.3,1);
@@ -134,13 +186,12 @@
   .bio-photo {
     width: 142px;
     height: 189px;
-    border-radius: 8px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.05);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
     opacity: 0;
     transform: translateY(8px);
-    transition: opacity .35s cubic-bezier(.16,1,.3,1), transform .35s cubic-bezier(.16,1,.3,1);
+    transition: opacity .35s cubic-bezier(.16,1,.3,1), transform .35s cubic-bezier(.16,1,.3,1), width .35s cubic-bezier(.16,1,.3,1);
   }
 
   .bio-photo.active {
@@ -148,7 +199,8 @@
     transform: translateY(0);
   }
 
-  .bio-photo img {
+  .bio-photo img,
+  .bio-photo video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -156,13 +208,7 @@
   }
 
   .bio-photo-caption {
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    color: #000000;
-    text-align: center;
-    opacity: 0;
-    transition: opacity .35s cubic-bezier(.16,1,.3,1);
+    display: none;
   }
 
   .bio-photo-caption.active { opacity: 1; }
@@ -331,7 +377,7 @@
     transform: translate(-50%, -50%);
     height: 86%;
     width: auto;
-    border-radius: 20px;
+    border-radius: calc(20px * var(--device-radius-scale));
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     background: #000;
     transition: opacity 0.4s ease;
@@ -347,7 +393,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     height: 86%;
-    border-radius: 20px;
+    border-radius: calc(20px * var(--device-radius-scale));
     background: #0a0e14;
   }
 
@@ -366,142 +412,33 @@
     color: #000000;
   }
 
-  /* ── FOOTER CTA — dark closing section, Ebb Scandinavia-inspired layout ──
-     Resets the shared styles.css `footer{}` element rule (flex/max-width/
-     centered/padding), which would otherwise still apply here. */
-  .footer-cta {
-    display: block;
-    max-width: none;
-    margin: 0;
-    padding: 140px 0 0;
-    background: #080808;
-    color: var(--color-on-dark);
-    overflow: hidden;
-  }
-
-  .footer-cta-inner {
-    position: relative;
-    padding: 0 64px 100px;
-    text-align: left;
-  }
-
-  .footer-cta-heading {
+  /* ── FOOTER — minimal, matching case study pages ── */
+  footer { border-top: 1px solid rgba(0, 0, 0, .1); }
+  .footer-text {
     font-family: 'Lausanne', Helvetica, sans-serif;
-    font-weight: 250;
-    font-size: clamp(44px, 9vw, 140px);
-    line-height: 0.95;
-    letter-spacing: -0.01em;
-    color: var(--color-on-dark);
+    color: #000000;
+    opacity: .5;
   }
-
-  .footer-cta-heading .accent {
-    font-family: 'Ghost', sans-serif;
-    font-weight: 300;
-    color: var(--color-highlight);
-  }
-
-  .footer-cta-badge {
-    position: absolute;
-    top: 50%;
-    right: 8%;
-    transform: translateY(-50%);
-    width: 128px;
-    height: 128px;
-    border-radius: 50%;
-    background: var(--color-highlight);
-    color: #080808;
+  .footer-links {
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 1.3;
-    text-decoration: none;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .footer-cta-badge:hover {
-    transform: translateY(-50%) scale(1.06);
-  }
-
-  .footer-cta-link {
-    display: inline-block;
-    margin-top: 48px;
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 22px;
-    font-weight: 300;
-    color: var(--color-on-dark);
-    text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-  }
-
-  .footer-cta-link:hover {
-    opacity: 1;
-  }
-
-  .footer-cta-bottom {
-    border-top: 1px solid rgba(240, 237, 229, 0.15);
-    padding: 28px 64px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer-cta-nav {
-    display: flex;
     gap: 24px;
-    list-style: none;
-    flex-shrink: 0;
   }
-
-  .footer-cta-nav li {
-    flex-shrink: 0;
-  }
-
-  .footer-cta-nav a {
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--color-on-dark);
+  a.footer-text {
     text-decoration: none;
-    opacity: 0.7;
-    white-space: nowrap;
-    transition: opacity 0.2s;
+    transition: opacity .2s;
   }
-
-  .footer-cta-nav a:hover {
+  a.footer-text:hover {
     opacity: 1;
-  }
-
-  .footer-cta-meta {
-    display: flex;
-    gap: 24px;
-    flex-shrink: 0;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-on-dark);
-    opacity: 0.5;
-  }
-
-  .footer-cta-meta span {
-    white-space: nowrap;
   }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .container { padding: 0 40px; }
-    .footer-cta-inner { padding: 0 40px 80px; }
-    .footer-cta-bottom { padding: 24px 40px; }
-    .footer-cta-badge { width: 100px; height: 100px; font-size: 13px; }
     .intro { padding: 160px 0 90px; }
     .works { padding: 80px 0; }
     .work-visual { height: 400px; }
+    :root { --device-radius-scale: 0.7533; }
   }
 
   @media (max-width: 600px) {
@@ -511,7 +448,7 @@
     /* Nav */
     .nav-logo { font-size: 18px; }
     .nav-links { gap: 20px; }
-    .nav-links a { font-size: 16px; }
+    .nav-links a { font-size: 14px; }
 
     /* Intro */
     .intro { padding: 120px 0 64px; }
@@ -524,13 +461,7 @@
     .work-visual { height: 260px; }
     .work-tags { flex-wrap: wrap; gap: 10px; }
     .work-tag { padding: 6px 14px; font-size: 14px; }
-
-    /* Footer — badge drops into normal flow above the heading instead of floating */
-    .footer-cta { padding-top: 80px; }
-    .footer-cta-inner { display: flex; flex-direction: column; align-items: flex-start; padding: 0 24px 64px; }
-    .footer-cta-badge { position: static; transform: none; width: 90px; height: 90px; font-size: 12px; margin-bottom: 32px; order: -1; }
-    .footer-cta-link { font-size: 17px; margin-top: 32px; }
-    .footer-cta-bottom { padding: 20px 24px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    :root { --device-radius-scale: 0.4897; }
   }
 </style>
 </head>
@@ -542,20 +473,27 @@
 <nav>
   <a href="#" class="nav-logo">cheryl_kwan</a>
   <ul class="nav-links">
-    <li><a href="#work">Work</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="#work" class="active">Work</a></li>
+    <li><a href="about.html">About</a></li>
   </ul>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-overlay"></div>
 
 <!-- ── INTRO ── -->
 <section class="intro" id="about">
   <div class="container">
     <div class="content-indent intro-flex">
       <p class="bio-text">
-        I'm <span class="bio-highlight" data-photo="images/cheryl-portrait.jpg" data-caption="Cheryl.jpeg">(Cheryl)</span> — a <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(Hong Kong-based)</span> product designer who finds the <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(real constraint)</span> before designing anything, usually buried in <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(fintech and crypto's)</span> compliance rules and legacy systems.
+        I'm <span class="bio-highlight" data-photo="images/cheryl-portrait.jpg" data-caption="Cheryl.jpeg">(Cheryl)</span> — a <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(Hong Kong-based)</span> product designer who finds the <span class="bio-highlight" data-video="images/constraint.mp4" data-caption="constraint.gif" data-width="171">(real constraint)</span> before designing anything, usually buried in <span class="bio-highlight" data-photo="images/cdc.jpeg" data-caption="fintech and crypto.jpg" data-width="284">(fintech and crypto's)</span> compliance rules and legacy systems.
       </p>
       <div class="bio-photo-slot">
-        <div class="bio-photo"><img src="images/hongkong-taxi.png" alt="" /></div>
+        <div class="bio-photo">
+          <img src="images/hongkong-taxi.png" alt="" />
+          <video muted loop playsinline preload="none"></video>
+        </div>
         <span class="bio-photo-caption">Hong Kong.jpeg</span>
       </div>
     </div>
@@ -593,8 +531,8 @@
             </div>
             <div class="work-visual work-visual--video">
               <div class="work-visual-parallax"><img src="images/deposit-thumbnail-bg.jpg" alt="" /></div>
-              <div class="work-visual-backer" style="aspect-ratio: 662 / 1348; border-radius: 36px;"></div>
-              <video class="work-visual-screen" style="border-radius: 36px;" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
+              <div class="work-visual-backer" style="aspect-ratio: 662 / 1348; border-radius: calc(36px * var(--device-radius-scale));"></div>
+              <video class="work-visual-screen" style="border-radius: calc(36px * var(--device-radius-scale));" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
             <div class="work-tags">
               <span class="work-tag">2026</span>
@@ -610,8 +548,8 @@
             </div>
             <div class="work-visual work-visual--video">
               <div class="work-visual-parallax"><img src="images/wallet-tab-thumbnail-bg.jpg" alt="" /></div>
-              <div class="work-visual-backer" style="aspect-ratio: 764 / 1528; border-radius: 44px;"></div>
-              <video class="work-visual-screen" style="border-radius: 44px;" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
+              <div class="work-visual-backer" style="aspect-ratio: 764 / 1528; border-radius: calc(44px * var(--device-radius-scale));"></div>
+              <video class="work-visual-screen" style="border-radius: calc(44px * var(--device-radius-scale));" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
             <div class="work-tags">
               <span class="work-tag">2024</span>
@@ -640,30 +578,44 @@
 <div class="container"><div class="divider"></div></div>
 
 <!-- ── FOOTER ── -->
-<footer id="contact" class="footer-cta">
-  <div class="footer-cta-inner">
-    <a href="mailto:hello@cherylkwan.com" class="footer-cta-badge">Say<br>hello</a>
-    <h2 class="footer-cta-heading">Let's <span class="accent">connect</span></h2>
-    <a href="mailto:hello@cherylkwan.com" class="footer-cta-link">[ Get in touch ]</a>
-  </div>
-  <div class="footer-cta-bottom">
-    <ul class="footer-cta-nav">
-      <li><a href="#work">[ Work ]</a></li>
-      <li><a href="inspirations.html">[ Inspirations ]</a></li>
-      <li><a href="mailto:hello@cherylkwan.com">[ Contact ]</a></li>
-    </ul>
-    <div class="footer-cta-meta">
-      <span>© 2026 Cheryl Kwan</span>
-      <span>Currently: Hong Kong</span>
-    </div>
+<footer id="contact">
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/cheryl-kwan/" target="_blank" rel="noopener" class="footer-text">LinkedIn</a>
+    <a href="mailto:cherylkwancl@gmail.com" class="footer-text">Contact me</a>
+    <span class="footer-text">Currently: Hong Kong · <span id="hk-time"></span></span>
   </div>
 </footer>
 
 <script>
-  // ── Nav glass effect
+  function updateHKTime() {
+    var el = document.getElementById('hk-time');
+    if (!el) return;
+    el.textContent = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Hong_Kong', hour: 'numeric', minute: '2-digit', hour12: true,
+    }).format(new Date());
+  }
+  updateHKTime();
+  setInterval(updateHKTime, 30000);
+</script>
+
+<script>
+  // ── Nav glass-in-on-scroll + hide-on-scroll-down (past hero only)
   const nav = document.querySelector('nav');
+  const heroEl = document.querySelector('.intro');
+  const heroBottom = heroEl ? heroEl.offsetHeight : 0;
+  let lastScrollY = window.scrollY;
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
+    const currentY = window.scrollY;
+    nav.classList.toggle('scrolled', currentY > 20);
+    if (currentY <= heroBottom) {
+      nav.classList.remove('nav-hidden');
+    } else if (currentY > lastScrollY) {
+      nav.classList.add('nav-hidden');
+    } else if (currentY < lastScrollY) {
+      nav.classList.remove('nav-hidden');
+    }
+    lastScrollY = currentY;
   }, { passive: true });
 
   // ── Custom cursor
@@ -673,8 +625,8 @@
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 
   (function tick() {
-    cx += (mx - cx) * 0.16;
-    cy += (my - cy) * 0.16;
+    cx += (mx - cx) * 0.35;
+    cy += (my - cy) * 0.35;
     cursor.style.left = cx + 'px';
     cursor.style.top  = cy + 'px';
     requestAnimationFrame(tick);
@@ -688,10 +640,24 @@
   // ── Bio photo reveal on hover
   const bioPhotoBox = document.querySelector('.bio-photo');
   const bioPhotoImg = bioPhotoBox.querySelector('img');
+  const bioPhotoVideo = bioPhotoBox.querySelector('video');
   const bioPhotoCaption = document.querySelector('.bio-photo-caption');
   document.querySelectorAll('.bio-highlight').forEach(span => {
     span.addEventListener('mouseenter', () => {
-      bioPhotoImg.src = span.dataset.photo;
+      if (span.dataset.video) {
+        bioPhotoVideo.src = span.dataset.video;
+        bioPhotoVideo.style.display = 'block';
+        bioPhotoImg.style.display = 'none';
+        bioPhotoVideo.currentTime = 0;
+        bioPhotoVideo.play().catch(() => {});
+      } else {
+        bioPhotoImg.src = span.dataset.photo;
+        bioPhotoImg.style.display = 'block';
+        bioPhotoVideo.style.display = 'none';
+        bioPhotoVideo.pause();
+        bioPhotoVideo.removeAttribute('src');
+      }
+      bioPhotoBox.style.width = span.dataset.width ? `${span.dataset.width}px` : '';
       bioPhotoCaption.textContent = span.dataset.caption;
       bioPhotoBox.classList.add('active');
       bioPhotoCaption.classList.add('active');
@@ -749,9 +715,8 @@
     updateParallax();
   }
 
-  // ── Work thumbnail video — play on hover, crossfade through the loop point
+  // ── Work thumbnail video — auto-play once scrolled into view, crossfade through the loop point
   document.querySelectorAll('.work-visual-screen').forEach(video => {
-    const link = video.closest('.work-link');
     let loopTimer;
 
     video.addEventListener('ended', () => {
@@ -763,18 +728,20 @@
       }, 400); // matches the CSS opacity transition duration
     });
 
-    link.addEventListener('mouseenter', () => {
-      clearTimeout(loopTimer);
-      video.classList.remove('fading');
-      video.currentTime = 0;
-      video.play();
-    });
-    link.addEventListener('mouseleave', () => {
-      clearTimeout(loopTimer);
-      video.classList.remove('fading');
-      video.pause();
-      video.currentTime = 0;
-    });
+    const visualIo = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        clearTimeout(loopTimer);
+        video.classList.remove('fading');
+        if (entry.isIntersecting) {
+          video.currentTime = 0;
+          video.play();
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+    }, { threshold: 0.4 });
+    visualIo.observe(video);
   });
 
   // ── Nav — underline Work/About based on which section is in view
@@ -790,6 +757,7 @@
   }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
   navSpySections.forEach(s => { if (s) navSpyIo.observe(s); });
 </script>
+<script src="nav-menu.js" defer></script>
 
 </body>
 </html>

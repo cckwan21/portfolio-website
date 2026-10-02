@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About — Cheryl Kwan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── ABOUT PAGE SPECIFIC ── */
+  :root {
+    --content-max: 1100px;
+  }
+
+  .container {
+    max-width: calc(var(--content-max) + 96px);
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+
+  nav {
+    padding-left: 0;
+    padding-right: 0;
+    transition: transform 1.1s cubic-bezier(.16,1,.3,1);
+  }
+  nav.nav-hidden {
+    transform: translateY(-120%);
+  }
+
+  .nav-inner {
+    width: 100%;
+    max-width: calc(var(--content-max) + 96px);
+    margin: 0 auto;
+    padding: 0 64px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  /* ── LIGHT THEME OVERRIDE (whole page) ── */
+  html, body {
+    background: #F2F2F2;
+    color: #000000;
+  }
+
+  .nav-logo {
+    font-size: 24px;
+    font-weight: 300;
+    text-transform: none;
+    color: #000000;
+    justify-self: start;
+  }
+  .nav-links {
+    justify-self: center;
+    gap: 24px;
+    align-items: center;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid transparent;
+    box-shadow: none;
+    border-radius: 999px;
+    padding: 8px;
+    transition: background .5s cubic-bezier(.16,1,.3,1),
+                backdrop-filter .5s cubic-bezier(.16,1,.3,1),
+                -webkit-backdrop-filter .5s cubic-bezier(.16,1,.3,1),
+                border-color .5s cubic-bezier(.16,1,.3,1),
+                box-shadow .5s cubic-bezier(.16,1,.3,1);
+  }
+  nav.scrolled .nav-links {
+    background: linear-gradient(180deg, rgba(242, 242, 242, 0.98), rgba(242, 242, 242, 0.9));
+    backdrop-filter: blur(200px) saturate(200%);
+    -webkit-backdrop-filter: blur(200px) saturate(200%);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.2),
+      inset 0 1px 1px rgba(255, 255, 255, 1),
+      inset 0 -1px 3px rgba(0, 0, 0, 0.08);
+  }
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 300;
+    color: #000000;
+    opacity: 1;
+    padding: 0 24px;
+    border-radius: 32px;
+    transition: background .3s cubic-bezier(.16,1,.3,1), color .3s cubic-bezier(.16,1,.3,1), opacity .2s, padding .3s cubic-bezier(.16,1,.3,1);
+  }
+  .nav-links a::after { display: none; }
+  .nav-links a:hover:not(.active) { opacity: .55; padding: 16px 24px; }
+  .nav-links a.active {
+    background: #000000;
+    color: #ffffff;
+    padding: 16px 24px;
+  }
+
+  nav.scrolled .nav-logo,
+  nav.scrolled .nav-links a:not(.active) { color: #000000 !important; }
+  nav::after { display: none; }
+  nav.scrolled {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 28px 0;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 130px 0 160px;
+  }
+
+  /* ── TABS ── */
+  .about-tabs {
+    display: none;
+    gap: 16px;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 1s .05s forwards;
+  }
+
+  .about-tab {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(15px, 1.6vw, 20px);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    color: #000000;
+    background: transparent;
+    border: 1px solid #000000;
+    border-radius: 32px;
+    padding: 12px 20px;
+    cursor: none;
+    transition: background .3s cubic-bezier(.16,1,.3,1), color .3s cubic-bezier(.16,1,.3,1);
+  }
+
+  .about-tab.active {
+    background: #000000;
+    color: #ffffff;
+  }
+
+  .about-panel {
+    display: none;
+  }
+
+  .about-panel.active {
+    display: block;
+  }
+
+  .about-heading {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 400;
+    color: #000000;
+    margin-bottom: 64px;
+    opacity: 0;
+    animation: fadeUp 1s .1s forwards;
+  }
+
+  .corner-heading {
+    font-family: 'Yuji Boku', cursive;
+    font-weight: 400;
+    font-size: clamp(20px, 2.4vw, 32px);
+  }
+
+  .about-accent {
+    font-family: 'Yuji Boku', cursive;
+    font-weight: 400;
+  }
+
+  .about-grid {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 60px;
+  }
+
+  .about-bio {
+    max-width: 734px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 28px;
+    line-height: 1.25;
+    color: #000000;
+    opacity: 0;
+    animation: fadeUp 1s .2s forwards;
+  }
+
+  .about-bio p {
+    margin-bottom: 1.25em;
+  }
+
+  .about-bio p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-bio .about-accent {
+    display: inline;
+  }
+
+  .about-bio em {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-style: italic;
+  }
+
+  .about-photo {
+    flex-shrink: 0;
+    width: 431px;
+    max-width: 38vw;
+    aspect-ratio: 431 / 647;
+    border-radius: 16px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 1s .3s forwards;
+  }
+
+  .about-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── CHERYL'S CORNER — scattered collage ──
+     Absolutely positioned to match the Figma layout's organic, overlapping
+     placement (the self-portrait and coastal photo deliberately overlap as a
+     small stacked "travel photos" pile) rather than flattening everything
+     into a clean grid. Percentages are normalized from the original design's
+     coordinates. Each item's box uses that photo's real aspect-ratio, so
+     object-fit: cover has to crop only what the box's own shape requires —
+     not an arbitrary mismatched crop. */
+  .corner-collage {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    aspect-ratio: 1287 / 760;
+  }
+
+  .corner-item {
+    position: absolute;
+    opacity: 0;
+    animation: fadeUp .8s forwards;
+  }
+
+  .corner-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .corner-num {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 10px);
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #000000;
+    white-space: nowrap;
+  }
+
+  .corner-quote {
+    background: #9ac6cc;
+    border-radius: 24px;
+    padding: 5% 6%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .corner-quote-title {
+    font-family: 'Yuji Boku', cursive;
+    font-weight: 400;
+    font-size: clamp(20px, 2.2vw, 32px);
+    margin-bottom: 8px;
+  }
+
+  .corner-quote-body {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(14px, 1.2vw, 18px);
+    font-weight: 350;
+    line-height: 1.3;
+  }
+
+  /* left/top/width are normalized from the Figma coordinates; aspect-ratio
+     matches each source photo so nothing gets stretched or over-cropped. */
+  .corner-item--coastal   { left: 2%;     top: 4%;   width: 18%;   aspect-ratio: 2731 / 4096; z-index: 1; }
+  .corner-item--travel    { left: 4%;     top: 0%;   width: 19%;   aspect-ratio: 3072 / 4096; z-index: 2; }
+  .corner-item--quote     { left: 32%;    top: 1%;   width: 23.5%; aspect-ratio: 304 / 188; }
+  .corner-item--figurine  { left: 80.5%;  top: 0%;   width: 19%;   aspect-ratio: 1 / 1; }
+  .corner-item--book      { left: 62.5%;  top: 21%;  width: 10.5%; aspect-ratio: 500 / 768; }
+  .corner-item--snowboard { left: 35%;    top: 49%;  width: 19%;   aspect-ratio: 1536 / 2048; }
+  .corner-item--article   { left: 0%;     top: 67%;  width: 23%;   aspect-ratio: 1179 / 839; }
+
+  .corner-list {
+    position: absolute;
+    left: 63%;
+    top: 55%;
+    width: 35%;
+    list-style: decimal;
+    padding-left: 22px;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: clamp(14px, 1.1vw, 18px);
+    font-weight: 400;
+    color: #000000;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp .8s .5s forwards;
+  }
+
+  .corner-list li {
+    margin-bottom: 10px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .container { padding: 0 40px; }
+    .about { padding: 110px 0 100px; }
+    .about-grid { flex-direction: column-reverse; gap: 40px; }
+    .about-photo { width: 320px; max-width: 100%; }
+
+    /* Scattered absolute positioning only really works with room to breathe —
+       below 900px it collapses into a plain stacked flow instead. */
+    .corner-collage {
+      position: static;
+      aspect-ratio: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .corner-item {
+      position: static;
+      width: 100% !important;
+      aspect-ratio: auto !important;
+    }
+    .corner-item img { border-radius: 20px; max-height: 60vh; }
+    .corner-num { position: static; display: block; margin-top: 8px; }
+    .corner-list { position: static; width: 100%; }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 24px; }
+    .nav-logo { font-size: 18px; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: 16px; }
+    .about { padding: 90px 0 80px; }
+    .about-heading { margin-bottom: 40px; }
+    .about-photo { width: 100%; }
+    .about-tabs { gap: 10px; margin-bottom: 40px; }
+    .about-tab { padding: 10px 16px; }
+
+    .corner-collage { gap: 16px; }
+    .corner-item img { max-height: 50vh; }
+  }
+
+  /* ── FOOTER — minimal, matching case study pages / homepage ── */
+  footer { border-top: 1px solid rgba(0, 0, 0, .1); }
+  .footer-text {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    color: #000000;
+    opacity: .5;
+  }
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  a.footer-text {
+    text-decoration: none;
+    transition: opacity .2s;
+  }
+  a.footer-text:hover {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="portfolio.html" class="nav-logo">cheryl_kwan</a>
+    <ul class="nav-links">
+      <li><a href="portfolio.html#work">Work</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-overlay"></div>
+
+<!-- ── ABOUT ── -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-tabs" role="tablist">
+      <button type="button" class="about-tab active" data-tab="bio" role="tab" aria-selected="true">about cheryl</button>
+      <button type="button" class="about-tab" data-tab="corner" role="tab" aria-selected="false">cheryl's corner</button>
+    </div>
+
+    <div class="about-panel active" data-panel="bio">
+      <h1 class="about-heading">About (<span class="about-accent">cheryl</span>)</h1>
+      <div class="about-grid">
+        <div class="about-bio">
+          <p>I'm a <span class="about-accent">senior product designer</span> with 8 years of experience, currently based in Hong Kong (though I spent most of my young adult years in Vancouver, Canada). I fell into fintech/crypto 6 years ago and got hooked on <span class="about-accent">turning complicated ideas into something simple</span> — I think you don't really understand a concept until you can explain it simply.</p>
+          <p>My process is <em>never linear</em>. It usually starts with me asking "<span class="about-accent">wait, why are we doing this?</span>" before touching a single screen — I like to really understand what a PM's trying to solve, not just take the ask at face value. From there I go digging: auditing our existing flow, checking out what competitors are doing, gathering enough context <span class="about-accent">to land on something I actually believe in</span>.</p>
+          <p>A bit more legwork upfront, but worth it.</p>
+        </div>
+        <div class="about-photo">
+          <img src="images/about-portrait.jpg" alt="Cheryl Kwan" />
+        </div>
+      </div>
+    </div>
+
+    <div class="about-panel" data-panel="corner" hidden>
+      <h1 class="about-heading corner-heading">✦ Welcome to my corner outside as a designer</h1>
+      <div class="corner-collage">
+        <div class="corner-item corner-item--coastal">
+          <img src="images/corner-coastal-bonus.jpg" alt="A travel photo of a coastal village" />
+        </div>
+        <div class="corner-item corner-item--travel">
+          <img src="images/corner-travel.jpg" alt="A self-portrait taken while out shooting travel photos" />
+          <span class="corner-num">(01)</span>
+        </div>
+        <div class="corner-item corner-item--quote">
+          <div class="corner-quote">
+            <p class="corner-quote-title">Everything</p>
+            <p class="corner-quote-body">is a win if the goal is to experience</p>
+          </div>
+          <span class="corner-num">(04)</span>
+        </div>
+        <div class="corner-item corner-item--figurine">
+          <img src="images/corner-figurine.png" alt="A small figurine that makes me smile" />
+          <span class="corner-num">(03)</span>
+        </div>
+        <div class="corner-item corner-item--book">
+          <img src="images/corner-book.png" alt="Cover of a recent favourite read" />
+          <span class="corner-num">(05)</span>
+        </div>
+        <div class="corner-item corner-item--snowboard">
+          <img src="images/corner-snowboard.jpg" alt="Snowboarding on a mountain" />
+          <span class="corner-num">(02)</span>
+        </div>
+        <div class="corner-item corner-item--article">
+          <img src="images/corner-article.jpg" alt="Screenshot of an article that resonated with me" />
+          <span class="corner-num">(06)</span>
+        </div>
+        <ol class="corner-list">
+          <li>i take travel photos sometimes</li>
+          <li>snowboarding makes me feel alive</li>
+          <li>trinket that makes me smile</li>
+          <li>quote that i live by</li>
+          <li>recent favourite read</li>
+          <li>article that really resonated with me</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer id="contact">
+  <span class="footer-text">© 2026 Cheryl Kwan. All Rights Reserved.</span>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/cheryl-kwan/" target="_blank" rel="noopener" class="footer-text">LinkedIn</a>
+    <a href="mailto:cherylkwancl@gmail.com" class="footer-text">Contact me</a>
+    <span class="footer-text">Currently: Hong Kong · <span id="hk-time"></span></span>
+  </div>
+</footer>
+
+<script>
+  function updateHKTime() {
+    var el = document.getElementById('hk-time');
+    if (!el) return;
+    el.textContent = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Hong_Kong', hour: 'numeric', minute: '2-digit', hour12: true,
+    }).format(new Date());
+  }
+  updateHKTime();
+  setInterval(updateHKTime, 30000);
+</script>
+
+<script>
+  // ── Nav glass-in-on-scroll + hide-on-scroll-down (past intro only)
+  const nav = document.querySelector('nav');
+  const heroEl = document.querySelector('.about-grid');
+  const heroBottom = heroEl ? heroEl.offsetHeight : 0;
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const currentY = window.scrollY;
+    nav.classList.toggle('scrolled', currentY > 20);
+    if (currentY <= heroBottom) {
+      nav.classList.remove('nav-hidden');
+    } else if (currentY > lastScrollY) {
+      nav.classList.add('nav-hidden');
+    } else if (currentY < lastScrollY) {
+      nav.classList.remove('nav-hidden');
+    }
+    lastScrollY = currentY;
+  }, { passive: true });
+
+  // ── Custom cursor
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  (function tick() {
+    cx += (mx - cx) * 0.35;
+    cy += (my - cy) * 0.35;
+    cursor.style.left = cx + 'px';
+    cursor.style.top  = cy + 'px';
+    requestAnimationFrame(tick);
+  })();
+
+  document.querySelectorAll('a, .about-tab').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
+
+  // ── About tabs
+  const tabs = document.querySelectorAll('.about-tab');
+  const panels = document.querySelectorAll('.about-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => {
+        const isActive = t === tab;
+        t.classList.toggle('active', isActive);
+        t.setAttribute('aria-selected', isActive);
+      });
+      panels.forEach(panel => {
+        const isActive = panel.dataset.panel === target;
+        panel.classList.toggle('active', isActive);
+        panel.hidden = !isActive;
+      });
+    });
+  });
+</script>
+<script src="nav-menu.js" defer></script>
+
+</body>
+</html>
