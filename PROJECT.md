@@ -9,7 +9,7 @@
 
 ```
 /
-├── portfolio.html           — Homepage
+├── index.html           — Homepage
 ├── case-study.html          — Case study: Crypto Deposit
 ├── styles.css               — Shared stylesheet (fonts, tokens, nav, footer, animations)
 ├── Vercetti-Regular.ttf     — Self-hosted display font
@@ -49,7 +49,7 @@
 ### Page-specific `<style>` blocks
 Each page links `styles.css` first, then defines only its own styles:
 
-**`portfolio.html`** — container, hero (light mode), project rows, image grid, capability section, footer padding override
+**`index.html`** — container, hero (light mode), project rows, image grid, capability section, footer padding override
 
 **`case-study.html`** — block system, typography classes, hero variants, metadata strip, solution group, KPI callout, next-project, screens layout
 
@@ -66,7 +66,7 @@ Each page links `styles.css` first, then defines only its own styles:
 --color-muted-lg:  #888      /* lighter muted */
 --divider:         #1a1a1a   /* rule lines */
 
-/* Aliases (portfolio.html backwards compat) */
+/* Aliases (index.html backwards compat) */
 --accent     → --color-highlight
 --white      → --color-on-dark
 --gray       → --color-muted
@@ -95,7 +95,7 @@ Each page links `styles.css` first, then defines only its own styles:
 
 All letter-spacing is `0` globally.
 
-### Portfolio (`portfolio.html`)
+### Portfolio (`index.html`)
 
 | Element           | Font        | Size                        | Weight | Color   | Notes                          |
 |-------------------|-------------|-----------------------------|--------|---------|--------------------------------|
@@ -325,7 +325,7 @@ FOOTER
 
 | Page | Status | Notes |
 |------|--------|-------|
-| `portfolio.html` | ✅ Complete | Typography updated, hero in light mode, all rows linked |
+| `index.html` | ✅ Complete | Typography updated, hero in light mode, all rows linked |
 | `case-study.html` | ✅ Content in | Placeholder images remain — needs real screenshots |
 | `portfolio-visibility.html` | ✅ Content in | Solution section added; placeholder images remain |
 | `browser-extension.html` | ✅ Content in | Hero image wired (`browser-extension.png`) |

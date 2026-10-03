@@ -3,7 +3,7 @@
   CHERYL KWAN — SHARED STYLES
   styles.css
 
-  Shared across: portfolio.html, all case-study pages
+  Shared across: index.html, all case-study pages
   ═══════════════════════════════════════════
 */
 
@@ -114,7 +114,7 @@
   --color-muted-lg:  #888;
   --divider:         #1a1a1a;
 
-  /* Aliases (backwards compat with portfolio.html) */
+  /* Aliases (backwards compat with index.html) */
   --accent:      var(--color-highlight);
   --bg:          var(--color-surface);
   --white:       var(--color-on-dark);

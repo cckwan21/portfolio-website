@@ -10,7 +10,7 @@ How to create and update case studies for this portfolio.
 2. **Rename** it to match the project, e.g. `portfolio-visibility.html`
 3. **Fill in** the fixed structure at the top (see below)
 4. **Build** the content by copying blocks from the Block Library section
-5. **Link it** from `portfolio.html` by updating the project row's `href`
+5. **Link it** from `index.html` by updating the project row's `href`
 
 ---
 
@@ -59,7 +59,7 @@ Remove the `<a>` tag if there's no prototype.
   <div class="next-title">[Next project title]</div>
 </a>
 ```
-Point this to the next case study in the list. For the last one, point back to `portfolio.html`.
+Point this to the next case study in the list. For the last one, point back to `index.html`.
 
 ---
 
@@ -129,7 +129,7 @@ and its JS block in the `<script>` tag.
 
 ## Adding the new case study to the homepage
 
-In `portfolio.html`, find the matching project row and add the link:
+In `index.html`, find the matching project row and add the link:
 
 ```html
 <!-- before -->
@@ -167,5 +167,5 @@ Images go in the `/images/` folder, named clearly: `[project]-[description].png`
 - [ ] All placeholder images replaced with real screenshots
 - [ ] Prototype link updated (or CTA removed)
 - [ ] Next project link points to the right page
-- [ ] Project row linked from `portfolio.html`
+- [ ] Project row linked from `index.html`
 - [ ] Theme toggle button removed
