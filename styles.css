@@ -487,3 +487,24 @@ footer {
   .nav-links { gap: 8px; }
   .nav-links a { font-size: 11px; }
 }
+
+/* ── NAV — Hong Kong time (moved up from the footer) ──
+   Sits in the empty right column of the nav grid. A desktop/tablet-only
+   touch: hidden below 700px, where that column gets too narrow for it
+   (and, under 600px, the spot belongs to the menu button). */
+.nav-time {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  font-family: 'Lausanne', Helvetica, sans-serif;
+  font-size: 18px; /* same as Work / About */
+  font-weight: 300;
+  color: #000000;
+  opacity: .6;
+  white-space: nowrap;
+}
+
+@media (max-width: 699px) {
+  .nav-time { display: none; }
+}
