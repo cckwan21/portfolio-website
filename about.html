@@ -180,8 +180,9 @@
     max-width: 734px;
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-weight: 300;
-    font-size: 28px;
-    line-height: 1.25;
+    /* Same scale as the homepage intro (.bio-text) */
+    font-size: clamp(24px, 3.1vw, 40px);
+    line-height: 1.35;
     color: #000000;
     opacity: 0;
     animation: fadeUp 1s .2s forwards;
@@ -352,6 +353,7 @@
     .nav-links a { font-size: 16px; }
     .about { padding: 90px 0 80px; }
     .about-heading { margin-bottom: 40px; }
+    .about-bio { font-size: 22px; line-height: 1.4; }
     .about-photo { width: 100%; }
     .about-tabs { gap: 10px; margin-bottom: 40px; }
     .about-tab { padding: 10px 16px; }
