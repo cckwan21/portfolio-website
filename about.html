@@ -494,15 +494,19 @@
 </script>
 
 <script>
-  // ── Nav glass-in-on-scroll + hide-on-scroll-down (past intro only)
+  // ── Nav glass-in-on-scroll + hide-on-scroll-down (past the active tab's
+  // heading only, like the homepage's intro). Measured on each scroll since
+  // the two tabs' headings sit at different heights.
   const nav = document.querySelector('nav');
-  const heroEl = document.querySelector('.about-grid');
-  const heroBottom = heroEl ? heroEl.offsetHeight : 0;
+  const heroBottom = () => {
+    const heading = document.querySelector('.about-panel.active .about-heading');
+    return heading ? heading.getBoundingClientRect().bottom + window.scrollY : 0;
+  };
   let lastScrollY = window.scrollY;
   window.addEventListener('scroll', () => {
     const currentY = window.scrollY;
     nav.classList.toggle('scrolled', currentY > 20);
-    if (currentY <= heroBottom) {
+    if (currentY <= heroBottom()) {
       nav.classList.remove('nav-hidden');
     } else if (currentY > lastScrollY) {
       nav.classList.add('nav-hidden');
