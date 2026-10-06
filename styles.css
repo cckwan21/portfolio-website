@@ -422,7 +422,7 @@ body:has(nav.menu-open) { overflow: hidden; }
 
 /* ── FOOTER ── */
 footer {
-  border-top: 1px solid var(--divider);
+  background: #000000;
   padding: 30px var(--pad);
   display: flex;
   justify-content: space-between;
@@ -435,9 +435,12 @@ footer {
   font-weight: 500;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--color-highlight);
-  opacity: .55;
+  color: #FFFFFF;
+  opacity: .7;
 }
+
+/* Two-line credit on the left of the footer */
+.footer-credit { line-height: 1.8; }
 
 /* ── ANIMATIONS ── */
 @keyframes fadeIn {
