@@ -278,7 +278,19 @@
     height: 412px;
   }
 
-  .visual--video { position: relative; overflow: hidden; }
+  /* The phone mockups' corner radius stays a fixed fraction of the frame's
+     height, so it shrinks with the device as the window narrows instead of a
+     fixed px radius looking progressively rounder (same idea as the homepage's
+     --device-radius-scale, but continuous since some frames scale with width).
+     --device-radius is the px radius at --device-ref-h, the frame's full
+     desktop height; frames with a different desktop height override both. */
+  .visual--video {
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    --device-radius: 20;
+    --device-ref-h: 412;
+  }
   .visual--video img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .visual-screen {
     position: absolute;
@@ -288,6 +300,7 @@
     height: 86%;
     width: auto;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     background: #000;
     transition: opacity 0.4s ease;
@@ -301,6 +314,7 @@
     transform: translate(-50%, -50%);
     height: 86%;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     background: #0a0e14;
   }
 
@@ -455,10 +469,10 @@
       <span class="label">Overview</span>
       <p class="body">The crypto deposit flow was one of the most critical — and most friction-heavy — parts of the app, and a legacy flow that hadn't been improved since 2021. At the same time, the team was rebuilding the design system, and deposit became the first flow to be redesigned under it, given the time and effort available. I wasn't involved in building the new design system itself, but I worked in parallel to migrate it into the deposit flow redesign as I went, given the limited timeline.</p>
       <p class="body">Deposit sits directly on the critical path. A user cannot place their first trade without depositing funds first, making it one of the highest-leverage flows to get right.</p>
-      <div class="visual visual--video reveal" style="margin-top:40px; height:auto; aspect-ratio: 2400/1199; background:none;">
+      <div class="visual visual--video reveal" style="margin-top:40px; height:auto; aspect-ratio: 2400/1199; background:none; --device-radius: 36; --device-ref-h: 476.6;">
         <img src="images/deposit-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
-        <div class="visual-backer" style="aspect-ratio: 662/1348; border-radius:36px;"></div>
-        <video class="visual-screen visual-screen--autoplay-loop" style="border-radius:36px;" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
+        <div class="visual-backer" style="aspect-ratio: 662/1348;"></div>
+        <video class="visual-screen visual-screen--autoplay-loop" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
       </div>
     </div>
 
@@ -536,7 +550,7 @@
       </ul>
       <div class="visual-pair reveal">
         <div class="visual" style="background:none; height:auto; aspect-ratio:2092/2124;"><img src="images/deposit-ui-before.png" alt="Before: dense deposit screen mixing essential and secondary information with no clear hierarchy" style="width:100%; height:100%; object-fit:contain;" /></div>
-        <div class="visual visual--video" style="background:none; height:auto; aspect-ratio:2092/2124;">
+        <div class="visual visual--video" style="background:none; height:auto; aspect-ratio:2092/2124; --device-ref-h: 476.2;">
           <img src="images/deposit-ui-after.png" alt="After" />
           <video class="visual-screen visual-screen--deposit-detail" src="images/deposit-more.mp4" autoplay muted loop playsinline preload="metadata"></video>
         </div>

@@ -241,7 +241,19 @@
     color: #000000;
   }
 
-  .visual--video { position: relative; overflow: hidden; }
+  /* The phone mockups' corner radius stays a fixed fraction of the frame's
+     height, so it shrinks with the device when .visual drops to 260px on
+     mobile instead of a fixed px radius looking much rounder (same idea as
+     the homepage's --device-radius-scale). --device-radius is the px radius
+     at --device-ref-h, the frame's full desktop height. */
+  .visual--video {
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    --device-radius: 20;
+    --device-ref-h: 412;
+  }
+  .visual.tall.visual--video { --device-ref-h: 465; }
   .visual--video img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .visual--imgpair { background: none; gap: 16px; }
@@ -254,6 +266,7 @@
     height: 86%;
     width: auto;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     background: #000;
   }

@@ -354,7 +354,19 @@
     color: #000000;
   }
 
-  .visual--video { position: relative; overflow: hidden; }
+  /* The phone mockups' corner radius stays a fixed fraction of the frame's
+     height, so it shrinks with the device as the window narrows instead of a
+     fixed px radius looking progressively rounder (same idea as the homepage's
+     --device-radius-scale, but continuous since these frames scale with width).
+     --device-radius is the px radius at --device-ref-h, the frame's full
+     desktop height (954px-wide column at a 2400/1199 ratio). */
+  .visual--video {
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    --device-radius: 20;
+    --device-ref-h: 476.6;
+  }
   .visual--video img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .visual-screen {
     position: absolute;
@@ -364,6 +376,7 @@
     height: 86%;
     width: auto;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     background: #000;
     transition: opacity 0.4s ease;
@@ -377,6 +390,7 @@
     transform: translate(-50%, -50%);
     height: 86%;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     background: #0a0e14;
   }
 
@@ -749,14 +763,14 @@
           <div class="carousel-slide" data-caption="Import existing wallet">
             <div class="visual visual--video" style="width:100%; height:100%; background:none;">
               <img src="images/extension-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
-              <div class="visual-backer" style="aspect-ratio: 718/1156; border-radius:20px; background:#F4F6F9;"></div>
+              <div class="visual-backer" style="aspect-ratio: 718/1156; background:#F4F6F9;"></div>
               <video class="visual-screen" src="images/extension-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
           </div>
           <div class="carousel-slide" data-caption="Send tokens">
             <div class="visual visual--video" style="width:100%; height:100%; background:none;">
               <img src="images/extension-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
-              <div class="visual-backer" style="aspect-ratio: 714/1152; border-radius:20px; background:#F4F6F9;"></div>
+              <div class="visual-backer" style="aspect-ratio: 714/1152; background:#F4F6F9;"></div>
               <video class="visual-screen" src="images/extension-send-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
           </div>

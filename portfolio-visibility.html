@@ -297,7 +297,19 @@
     color: #000000;
   }
 
-  .visual--video { position: relative; overflow: hidden; }
+  /* The phone mockups' corner radius stays a fixed fraction of the frame's
+     height, so it shrinks with the device as the window narrows instead of a
+     fixed px radius looking progressively rounder (same idea as the homepage's
+     --device-radius-scale, but continuous since these frames scale with width).
+     --device-radius is the px radius at --device-ref-h, the frame's full
+     desktop height (954px-wide column at a 2400/1199 ratio). */
+  .visual--video {
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    --device-radius: 20;
+    --device-ref-h: 476.6;
+  }
   .visual--video img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .visual-screen {
     position: absolute;
@@ -307,6 +319,7 @@
     height: 86%;
     width: auto;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
     background: #000;
     transition: opacity 0.4s ease;
@@ -320,6 +333,7 @@
     transform: translate(-50%, -50%);
     height: 86%;
     border-radius: 20px;
+    border-radius: calc(var(--device-radius) * 100cqh / var(--device-ref-h));
     background: #0a0e14;
   }
 
@@ -514,10 +528,10 @@
     <div class="section reveal" id="overview">
       <span class="label">Overview</span>
       <p class="body">The Crypto.com Exchange App's wallet tab hadn't been updated since 2021. As trading behaviours evolved and the product expanded, the tab struggled to keep up — users had no visibility into PnL, no easy access to their positions, and no sense of the full range of products available to them. I redesigned it from the ground up to give traders the clarity and confidence they needed to make better decisions.</p>
-      <div class="visual visual--video reveal" style="margin-top:40px; height:auto; aspect-ratio: 2400/1199; background:none;">
+      <div class="visual visual--video reveal" style="margin-top:40px; height:auto; aspect-ratio: 2400/1199; background:none; --device-radius: 44;">
         <img src="images/wallet-tab-thumbnail-bg.jpg" alt="" style="object-fit:cover;" />
-        <div class="visual-backer" style="aspect-ratio: 764/1528; border-radius:44px;"></div>
-        <video class="visual-screen visual-screen--autoplay-loop" style="border-radius:44px;" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
+        <div class="visual-backer" style="aspect-ratio: 764/1528;"></div>
+        <video class="visual-screen visual-screen--autoplay-loop" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
       </div>
     </div>
 
