@@ -346,6 +346,13 @@
     border-radius: 20px;
     padding: 32px 40px;
     overflow-x: auto;
+    /* Right-edge shadow that only shows while more content is scrolled off to
+       the right: the white "local" gradient scrolls with the content and covers
+       the fixed "scroll" shadow once the end is reached. */
+    background:
+      linear-gradient(to left, #FFFFFF 30%, rgba(255,255,255,0)) right center / 40px 100% no-repeat local,
+      radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.14), rgba(0,0,0,0)) right center / 14px 100% no-repeat scroll,
+      #FFFFFF;
   }
   .comparison-table table {
     width: 100%;
@@ -358,12 +365,14 @@
     font-weight: 700;
     font-size: 16px;
     color: #000000;
-    padding-bottom: 20px;
+    padding: 0 12px 20px;
     border-bottom: 1px solid rgba(0,0,0,0.15);
   }
   .comparison-table th:not(:first-child),
   .comparison-table td:not(:first-child) {
     text-align: center;
+    width: 96px;
+    min-width: 96px;
   }
   .comparison-table td {
     font-weight: 300;
@@ -477,6 +486,27 @@
     .meta-row { grid-template-columns: 1fr; gap: 24px; }
     .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
     .visual { height: 260px; }
+    /* Competitive analysis tables: five columns can't fit a phone, so the
+       table scrolls sideways with the feature column pinned on the left. */
+    .comparison-table { padding: 20px 16px; border-radius: 16px; }
+    .comparison-table:has(table) { padding-left: 0; }
+    .comparison-table th { font-size: 13px; padding: 0 8px 14px; }
+    .comparison-table td { font-size: 14px; line-height: 1.35; padding: 14px 8px; }
+    .comparison-table .icon-yes,
+    .comparison-table .icon-no { font-size: 14px; }
+    .comparison-table th:not(:first-child),
+    .comparison-table td:not(:first-child) { width: 84px; min-width: 84px; }
+    .comparison-table th:first-child,
+    .comparison-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      width: 116px;
+      min-width: 116px;
+      padding-left: 16px;
+      background: #FFFFFF;
+      box-shadow: 1px 0 0 rgba(0,0,0,0.08);
+    }
   }
 </style>
 </head>
