@@ -480,7 +480,7 @@
         <li>US — our largest overall user base</li>
       </ul>
       <p class="body" style="margin-top:24px;">We also referenced competitors' UK EDD flows for comparison.</p>
-      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-regions.png" alt="Diagram comparing per-region requirements: UK requires EDD, risk profile, and knowledge test; US requires EDD and SSN" style="width:100%; display:block;" /></div>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-regions.webp" alt="Diagram comparing per-region requirements: UK requires EDD, risk profile, and knowledge test; US requires EDD and SSN" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── RESEARCH & DISCOVERY ── -->
@@ -488,7 +488,7 @@
       <span class="label">Research &amp; discovery</span>
       <p class="body">Before proposing changes, I audited our existing KYC EDD flows across regions to understand current limitations and the reasoning behind past decisions. I also reviewed the Crypto.com app's EDD flow — both its overall structure and its approach to SSN collection — and spoke with their PM to understand the reasoning behind their design decisions, using it as a reference throughout the redesign.</p>
       <p class="body">Alongside the audit, I conducted user interviews with two participants, which surfaced specific findings referenced in the issues below.</p>
-      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-audit.png" alt="Audit board mapping Crypto.com's Wallet app and Exchange EDD flows, including UK risk profile, knowledge assessment, and educational guide screens" style="width:100%; display:block;" /></div>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img loading="lazy" decoding="async" src="images/edd-audit.webp" alt="Audit board mapping Crypto.com's Wallet app and Exchange EDD flows, including UK risk profile, knowledge assessment, and educational guide screens" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── PROBLEM 1 ── -->
@@ -498,7 +498,7 @@
       <p class="body">EDD, risk profile, and knowledge assessment were originally <strong>split into three flows with separate entry points</strong>, based on the assumption that showing steps only when needed would reduce upfront friction and let users start browsing sooner. <strong>I merged them into one continuous assessment instead.</strong></p>
       <p class="body">In practice, triggering these assessments at unpredictable points created a more disjointed experience, not a lighter one.</p>
       <p class="body">A UK user interview confirmed this — he accepted EDD itself as standard across banking apps, but found being interrupted by unrelated questions more frustrating than the form's length. Combining the three into one upfront assessment set clear expectations and removed the surprise factor, trading three short interruptions for one longer session.</p>
-      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-merging.png" alt="Before/after diagram showing EDD, risk profile, and knowledge test triggering separately at unpredictable points, versus merged into one continuous assessment flow" style="width:100%; display:block;" /></div>
+      <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img loading="lazy" decoding="async" src="images/edd-merging.webp" alt="Before/after diagram showing EDD, risk profile, and knowledge test triggering separately at unpredictable points, versus merged into one continuous assessment flow" style="width:100%; display:block;" /></div>
     </div>
 
     <!-- ── PROBLEM 2 ── -->
@@ -512,18 +512,18 @@
       </ul>
       <p class="body" style="margin-top:24px;">I front-loaded assessments too — EDD for US, and EDD, risk profile, and knowledge test for UK — into the same wait window, <strong>clearing these blockers early so users can access the rest of the product without interruption afterward.</strong></p>
       <div class="visual visual--imgpair reveal" style="margin-top:24px;">
-        <img src="images/before-frontload.png" alt="Before: KYC verification in progress leads straight to a 30-second wait, then resubmit, success, or failed" />
-        <img src="images/after-frontload.png" alt="After: KYC verification in progress leads into address input, then EDD, risk profile, and knowledge test, filling the same 30-second wait window, before reaching KYC status" />
+        <img loading="lazy" decoding="async" src="images/before-frontload.webp" alt="Before: KYC verification in progress leads straight to a 30-second wait, then resubmit, success, or failed" />
+        <img loading="lazy" decoding="async" src="images/after-frontload.webp" alt="After: KYC verification in progress leads into address input, then EDD, risk profile, and knowledge test, filling the same 30-second wait window, before reaching KYC status" />
       </div>
       <p class="body" style="margin-top:24px;">For address collection specifically, I also added Google-suggested autofill, speeding up entry compared to the static form previously in place.</p>
       <div class="visual visual--video reveal" style="margin-top:24px;">
-        <img src="images/google-address-thumbnail-bg.jpg" alt="" />
+        <img loading="lazy" decoding="async" src="images/google-address-thumbnail-bg.webp" alt="" />
         <video class="visual-screen" src="images/google-address-prototype.mp4" autoplay muted loop playsinline preload="metadata"></video>
       </div>
       <p class="body" style="margin-top:24px;">A user interview reinforced the opportunity: one participant described sitting on the loading screen unsure whether to quit or stay, since the wait had no clear purpose — creating abandonment risk.</p>
       <p class="body">This diverges from Crypto.com's approach, which gates SSN to only the specific features that need it — we front-loaded instead because SSN will soon be required broadly for a major upcoming product feature.</p>
       <div class="visual visual--video reveal" style="margin-top:40px;">
-        <img src="images/ssn-thumbnail-bg.jpg" alt="" />
+        <img loading="lazy" decoding="async" src="images/ssn-thumbnail-bg.webp" alt="" />
         <video class="visual-screen" src="images/ssn-prototype.mp4" autoplay muted loop playsinline preload="metadata"></video>
       </div>
     </div>
@@ -536,7 +536,7 @@
       <p class="body">UI: Compliance required keeping assessment copy exactly as-is, so I focused on structure instead — <strong>progress bars on longer flows, and clearer hierarchy for dense text blocks.</strong></p>
       <p class="body">Technical pushback: I proposed native over webview, since webview looked visually detached from the rest of onboarding. Tech pushed back — webview is faster to update for compliance changes — so we kept webview and closed the visual gap through UI work instead.</p>
       <div class="visual tall visual--video reveal" style="margin-top:40px;">
-        <img src="images/edd-thumbnail-bg.jpg" alt="" />
+        <img loading="lazy" decoding="async" src="images/edd-thumbnail-bg.webp" alt="" />
         <video class="visual-screen" src="images/edd-prototype.mp4" autoplay muted loop playsinline preload="metadata"></video>
       </div>
     </div>

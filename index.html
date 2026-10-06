@@ -499,11 +499,11 @@
   <div class="container">
     <div class="content-indent intro-flex">
       <p class="bio-text">
-        I'm <span class="bio-highlight" data-photo="images/cheryl-portrait.jpg" data-caption="Cheryl.jpeg">(Cheryl)</span> — a <span class="bio-highlight" data-photo="images/hongkong-taxi.png" data-caption="Hong Kong.jpeg">(Hong Kong-based)</span> product designer who finds the <span class="bio-highlight" data-video="images/constraint.mp4" data-caption="constraint.gif" data-width="171">(real constraint)</span> before designing anything, usually buried in <span class="bio-highlight" data-photo="images/cdc.jpeg" data-caption="fintech and crypto.jpg" data-width="228" data-height="152">(fintech and crypto's)</span> compliance rules and legacy systems.
+        I'm <span class="bio-highlight" data-photo="images/cheryl-portrait.jpg" data-caption="Cheryl.jpeg">(Cheryl)</span> — a <span class="bio-highlight" data-photo="images/hongkong-taxi.webp" data-caption="Hong Kong.jpeg">(Hong Kong-based)</span> product designer who finds the <span class="bio-highlight" data-video="images/constraint.mp4" data-caption="constraint.gif" data-width="171">(real constraint)</span> before designing anything, usually buried in <span class="bio-highlight" data-photo="images/cdc.jpeg" data-caption="fintech and crypto.jpg" data-width="228" data-height="152">(fintech and crypto's)</span> compliance rules and legacy systems.
       </p>
       <div class="bio-photo-slot">
         <div class="bio-photo">
-          <img src="images/hongkong-taxi.png" alt="" />
+          <img src="images/hongkong-taxi.webp" alt="" />
           <video muted loop playsinline preload="none"></video>
         </div>
         <span class="bio-photo-caption">Hong Kong.jpeg</span>
@@ -525,7 +525,7 @@
               <p class="work-tagline">Merging fragmented compliance flows into one consistent template.</p>
             </div>
             <div class="work-visual work-visual--video">
-              <div class="work-visual-parallax"><img src="images/edd-thumbnail-bg.jpg" alt="" /></div>
+              <div class="work-visual-parallax"><img loading="lazy" decoding="async" src="images/edd-thumbnail-bg.webp" alt="" /></div>
               <div class="work-visual-backer" style="aspect-ratio: 642 / 1398;"></div>
               <video class="work-visual-screen" src="images/edd-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
@@ -542,7 +542,7 @@
               <p class="work-tagline">Removing friction from the path to first trade.</p>
             </div>
             <div class="work-visual work-visual--video">
-              <div class="work-visual-parallax"><img src="images/deposit-thumbnail-bg.jpg" alt="" /></div>
+              <div class="work-visual-parallax"><img loading="lazy" decoding="async" src="images/deposit-thumbnail-bg.webp" alt="" /></div>
               <div class="work-visual-backer" style="aspect-ratio: 662 / 1348; border-radius: calc(36px * var(--device-radius-scale));"></div>
               <video class="work-visual-screen" style="border-radius: calc(36px * var(--device-radius-scale));" src="images/deposit-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
@@ -559,7 +559,7 @@
               <p class="work-tagline">Giving traders clarity into every position.</p>
             </div>
             <div class="work-visual work-visual--video">
-              <div class="work-visual-parallax"><img src="images/wallet-tab-thumbnail-bg.jpg" alt="" /></div>
+              <div class="work-visual-parallax"><img loading="lazy" decoding="async" src="images/wallet-tab-thumbnail-bg.webp" alt="" /></div>
               <div class="work-visual-backer" style="aspect-ratio: 764 / 1528; border-radius: calc(44px * var(--device-radius-scale));"></div>
               <video class="work-visual-screen" style="border-radius: calc(44px * var(--device-radius-scale));" src="images/wallet-tab-prototype.mp4" muted playsinline preload="metadata"></video>
             </div>
@@ -575,7 +575,7 @@
               <h3 class="work-title">04 — Building the Wallet Extension from 0 to 1</h3>
               <p class="work-tagline">Bringing DeFi to the browser, one click away.</p>
             </div>
-            <div class="work-visual"><div class="work-visual-parallax"><img src="images/wallet-extension-thumbnail.jpg" alt="" /></div></div>
+            <div class="work-visual"><div class="work-visual-parallax"><img loading="lazy" decoding="async" src="images/wallet-extension-thumbnail.webp" alt="" /></div></div>
             <div class="work-tags">
               <span class="work-tag">2022</span>
               <span class="work-tag">Wallet MVP</span>
@@ -654,6 +654,13 @@
   const bioPhotoImg = bioPhotoBox.querySelector('img');
   const bioPhotoVideo = bioPhotoBox.querySelector('video');
   const bioPhotoCaption = document.querySelector('.bio-photo-caption');
+  // Fetch the hover photos once the page has loaded, so the first hover
+  // doesn't flash an empty box while the image downloads
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.bio-highlight[data-photo]').forEach(span => {
+      new Image().src = span.dataset.photo;
+    });
+  });
   document.querySelectorAll('.bio-highlight').forEach(span => {
     span.addEventListener('mouseenter', () => {
       if (span.dataset.video) {
