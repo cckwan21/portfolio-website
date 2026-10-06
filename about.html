@@ -112,42 +112,6 @@
     padding: 130px 0 160px;
   }
 
-  /* ── TABS ── */
-  .about-tabs {
-    display: none;
-    gap: 16px;
-    margin-bottom: 56px;
-    opacity: 0;
-    animation: fadeUp 1s .05s forwards;
-  }
-
-  .about-tab {
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: clamp(15px, 1.6vw, 20px);
-    font-weight: 300;
-    letter-spacing: 0.01em;
-    color: #000000;
-    background: transparent;
-    border: 1px solid #000000;
-    border-radius: 32px;
-    padding: 12px 20px;
-    cursor: none;
-    transition: background .3s cubic-bezier(.16,1,.3,1), color .3s cubic-bezier(.16,1,.3,1);
-  }
-
-  .about-tab.active {
-    background: #000000;
-    color: #ffffff;
-  }
-
-  .about-panel {
-    display: none;
-  }
-
-  .about-panel.active {
-    display: block;
-  }
-
   .about-heading {
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-size: clamp(28px, 3.4vw, 40px);
@@ -158,15 +122,12 @@
     animation: fadeUp 1s .1s forwards;
   }
 
-  .corner-heading {
-    font-family: 'Ghost', serif;
-    font-weight: 300;
-    font-size: clamp(20px, 2.4vw, 32px);
-  }
-
+  /* Accent words stand out by colour only — same sans-serif and weight as
+     the text around them */
   .about-accent {
-    font-family: 'Ghost', serif;
-    font-weight: 300;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-weight: inherit;
+    color: #8A8A8A;
   }
 
   .about-grid {
@@ -180,9 +141,8 @@
     max-width: 734px;
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-weight: 300;
-    /* Same scale as the homepage intro (.bio-text) */
-    font-size: clamp(24px, 3.1vw, 40px);
-    line-height: 1.35;
+    font-size: 24px;
+    line-height: 1.4;
     color: #000000;
     opacity: 0;
     animation: fadeUp 1s .2s forwards;
@@ -223,127 +183,13 @@
     display: block;
   }
 
-  /* ── CHERYL'S CORNER — scattered collage ──
-     Absolutely positioned to match the Figma layout's organic, overlapping
-     placement (the self-portrait and coastal photo deliberately overlap as a
-     small stacked "travel photos" pile) rather than flattening everything
-     into a clean grid. Percentages are normalized from the original design's
-     coordinates. Each item's box uses that photo's real aspect-ratio, so
-     object-fit: cover has to crop only what the box's own shape requires —
-     not an arbitrary mismatched crop. */
-  .corner-collage {
-    position: relative;
-    width: 100%;
-    max-width: 1000px;
-    aspect-ratio: 1287 / 760;
-  }
-
-  .corner-item {
-    position: absolute;
-    opacity: 0;
-    animation: fadeUp .8s forwards;
-  }
-
-  .corner-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border-radius: 24px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-  }
-
-  .corner-num {
-    position: absolute;
-    left: 0;
-    top: calc(100% + 10px);
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    color: #000000;
-    white-space: nowrap;
-  }
-
-  .corner-quote {
-    background: #9ac6cc;
-    border-radius: 24px;
-    padding: 5% 6%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-  }
-
-  .corner-quote-title {
-    font-family: 'Ghost', serif;
-    font-weight: 300;
-    font-size: clamp(20px, 2.2vw, 32px);
-    margin-bottom: 8px;
-  }
-
-  .corner-quote-body {
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: clamp(14px, 1.2vw, 18px);
-    font-weight: 350;
-    line-height: 1.3;
-  }
-
-  /* left/top/width are normalized from the Figma coordinates; aspect-ratio
-     matches each source photo so nothing gets stretched or over-cropped. */
-  .corner-item--coastal   { left: 2%;     top: 4%;   width: 18%;   aspect-ratio: 2731 / 4096; z-index: 1; }
-  .corner-item--travel    { left: 4%;     top: 0%;   width: 19%;   aspect-ratio: 3072 / 4096; z-index: 2; }
-  .corner-item--quote     { left: 32%;    top: 1%;   width: 23.5%; aspect-ratio: 304 / 188; }
-  .corner-item--figurine  { left: 80.5%;  top: 0%;   width: 19%;   aspect-ratio: 1 / 1; }
-  .corner-item--book      { left: 62.5%;  top: 21%;  width: 10.5%; aspect-ratio: 500 / 768; }
-  .corner-item--snowboard { left: 35%;    top: 49%;  width: 19%;   aspect-ratio: 1536 / 2048; }
-  .corner-item--article   { left: 0%;     top: 67%;  width: 23%;   aspect-ratio: 1179 / 839; }
-
-  .corner-list {
-    position: absolute;
-    left: 63%;
-    top: 55%;
-    width: 35%;
-    list-style: decimal;
-    padding-left: 22px;
-    font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: clamp(14px, 1.1vw, 18px);
-    font-weight: 400;
-    color: #000000;
-    line-height: 1.6;
-    opacity: 0;
-    animation: fadeUp .8s .5s forwards;
-  }
-
-  .corner-list li {
-    margin-bottom: 10px;
-  }
-
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .container { padding: 0 40px; }
     .about { padding: 110px 0 100px; }
     .about-grid { flex-direction: column-reverse; gap: 40px; }
     .about-photo { width: 320px; max-width: 100%; }
-
-    /* Scattered absolute positioning only really works with room to breathe —
-       below 900px it collapses into a plain stacked flow instead. */
-    .corner-collage {
-      position: static;
-      aspect-ratio: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .corner-item {
-      position: static;
-      width: 100% !important;
-      aspect-ratio: auto !important;
-    }
-    .corner-item img { border-radius: 20px; max-height: 60vh; }
-    .corner-num { position: static; display: block; margin-top: 8px; }
-    .corner-list { position: static; width: 100%; }
+    .about-bio { font-size: 20px; }
   }
 
   @media (max-width: 600px) {
@@ -353,13 +199,8 @@
     .nav-links a { font-size: 16px; }
     .about { padding: 90px 0 80px; }
     .about-heading { margin-bottom: 40px; }
-    .about-bio { font-size: 22px; line-height: 1.4; }
+    .about-bio { font-size: 18px; }
     .about-photo { width: 100%; }
-    .about-tabs { gap: 10px; margin-bottom: 40px; }
-    .about-tab { padding: 10px 16px; }
-
-    .corner-collage { gap: 16px; }
-    .corner-item img { max-height: 50vh; }
   }
 
   /* ── FOOTER — minimal, matching case study pages / homepage ── */
@@ -406,66 +247,15 @@
 <!-- ── ABOUT ── -->
 <section class="about" id="about">
   <div class="container">
-    <div class="about-tabs" role="tablist">
-      <button type="button" class="about-tab active" data-tab="bio" role="tab" aria-selected="true">about cheryl</button>
-      <button type="button" class="about-tab" data-tab="corner" role="tab" aria-selected="false">cheryl's corner</button>
-    </div>
-
-    <div class="about-panel active" data-panel="bio">
-      <h1 class="about-heading">About (<span class="about-accent">cheryl</span>)</h1>
-      <div class="about-grid">
-        <div class="about-bio">
-          <p>I'm a <span class="about-accent">senior product designer</span> with 8 years of experience, currently based in Hong Kong (though I spent most of my young adult years in Vancouver, Canada). I fell into fintech/crypto 6 years ago and got hooked on <span class="about-accent">turning complicated ideas into something simple</span> — I think you don't really understand a concept until you can explain it simply.</p>
-          <p>My process is <em>never linear</em>. It usually starts with me asking "<span class="about-accent">wait, why are we doing this?</span>" before touching a single screen — I like to really understand what a PM's trying to solve, not just take the ask at face value. From there I go digging: auditing our existing flow, checking out what competitors are doing, gathering enough context <span class="about-accent">to land on something I actually believe in</span>.</p>
-          <p>A bit more legwork upfront, but worth it.</p>
-        </div>
-        <div class="about-photo">
-          <img src="images/about-portrait.jpg" alt="Cheryl Kwan" />
-        </div>
+    <h1 class="about-heading">About (<span class="about-accent">cheryl</span>)</h1>
+    <div class="about-grid">
+      <div class="about-bio">
+        <p>I'm a <span class="about-accent">senior product designer</span> with 8 years of experience, currently based in Hong Kong (though I spent most of my young adult years in Vancouver, Canada). I fell into fintech/crypto 6 years ago and got hooked on <span class="about-accent">turning complicated ideas into something simple</span> — I think you don't really understand a concept until you can explain it simply.</p>
+        <p>My process is <em>never linear</em>. It usually starts with me asking "<span class="about-accent">wait, why are we doing this?</span>" before touching a single screen — I like to really understand what a PM's trying to solve, not just take the ask at face value. From there I go digging: auditing our existing flow, checking out what competitors are doing, gathering enough context <span class="about-accent">to land on something I actually believe in</span>.</p>
+        <p>A bit more legwork upfront, but worth it.</p>
       </div>
-    </div>
-
-    <div class="about-panel" data-panel="corner" hidden>
-      <h1 class="about-heading corner-heading">✦ Welcome to my corner outside as a designer</h1>
-      <div class="corner-collage">
-        <div class="corner-item corner-item--coastal">
-          <img loading="lazy" decoding="async" src="images/corner-coastal-bonus.webp" alt="A travel photo of a coastal village" />
-        </div>
-        <div class="corner-item corner-item--travel">
-          <img loading="lazy" decoding="async" src="images/corner-travel.webp" alt="A self-portrait taken while out shooting travel photos" />
-          <span class="corner-num">(01)</span>
-        </div>
-        <div class="corner-item corner-item--quote">
-          <div class="corner-quote">
-            <p class="corner-quote-title">Everything</p>
-            <p class="corner-quote-body">is a win if the goal is to experience</p>
-          </div>
-          <span class="corner-num">(04)</span>
-        </div>
-        <div class="corner-item corner-item--figurine">
-          <img loading="lazy" decoding="async" src="images/corner-figurine.png" alt="A small figurine that makes me smile" />
-          <span class="corner-num">(03)</span>
-        </div>
-        <div class="corner-item corner-item--book">
-          <img loading="lazy" decoding="async" src="images/corner-book.webp" alt="Cover of a recent favourite read" />
-          <span class="corner-num">(05)</span>
-        </div>
-        <div class="corner-item corner-item--snowboard">
-          <img loading="lazy" decoding="async" src="images/corner-snowboard.webp" alt="Snowboarding on a mountain" />
-          <span class="corner-num">(02)</span>
-        </div>
-        <div class="corner-item corner-item--article">
-          <img loading="lazy" decoding="async" src="images/corner-article.jpg" alt="Screenshot of an article that resonated with me" />
-          <span class="corner-num">(06)</span>
-        </div>
-        <ol class="corner-list">
-          <li>i take travel photos sometimes</li>
-          <li>snowboarding makes me feel alive</li>
-          <li>trinket that makes me smile</li>
-          <li>quote that i live by</li>
-          <li>recent favourite read</li>
-          <li>article that really resonated with me</li>
-        </ol>
+      <div class="about-photo">
+        <img src="images/about-portrait.jpg" alt="Cheryl Kwan" />
       </div>
     </div>
   </div>
@@ -493,12 +283,11 @@
 </script>
 
 <script>
-  // ── Nav glass-in-on-scroll + hide-on-scroll-down (past the active tab's
-  // heading only, like the homepage's intro). Measured on each scroll since
-  // the two tabs' headings sit at different heights.
+  // ── Nav glass-in-on-scroll + hide-on-scroll-down (past the page heading
+  // only, like the homepage's intro).
   const nav = document.querySelector('nav');
   const heroBottom = () => {
-    const heading = document.querySelector('.about-panel.active .about-heading');
+    const heading = document.querySelector('.about-heading');
     return heading ? heading.getBoundingClientRect().bottom + window.scrollY : 0;
   };
   let lastScrollY = window.scrollY;
@@ -529,28 +318,9 @@
     requestAnimationFrame(tick);
   })();
 
-  document.querySelectorAll('a, .about-tab').forEach(el => {
+  document.querySelectorAll('a').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
-  });
-
-  // ── About tabs
-  const tabs = document.querySelectorAll('.about-tab');
-  const panels = document.querySelectorAll('.about-panel');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.dataset.tab;
-      tabs.forEach(t => {
-        const isActive = t === tab;
-        t.classList.toggle('active', isActive);
-        t.setAttribute('aria-selected', isActive);
-      });
-      panels.forEach(panel => {
-        const isActive = panel.dataset.panel === target;
-        panel.classList.toggle('active', isActive);
-        panel.hidden = !isActive;
-      });
-    });
   });
 </script>
 <script src="nav-menu.js" defer></script>
