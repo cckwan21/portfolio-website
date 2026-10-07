@@ -289,22 +289,28 @@
     color: #000000;
   }
 
-  /* ── TEXT COLUMNS (Key Learnings) ── */
+  /* ── TEXT COLUMNS (Key Learnings) — boxed, matching the Outcome boxes on
+     the KYC EDD case study ── */
   .text-cols {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
+    align-items: stretch;
+    gap: 4px;
     margin-top: 16px;
+  }
+
+  .text-col {
+    background: #EAEAEA;
+    padding: 24px;
   }
 
   .text-col-heading {
     font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: 300;
-    letter-spacing: 0.01em;
-    line-height: 26px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.16px;
     color: #000000;
-    margin-bottom: 12px;
+    margin: 0 0 8px;
     display: block;
   }
 
@@ -312,9 +318,9 @@
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-size: 15px;
     font-weight: 300;
-    letter-spacing: 0.01em;
     line-height: 22px;
-    color: #000000;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0;
   }
 
   /* ── STATS ROW (Outcome) ── */
@@ -820,11 +826,11 @@
     <div class="section reveal" id="learnings">
       <span class="label">Key learnings</span>
       <div class="text-cols">
-        <div>
+        <div class="text-col">
           <span class="text-col-heading">Working under time pressure</span>
           <p class="text-col-body">The journey from concept to product was marked by a tight timeline, leaving me with limited research time. I had to make quick decisions and iterate rapidly, with little room to push back or explore design options for more complex features.</p>
         </div>
-        <div>
+        <div class="text-col">
           <span class="text-col-heading">Prioritising functionality first</span>
           <p class="text-col-body">As the wallet extension landscape matured, my prior emphasis was on optimising the product's core functionality over onboarding simplicity.</p>
         </div>
