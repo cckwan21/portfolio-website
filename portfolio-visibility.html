@@ -249,23 +249,28 @@
     color: #000000;
   }
 
-  /* ── TEXT COLUMNS (Key Learnings) ── */
+  /* ── TEXT COLUMNS (Key Learnings) — boxed, matching the Outcome boxes on
+     the KYC EDD case study ── */
   .text-cols {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
+    align-items: stretch;
+    gap: 4px;
     margin-top: 16px;
+  }
+
+  .text-col {
+    background: #EAEAEA;
+    padding: 24px;
   }
 
   .text-col-heading {
     font-family: 'Lausanne', Helvetica, sans-serif;
-    font-size: 24px;
-    font-weight: 300;
-    letter-spacing: 0.01em;
-    line-height: 30px;
-    min-height: 60px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.16px;
     color: #000000;
-    margin-bottom: 12px;
+    margin: 0 0 8px;
     display: block;
   }
 
@@ -273,9 +278,9 @@
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-size: 15px;
     font-weight: 300;
-    letter-spacing: 0.01em;
     line-height: 22px;
-    color: #000000;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 0;
   }
 
   /* ── VISUAL PLACEHOLDER ── */
@@ -694,15 +699,15 @@
     <div class="section reveal" id="learnings">
       <span class="label">Key learnings</span>
       <div class="text-cols">
-        <div>
+        <div class="text-col">
           <span class="text-col-heading">Constraints are a design tool</span>
           <p class="text-col-body">The restrictions I was working within — limited engineering resources, regional variation in product availability, and an existing component library — pushed me toward more creative, deliberate solutions. My strongest ideas came from reframing what already existed rather than building something new.</p>
         </div>
-        <div>
+        <div class="text-col">
           <span class="text-col-heading">Raise complexity early</span>
           <p class="text-col-body">I didn't anticipate the extent of regional variation until I was already deep into the design process. It's a pattern I now actively work against — I push to surface technical and geo constraints as design requirements at the start of a project, not as discoveries midway through.</p>
         </div>
-        <div>
+        <div class="text-col">
           <span class="text-col-heading">Redesigns are rarely linear</span>
           <p class="text-col-body">This project involved more back-and-forth than almost anything I'd worked on before. Navigating competing constraints while still delivering something meaningful taught me how to stay anchored to the core problem when everything else around it kept shifting.</p>
         </div>

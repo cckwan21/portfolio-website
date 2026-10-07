@@ -280,7 +280,7 @@
     gap: 4px;
   }
   .outcome-point {
-    background: #F2F2F7;
+    background: #EAEAEA;
     padding: 24px;
   }
   .outcome-point-title {
@@ -384,6 +384,111 @@
     opacity: 1;
   }
 
+  /* ── FLOW CHART (current onboarding steps) ── */
+  .flow {
+    --flow-pad: 32px;
+    margin-top: 40px;
+    padding: var(--flow-pad) var(--flow-pad) 12px;
+    background: #EAEAEA;
+  }
+  /* Always one row of 8. When it doesn't fit, the steps and note scroll
+     sideways together like the competitive analysis tables, so the scrollbar
+     sits at the bottom of the box below the note. The note is sticky so it
+     stays put while the steps scroll. The steps are opaque white, so the
+     tables' background-shadow trick would be hidden behind them; instead a
+     fade sits on top of the right edge while more steps are scrolled off
+     (.has-more is toggled by the script at the bottom of the page). */
+  .flow-scroll {
+    position: relative;
+    /* Bleeds into the box's right padding so steps scroll out at its edge. */
+    margin-right: calc(var(--flow-pad) * -1);
+  }
+  .flow-scroll::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 12px;
+    width: 48px;
+    background: linear-gradient(to left, #EAEAEA, rgba(234,234,234,0));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .flow-scroll.has-more::after { opacity: 1; }
+  .flow-scroller {
+    overflow-x: auto;
+    padding-bottom: 20px;
+  }
+  /* Wide enough for 8 × 92px steps + 7 × 20px gaps + the right bleed, and
+     never narrower than the box. */
+  .flow-track {
+    box-sizing: border-box;
+    width: max(100%, calc(876px + var(--flow-pad)));
+    padding-right: var(--flow-pad);
+  }
+  /* Always-visible scrollbar so mouse users can drag it — macOS otherwise
+     hides overlay scrollbars until a trackpad scroll starts. Chrome/Safari
+     use the ::-webkit-scrollbar rules; Firefox gets the standard properties
+     (scoped so they don't override the webkit styling in newer Chrome). */
+  .flow-scroller::-webkit-scrollbar { height: 6px; }
+  .flow-scroller::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.08); border-radius: 3px; margin-right: var(--flow-pad); }
+  .flow-scroller::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.35); border-radius: 3px; }
+  .flow-scroller::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.5); }
+  @supports not selector(::-webkit-scrollbar) {
+    .flow-scroller { scrollbar-width: thin; scrollbar-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.08); }
+  }
+  /* Arrows sit in the column gap so the boxes stay equal width. */
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(92px, 1fr));
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .flow-step {
+    position: relative;
+    display: flex;
+  }
+  .flow-step span {
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 20px;
+    color: #000000;
+    background: #FFFFFF;
+    border-radius: 4px;
+    padding: 12px 8px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    transform: translateY(-50%);
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.4);
+  }
+  .flow-note {
+    position: sticky;
+    left: 0;
+    width: fit-content;
+    font-family: 'Lausanne', Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.24px;
+    line-height: 20px;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 20px 0 0;
+  }
+
   @media (max-width: 900px) {
     .cs-sidenav { display: none; }
     .meta-row { grid-template-columns: 1fr 1fr; }
@@ -397,6 +502,7 @@
     .outcome-points { grid-template-columns: 1fr; gap: 24px; }
     .next-project { flex-direction: column; align-items: flex-start; gap: 24px; }
     .visual, .visual.tall { height: 260px; }
+    .flow { --flow-pad: 24px; }
   }
 </style>
 </head>
@@ -463,7 +569,7 @@
       </div>
       <div>
         <span class="meta-label">Involvement</span>
-        <div class="meta-value">Product Designer</div>
+        <div class="meta-value">Competitive Benchmarking<br>UX/UI Design<br>Cross-functional Alignment</div>
       </div>
       <div>
         <span class="meta-label">Timeline</span>
@@ -482,6 +588,26 @@
       </ul>
       <p class="body" style="margin-top:24px;">We also referenced competitors' UK EDD flows for comparison.</p>
       <div class="visual reveal" style="margin-top:40px; height:auto; background:none;"><img src="images/edd-regions.webp" alt="Diagram comparing per-region requirements: UK requires EDD, risk profile, and knowledge test; US requires EDD and SSN" style="width:100%; display:block;" /></div>
+      <div class="flow reveal" role="figure" aria-label="Existing onboarding flow">
+        <span class="label">Existing onboarding flow</span>
+        <div class="flow-scroll">
+          <div class="flow-scroller">
+            <div class="flow-track">
+              <ol class="flow-steps">
+                <li class="flow-step"><span>Email</span></li>
+                <li class="flow-step"><span>Mobile number</span></li>
+                <li class="flow-step"><span>Create password</span></li>
+                <li class="flow-step"><span>KYC verification</span></li>
+                <li class="flow-step"><span>Account creation status</span></li>
+                <li class="flow-step"><span>EDD</span></li>
+                <li class="flow-step"><span>Risk profile</span></li>
+                <li class="flow-step"><span>Knowledge test</span></li>
+              </ol>
+              <p class="flow-note">Note: based on the UK flow.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ── RESEARCH & DISCOVERY ── -->
@@ -654,6 +780,14 @@
     });
   }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
   sections.forEach(s => { if (s) tocIo.observe(s); });
+  // Flow chart — show the right-edge fade only while steps are scrolled off
+  document.querySelectorAll('.flow-scroll').forEach(wrap => {
+    const list = wrap.querySelector('.flow-scroller');
+    const update = () => wrap.classList.toggle('has-more',
+      list.scrollLeft + list.clientWidth < list.scrollWidth - 1);
+    list.addEventListener('scroll', update, { passive: true });
+    new ResizeObserver(update).observe(list);
+  });
 </script>
 <script src="nav-menu.js" defer></script>
 
