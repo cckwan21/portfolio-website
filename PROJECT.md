@@ -317,7 +317,7 @@ FOOTER
 | 2026 | Friction-free Crypto Deposit | Mobile UX | ✅ Case study built |
 | 2024 | Portfolio Visibility for Active Trades | Mobile UX | ✅ Case study built |
 | 2022 | Crypto.com Browser Extension | Web Extension | ✅ Case study built |
-| 2021 | APAA | Web Design | ✅ Case study built |
+| 2021 | APAA | Web Design | 🙈 Hidden — page kept, not linked |
 
 ---
 
@@ -329,7 +329,7 @@ FOOTER
 | `case-study.html` | ✅ Content in | Placeholder images remain — needs real screenshots |
 | `portfolio-visibility.html` | ✅ Content in | Solution section added; placeholder images remain |
 | `browser-extension.html` | ✅ Content in | Hero image wired (`browser-extension.png`) |
-| `apaa.html` | ✅ Content in | Hero image wired (`apaa.png`) |
+| `apaa.html` | 🙈 Hidden | Not linked from any page (Browser Extension now ends with "All projects"); `noindex` set. Hero image wired (`apaa.png`) |
 
 ---
 

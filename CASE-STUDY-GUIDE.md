@@ -151,7 +151,7 @@ Also remove the `project-row--inactive` class so the hover effect activates.
 | `case-study.html` | Friction-free Crypto Deposit |
 | `portfolio-visibility.html` | Portfolio Visibility for Active Trades |
 | `browser-extension.html` | Crypto.com Browser Extension |
-| `apaa.html` | APAA |
+| `apaa.html` | APAA (hidden — not linked) |
 
 Images go in the `/images/` folder, named clearly: `[project]-[description].png`
 
