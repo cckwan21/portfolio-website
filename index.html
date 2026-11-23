@@ -123,18 +123,14 @@
 
   .intro-flex {
     position: relative;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 40px;
   }
 
   .bio-text {
-    max-width: 736px;
+    max-width: 960px;
     font-family: 'Lausanne', Helvetica, sans-serif;
     font-size: clamp(24px, 3.1vw, 40px);
     font-weight: 300;
-    line-height: 1.35;
+    line-height: 1.5;
     color: #000000;
     opacity: 0;
     animation: fadeUp 1s .1s forwards;
@@ -150,102 +146,72 @@
     transition: letter-spacing .35s cubic-bezier(.16,1,.3,1);
   }
 
-  .bio-highlight::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1px;
-    background: #000000;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .4s cubic-bezier(.16,1,.3,1);
-  }
-
-  .bio-highlight:hover::after {
-    transform: scaleX(1);
-  }
-
   .bio-highlight:hover {
     letter-spacing: 0.01em;
   }
 
-  /* Reserve the column so hovering the photo in never shifts layout */
-  .bio-photo-slot {
-    flex-shrink: 0;
-    width: 142px;
-    display: flex;
-    flex-direction: column;
-    /* Wider photos (e.g. the fintech one) grow leftward from the slot's right
-       edge so they keep the page's side margin instead of overhanging it */
-    align-items: flex-end;
-    gap: 16px;
-    opacity: 0;
-    animation: fadeUp 1s .2s forwards;
-  }
-
-  .bio-photo {
-    width: 142px;
-    height: 189px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.05);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity .35s cubic-bezier(.16,1,.3,1), transform .35s cubic-bezier(.16,1,.3,1), width .35s cubic-bezier(.16,1,.3,1), height .35s cubic-bezier(.16,1,.3,1);
-  }
-
-  .bio-photo.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Just above the 900px breakpoint the gap between the paragraph and the
-     page margin is narrower than the fintech photo, so scale it down there
-     (from its right edge) rather than let it overlap the text */
-  @media (min-width: 901px) and (max-width: 1100px) {
-    .bio-photo--wide {
-      scale: 0.8;
-      transform-origin: right center;
-    }
-  }
-
-  .bio-photo img,
-  .bio-photo video {
-    width: 100%;
-    height: 100%;
+  /* Pill-shaped photo set inside each bracketed word, sized to the text */
+  .bio-pill {
+    display: inline-block;
+    width: 2.4em;
+    height: 1.25em;
+    margin: 0 0.04em;
+    border-radius: 999px;
     object-fit: cover;
-    display: block;
+    vertical-align: -0.26em;
+    background: rgba(0, 0, 0, 0.05);
   }
 
-  .bio-photo-caption {
-    display: none;
+  /* Once the paragraph has faded up, each bracketed item plays in reading
+     order: the word types out letter by letter (.bio-char, timed by the
+     script below), then its pill wipes in left to right. The brackets
+     themselves stay put.
+     The delays here are a fallback in case the script doesn't run. */
+  .bio-word,
+  .bio-media {
+    display: inline-block;
   }
 
-  .bio-photo-caption.active { opacity: 1; }
+  .bio-char {
+    animation: bioType .01s linear both;
+  }
 
-  /* Below this width there's no room for a side column — float the
-     photo centered on top of the paragraph instead of hiding it */
-  @media (max-width: 900px) {
-    /* Cap to the paragraph's own max-width so centering below is measured
-       against the text, not the full (now-empty) flex row */
-    .intro-flex { max-width: 736px; }
+  .bio-media {
+    animation: bioWipe .5s cubic-bezier(.16,1,.3,1) both;
+    animation-delay: calc(1.5s + var(--i, 0) * .7s);
+  }
 
-    .bio-photo-slot {
-      position: absolute;
-      top: 14%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 20;
-      pointer-events: none;
-    }
+  /* Hover shuffle: a small overlay laid over the pill that flicks through
+     other photos before clearing to reveal the real one */
+  .bio-media {
+    position: relative;
+  }
 
-    .bio-photo-caption {
-      background: #ffffff;
-      padding: 4px 10px;
-      border-radius: 4px;
-    }
+  .bio-shuffle {
+    position: absolute;
+    object-fit: cover;
+    border-radius: 999px;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .bio-shuffle.is-on {
+    visibility: visible;
+  }
+
+  @keyframes bioType {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes bioWipe {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bio-char,
+    .bio-media { animation: none; }
   }
 
   /* ── SELECTED WORKS ── */
@@ -464,7 +430,7 @@
 
     /* Intro */
     .intro { padding: 120px 0 64px; }
-    .bio-text { font-size: 22px; line-height: 1.4; }
+    .bio-text { font-size: 22px; line-height: 1.55; }
 
     /* Selected works */
     .works { padding: 64px 0; }
@@ -500,15 +466,8 @@
   <div class="container">
     <div class="content-indent intro-flex">
       <p class="bio-text">
-        I'm <span class="bio-highlight" data-photo="images/cheryl-portrait.jpg" data-caption="Cheryl.jpeg">(Cheryl)</span> — a <span class="bio-highlight" data-photo="images/hongkong-taxi.webp" data-caption="Hong Kong.jpeg">(Hong Kong-based)</span> product designer who finds the <span class="bio-highlight" data-video="images/constraint.mp4" data-caption="constraint.gif" data-width="171">(real constraint)</span> before designing anything, usually buried in <span class="bio-highlight" data-photo="images/cdc.jpeg" data-caption="fintech and crypto.jpg" data-width="228" data-height="152">(fintech and crypto's)</span> compliance rules and legacy systems.
+        I'm <span class="bio-highlight" style="--i: 0;">(<span class="bio-word">Cheryl</span> <span class="bio-media"><img class="bio-pill" src="images/cheryl-pill.jpg" alt="" /></span>)</span> — a <span class="bio-highlight" style="--i: 1;">(<span class="bio-word">Hong Kong-based</span> <span class="bio-media"><img class="bio-pill" src="images/hongkong-taxi.webp" alt="" /></span>)</span> product designer who finds the <span class="bio-highlight" style="--i: 2;">(<span class="bio-word">real constraint</span> <span class="bio-media"><video class="bio-pill" style="object-position: 50% 70%;" src="images/constraint.mp4" autoplay muted loop playsinline aria-hidden="true"></video></span>)</span> before designing anything, usually buried in <span class="bio-highlight" style="--i: 3;">(<span class="bio-word">fintech and crypto's</span> <span class="bio-media"><img class="bio-pill" src="images/cdc.jpeg" alt="" /></span>)</span> compliance rules and legacy systems.
       </p>
-      <div class="bio-photo-slot">
-        <div class="bio-photo">
-          <img src="images/hongkong-taxi.webp" alt="" />
-          <video muted loop playsinline preload="none"></video>
-        </div>
-        <span class="bio-photo-caption">Hong Kong.jpeg</span>
-      </div>
     </div>
   </div>
 </section>
@@ -649,45 +608,112 @@
     el.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
   });
 
-  // ── Bio photo reveal on hover
-  const bioPhotoBox = document.querySelector('.bio-photo');
-  const bioPhotoImg = bioPhotoBox.querySelector('img');
-  const bioPhotoVideo = bioPhotoBox.querySelector('video');
-  const bioPhotoCaption = document.querySelector('.bio-photo-caption');
-  // Fetch the hover photos once the page has loaded, so the first hover
-  // doesn't flash an empty box while the image downloads
-  window.addEventListener('load', () => {
-    document.querySelectorAll('.bio-highlight[data-photo]').forEach(span => {
-      new Image().src = span.dataset.photo;
-    });
-  });
-  document.querySelectorAll('.bio-highlight').forEach(span => {
-    span.addEventListener('mouseenter', () => {
-      if (span.dataset.video) {
-        bioPhotoVideo.src = span.dataset.video;
-        bioPhotoVideo.style.display = 'block';
-        bioPhotoImg.style.display = 'none';
-        bioPhotoVideo.currentTime = 0;
-        bioPhotoVideo.play().catch(() => {});
-      } else {
-        bioPhotoImg.src = span.dataset.photo;
-        bioPhotoImg.style.display = 'block';
-        bioPhotoVideo.style.display = 'none';
-        bioPhotoVideo.pause();
-        bioPhotoVideo.removeAttribute('src');
+  // ── Bio typewriter: split each bracketed word into letters and stagger
+  // them so the word types out, then wipe in its pill once it's done.
+  // Starts once the paragraph's fade-up (1.1s) has finished.
+  (function () {
+    const START = 1100, PER_CHAR = 85, PILL = 500, PAUSE = 150;
+    let t = START;
+    document.querySelectorAll('.bio-highlight').forEach(item => {
+      const word = item.querySelector('.bio-word');
+      const media = item.querySelector('.bio-media');
+      const text = word.textContent;
+      word.textContent = '';
+      for (const ch of text) {
+        const span = document.createElement('span');
+        span.className = 'bio-char';
+        span.textContent = ch;
+        span.style.animationDelay = t + 'ms';
+        word.appendChild(span);
+        t += PER_CHAR;
       }
-      bioPhotoBox.style.width = span.dataset.width ? `${span.dataset.width}px` : '';
-      bioPhotoBox.style.height = span.dataset.height ? `${span.dataset.height}px` : '';
-      bioPhotoBox.classList.toggle('bio-photo--wide', !!span.dataset.height);
-      bioPhotoCaption.textContent = span.dataset.caption;
-      bioPhotoBox.classList.add('active');
-      bioPhotoCaption.classList.add('active');
+      media.style.animationDelay = t + 'ms';
+      item.dataset.pillAt = t;
+      t += PILL + PAUSE;
     });
-    span.addEventListener('mouseleave', () => {
-      bioPhotoBox.classList.remove('active');
-      bioPhotoCaption.classList.remove('active');
+  })();
+
+  // ── Bio hover shuffle: deal the deck of other photos twice (each pass in
+  // a fresh random order) like a slot machine, slowing down through the
+  // second pass, then clear the overlay to land on the item's own image/video.
+  // On touch screens (no hover) it also plays once on load, as each pill
+  // wipes in, so the shuffle is seen without needing a tap.
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const POOL = ['cheryl', 'hongkong', 'constraint', 'crypto', 'snowboard',
+      'travel', 'coastal', 'book', 'figurine', 'portrait']
+      .map(name => `images/shuffle/${name}.jpg`);
+    const OWN = ['cheryl', 'hongkong', 'constraint', 'crypto']
+      .map(name => `images/shuffle/${name}.jpg`);
+    // Gap after each flick: a quick first pass, then slowing into the landing
+    const FIRST_PASS = 45;
+    const SECOND_PASS = [50, 55, 60, 70, 80, 95, 115, 140, 170];
+    const shuffled = list => {
+      const a = list.slice();
+      for (let k = a.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [a[k], a[j]] = [a[j], a[k]];
+      }
+      return a;
+    };
+
+    // Touch screens play the shuffle during the intro, so fetch its photos
+    // straight away there; elsewhere wait until the page has loaded
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    const preload = () => POOL.forEach(src => { new Image().src = src; });
+    if (isTouch) preload(); else window.addEventListener('load', preload);
+
+    document.querySelectorAll('.bio-highlight').forEach((item, i) => {
+      const media = item.querySelector('.bio-media');
+      const pill = media.querySelector('.bio-pill');
+      const overlay = document.createElement('img');
+      overlay.className = 'bio-shuffle';
+      overlay.alt = '';
+      media.appendChild(overlay);
+      const others = POOL.filter(src => src !== OWN[i]);
+      let timer = null;
+
+      const stop = () => {
+        clearTimeout(timer);
+        overlay.classList.remove('is-on');
+      };
+
+      const play = () => {
+        stop();
+        Object.assign(overlay.style, {
+          left: pill.offsetLeft + 'px',
+          top: pill.offsetTop + 'px',
+          width: pill.offsetWidth + 'px',
+          height: pill.offsetHeight + 'px',
+        });
+        const first = shuffled(others);
+        let second;
+        do { second = shuffled(others); } while (second[0] === first[first.length - 1]);
+        const deck = first.concat(second);
+        const gaps = first.map(() => FIRST_PASS).concat(SECOND_PASS);
+        let step = 0;
+        const flick = () => {
+          if (step === deck.length) return stop();
+          overlay.src = deck[step];
+          overlay.classList.add('is-on');
+          timer = setTimeout(flick, gaps[step++]);
+        };
+        flick();
+      };
+
+      // mouseover/out (ignoring moves between the item's own children)
+      // behaves like mouseenter/leave
+      item.addEventListener('mouseover', e => {
+        if (!item.contains(e.relatedTarget)) play();
+      });
+      item.addEventListener('mouseout', e => {
+        if (!item.contains(e.relatedTarget)) stop();
+      });
+      if (isTouch && item.dataset.pillAt) {
+        setTimeout(play, Number(item.dataset.pillAt));
+      }
     });
-  });
+  })();
 
   // ── Scroll reveal
   const io = new IntersectionObserver(entries => {
