@@ -34,7 +34,7 @@
   }
   .nav-links {
     justify-self: center;
-    gap: 24px;
+    gap: 4px;
     align-items: center;
     background: transparent;
     backdrop-filter: none;
@@ -67,16 +67,16 @@
     font-weight: 300;
     color: #000000 !important;
     opacity: 1;
-    padding: 0 24px;
+    padding: 0 20px;
     border-radius: 32px;
     transition: background .3s cubic-bezier(.16,1,.3,1), color .3s cubic-bezier(.16,1,.3,1), opacity .2s, padding .3s cubic-bezier(.16,1,.3,1);
   }
   .nav-links a::after { display: none; }
-  .nav-links a:hover:not(.active) { opacity: .55; padding: 16px 24px; }
+  .nav-links a:hover:not(.active) { opacity: .55; padding: 16px 20px; }
   .nav-links a.active {
     background: #000000;
     color: #ffffff !important;
-    padding: 16px 24px;
+    padding: 16px 20px;
   }
 
   /* ── HERO ── */
@@ -524,6 +524,7 @@
   <a href="index.html" class="nav-logo">cheryl_kwan</a>
   <ul class="nav-links">
     <li><a href="index.html#work" class="active">Work</a></li>
+    <li><a href="playground.html">Playground</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
   <span class="nav-time">Hong Kong · <span id="hk-time"></span></span>
